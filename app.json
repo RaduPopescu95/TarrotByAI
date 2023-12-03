@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "StyleConnect",
+    "slug": "StyleConnect",
+    "platforms": ["ios", "android", "web"],
+    "version": "1.3.1",
+    "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      "react-native-health"
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDLMmE3p_s7JQebQz4a12YEIYIMILqI06U"
+        }
+      },
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.style.connect.saloon",
+      "versionCode": 23,
+      "permissions": ["android.permission.RECORD_AUDIO"]
+    },
+    "icon": "./assets/icon.png",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.style.connect.saloon"
+    },
+    "description": "Connect clients with saloons",
+    "extra": {
+      "bugsnag": {
+        "apiKey": "531d96660ab9d0305b9115d533ffffdb"
+      },
+      "eas": {
+        "projectId": "b6d5852c-27c7-4c72-b05b-734196547cfb"
+      }
+    },
+    "owner": "shikatedo1"
+  }
+}
