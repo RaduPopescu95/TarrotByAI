@@ -9,10 +9,16 @@ import {
   H7fontBoldPrimary,
   H7fontMediumPrimary,
 } from "./commonText";
+import { useNavigationState } from "../context/NavigationContext";
+import i18n from "../../i18n";
+import { useApiData } from "../context/ApiContext";
 
 const NavBarBottom = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
+  const { setCurrentScreen, currentScreen } = useNavigationState();
+  const { fetchData, data, loading } = useApiData();
+
   const animatedValues = useRef(
     Array.from({ length: 3 }, () => new Animated.Value(0))
   ).current;
@@ -45,14 +51,23 @@ const NavBarBottom = () => {
         iterations: 3, // Setează numărul de repetiții aici
       }
     ).start();
-  }, [selected, animatedValues, chevronAnimation]);
+
+    if (
+      currentScreen === "Dashboard2" ||
+      currentScreen === "PersonalReadingDashboard"
+    ) {
+      setSelected(1);
+    }
+  }, [selected, animatedValues, chevronAnimation, currentScreen]);
 
   const handlePress = (screen, index) => {
     if (index === 1 && selected === 1) {
+      fetchData();
       console.log("Shuffling...");
     } else {
       setSelected(index);
       navigation.navigate(screen);
+      setCurrentScreen(screen);
     }
   };
 
@@ -89,10 +104,10 @@ const NavBarBottom = () => {
 
   return (
     <>
-      {selected === 1 && (
+      {selected === 1 && !data && !loading && (
         <View style={styles.shuffleTextContainer}>
           <H7fontBoldPrimary style={{ marginBottom: 10 }}>
-            Touch to shuffle
+            {i18n.translate("touchToShuffle")}
           </H7fontBoldPrimary>
           <Animated.View style={chevronStyle}>
             <MaterialCommunityIcons
@@ -103,41 +118,53 @@ const NavBarBottom = () => {
           </Animated.View>
         </View>
       )}
-      <View style={styles.navbar}>
-        {[screenName.ClinicDashBoard, "Dashboard2", "TarrotSettings"].map(
-          (screen, index) => (
-            <Animated.View
-              key={screen}
-              style={[styles.iconWrap, animatedStyle(index)]}
+      <View
+        style={[
+          styles.navbar,
+          {
+            backgroundColor:
+              selected === 1 ? colors.secondary2rgba : "transparent",
+          },
+        ]}
+      >
+        {[
+          screenName.ClinicDashBoard,
+          screenName.PersonalReadingDashboard,
+          "TarrotSettings",
+        ].map((screen, index) => (
+          <Animated.View
+            key={screen}
+            style={[
+              selected != index && styles.iconWrapBase,
+              selected === index && styles.iconWrap,
+              animatedStyle(index),
+            ]}
+          >
+            <TouchableOpacity
+              onPress={() => handlePress(screen, index)}
+              style={{ zIndex: 1 }}
             >
-              <TouchableOpacity
-                onPress={() => handlePress(screen, index)}
-                style={{ zIndex: 1 }}
-              >
-                {index === 1 ? (
-                  <MaterialCommunityIcons
-                    name={"cards-outline"}
-                    size={selected === index ? 34 : 24}
-                    color={selected === index ? "#434343" : colors.primary2}
-                  />
-                ) : (
-                  <Ionicons
-                    name={
-                      "ios-" +
-                      (index === 0
-                        ? "star"
-                        : index === 1
-                          ? "bookmark"
-                          : "person")
-                    }
-                    size={selected === index ? 34 : 24}
-                    color={selected === index ? "#434343" : colors.primary2}
-                  />
-                )}
-              </TouchableOpacity>
-            </Animated.View>
-          )
-        )}
+              {index === 1 ? (
+                <MaterialCommunityIcons
+                  name={"cards-outline"}
+                  size={selected === index ? 34 : 24}
+                  color={selected === index ? "#434343" : colors.primary2}
+                />
+              ) : (
+                <Ionicons
+                  name={
+                    "ios-" +
+                    (index === 0 ? "star" : index === 1 ? "bookmark" : "person")
+                  }
+                  size={selected === index ? 34 : 24}
+                  color={
+                    selected === index ? colors.secondary2 : colors.primary2
+                  }
+                />
+              )}
+            </TouchableOpacity>
+          </Animated.View>
+        ))}
       </View>
     </>
   );
@@ -151,9 +178,18 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: "transparent",
     position: "absolute",
-    bottom: 10,
+    bottom: 0,
     width: "100%",
     zIndex: 1,
+  },
+  iconWrapBase: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    zIndex: 1,
+    top: "1%",
   },
   iconWrap: {
     justifyContent: "center",

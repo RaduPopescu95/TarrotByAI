@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Animated,
   TouchableWithoutFeedback,
@@ -9,9 +9,9 @@ import {
 } from "react-native";
 import i18n from "../../../i18n";
 
-const FlipCard = ({ style }) => {
-  const flipAnim = useRef(new Animated.Value(0)).current; // Valoarea inițială pentru animație
-  let flipped = false; // Variabilă pentru a urmări dacă cardul a fost întors
+const FlipCard = ({ item, style, shouldFlip }) => {
+  const flipAnim = useRef(new Animated.Value(0)).current;
+  let flipped = false;
 
   const flipCard = () => {
     if (!flipped) {
@@ -21,9 +21,15 @@ const FlipCard = ({ style }) => {
         tension: 10,
         useNativeDriver: true,
       }).start();
-      flipped = true; // Actualizează starea pentru a indica că cardul a fost întors
+      flipped = true;
     }
   };
+
+  useEffect(() => {
+    if (shouldFlip) {
+      flipCard();
+    }
+  }, [shouldFlip]);
 
   const frontAnimatedStyle = {
     transform: [
@@ -71,8 +77,8 @@ const FlipCard = ({ style }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 74,
-    width: Dimensions.get("window").width / 2.25,
+    height: Dimensions.get("window").width / 2.55,
+    width: Dimensions.get("window").width / 3.8,
     borderRadius: 5,
     overflow: "hidden",
     elevation: 4,
@@ -80,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonStyle: {
-    height: 74,
+    height: "100%",
     width: Dimensions.get("window").width / 2.25,
     justifyContent: "center",
     alignItems: "center",

@@ -174,6 +174,11 @@ const {
 } = styles;
 const { fontBold, fontRegular, fontMedium } = styles;
 
+export const H2fontBoldPrimary = styled(Text)`
+  ${h2};
+  ${fontBold};
+  ${primary2};
+`;
 export const H6fontBoldPrimary = styled(Text)`
   ${h3};
   ${fontBold};
@@ -384,6 +389,11 @@ export const H7fontBoldPrimary = styled(Text)`
   ${fontBold};
   ${primary2};
 `;
+export const H7fontBoldWhite = styled(Text)`
+  ${h7};
+  ${fontBold};
+  ${white};
+`;
 export const H7fontLightBlue = styled(Text)`
   ${h7};
   ${fontMedium};
@@ -457,6 +467,11 @@ export const H8fontMediumWhite = styled(Text)`
   ${h8};
   ${fontMedium};
   ${white};
+`;
+export const H8fontBoldPrimary = styled(Text)`
+  ${h8};
+  ${fontBold};
+  ${primary2};
 `;
 export const H8fontMediumPrimary = styled(Text)`
   ${h8};

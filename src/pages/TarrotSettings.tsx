@@ -14,16 +14,8 @@ import { Route, useRoute } from "@react-navigation/native";
 import { labels } from "../utils/labels";
 import { screenName } from "../utils/screenName";
 import {
-  FormErrorMessage,
-  H10fontRegularWhite,
   H6fontBoldPrimary,
-  H6fontRegularBlack,
   H7fontMediumPrimary,
-  H7fontMediumWhite,
-  H8fontMediumPrimary,
-  H8fontMediumWhite,
-  H9fontRegularBlack,
-  H9fontRegularGray,
 } from "../components/commonText";
 import {
   CommonLineView,
@@ -77,10 +69,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import {
   handleChangeEmail,
   handleChangePassword,
+  handleDeleteAccount,
   handleLogout,
 } from "../utils/authUtils";
 import CheckCurrentPasswordModal from "../components/CheckCurrentPasswordModal";
 import SnackBar from "../components/SnackBar";
+import GreetingBar from "../components/UpperGreetingBar/GreetingBar";
+import CheckCurrentPasswordModalDelete from "../components/CheckPassDelete/CheckPasswordModalDelete";
 
 interface Props extends GeneralProps {
   route: Route<string, object | undefined>;
@@ -114,6 +109,7 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
   const [registerType, setRegisterType] = useState("email");
   const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleDelete, setModalVisibleDelete] = useState(false);
   const [showSnackBar, setShowSnackback] = useState(false);
   const [snackMessage, setSnackMessage] = useState("");
 
@@ -127,6 +123,18 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
   function handleSelectedCountry(country: ICountry) {
     setSelectedCountry(country);
   }
+
+  const handleDeleteModal = () => {
+    setModalVisibleDelete(!modalVisibleDelete);
+  };
+
+  const handleDelete = () => {
+    handleDeleteAccount(currentPassword).then(() => {
+      setSnackMessage("Accound deleted succesfully");
+      setShowSnackback(!showSnackBar);
+      // navigation.navigate(screenName.SignInScreenClinic)
+    });
+  };
 
   const handleResetForm = () => {
     reset({
@@ -192,19 +200,63 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    height: "30%",
                   }}
                 >
                   <H6fontBoldPrimary>
-                    {i18n.translate("signUp")}
+                    {i18n.translate("myAccount")}
                   </H6fontBoldPrimary>
 
                   <Image
                     source={require("../../assets/headerIcon.png")}
-                    style={{ width: 300, height: 200 }}
+                    style={{ width: 300, height: 150 }}
                     resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
                   />
                 </View>
-                <ScrollView>
+
+                <ScrollView style={{ height: "70%" }}>
+                  <View
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        // Traduceți valoarea
+                        const translatedHistoryType = i18n.translate(
+                          "historyTypePersonalized"
+                        );
+
+                        // Navigați cu parametrul
+                        navigation.navigate(screenName.historyTarrot as any, {
+                          historyType: translatedHistoryType,
+                        });
+                      }}
+                    >
+                      <H7fontMediumPrimary>
+                        {i18n.translate("historyPersonalized")}
+                      </H7fontMediumPrimary>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ marginTop: 10 }}
+                      onPress={() => {
+                        // Traduceți valoarea
+                        const translatedHistoryType =
+                          i18n.translate("historyTypeFuture");
+
+                        // Navigați cu parametrul
+                        navigation.navigate(screenName.historyTarrot as any, {
+                          historyType: translatedHistoryType,
+                        });
+                      }}
+                    >
+                      <H7fontMediumPrimary>
+                        {i18n.translate("historyFuture")}
+                      </H7fontMediumPrimary>
+                    </TouchableOpacity>
+                  </View>
                   <View>
                     {registerType === "email" && (
                       <Controller
@@ -354,8 +406,20 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                     <View style={styles.infoTextViewStyle}>
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate(
-                            screenName.SignInScreenClinic as any
+                          Alert.alert(
+                            "Are you sure you want to delete your account?",
+                            "You will have to register again",
+                            [
+                              {
+                                text: "Cancel",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "cancel",
+                              },
+                              {
+                                text: "Delete",
+                                onPress: () => handleDelete(),
+                              },
+                            ]
                           )
                         }
                       >
@@ -376,6 +440,12 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
               isModalVisible={modalVisible}
               setCurrentPassword={setCurrentPassword}
               handleSubmit={handleSubmit(onsubmit)}
+            />
+            <CheckCurrentPasswordModalDelete
+              setIsModalVisible={setModalVisibleDelete}
+              isModalVisible={modalVisibleDelete}
+              setCurrentPassword={setCurrentPassword}
+              handleSubmit={handleDelete}
             />
             {showSnackBar && (
               <SnackBar

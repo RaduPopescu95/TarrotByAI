@@ -65,7 +65,6 @@ import {
   convertTimeTo12Hours,
   createTimeFormat,
 } from "../utils/convertTime24Hours";
-import { useHourClockContext } from "../context/HourClockContext";
 
 interface Props {
   onpress: CallableFunction;
@@ -102,7 +101,6 @@ const Checkout: React.FC<Props> = ({ onpress }): JSX.Element => {
     setIsLoading(true);
     console.log("-----------handleSubmitAppointment-------------");
     const basicInfo = AllDoctorInfo.doctorInfo.item.doctorInfoData;
-    const hourClock = useHourClockContext();
 
     const timeScheduled = AllDoctorInfo.item;
     const daySelected = AllDoctorInfo.daySelected;

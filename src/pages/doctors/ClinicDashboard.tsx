@@ -5,6 +5,8 @@ import {
   Dimensions,
   Animated,
   ActivityIndicator,
+  StatusBar,
+  Platform,
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,10 +17,37 @@ import FlipCard from "../../components/FlipCard/FlipCard";
 import { styles } from "./DashboardStyle";
 import { MainContainer } from "../../components/commonViews";
 import { LinearGradient } from "expo-linear-gradient";
+import Card from "../../components/MenuCard/Card";
+import GreetingBar from "../../components/UpperGreetingBar/GreetingBar";
+import { screenName } from "../../utils/screenName";
+import { useNavigationState } from "../../context/NavigationContext";
+import i18n from "../../../i18n";
+import { useLanguage } from "../../context/LanguageContext";
 
 const ClinicDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
   const initialAnimations = useRef(Array(4).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
+  const { language, changeLanguage } = useLanguage();
+
+  const cardData = [
+    {
+      text: i18n.translate("personalReading"),
+      screen: screenName.PersonalReadingDashboard,
+    },
+    {
+      text: i18n.translate("futureReading"),
+      screen: "Dashboard2",
+    },
+    {
+      text: i18n.translate("luckyNumber"),
+      screen: screenName.luckyNumberColor,
+    },
+    {
+      text: i18n.translate("luckyColor"),
+      screen: screenName.luckyColor,
+    },
+    // Adăugați mai multe obiecte aici în funcție de câte cartonașe doriți să aveți
+  ];
 
   useEffect(() => {
     const screenWidth = Dimensions.get("window").width;
@@ -35,6 +64,8 @@ const ClinicDashboard = () => {
     }
   }, []);
 
+  useEffect(() => {}, [language]);
+
   const animateCard = (index) => {
     if (index < initialAnimations.length) {
       Animated.timing(initialAnimations[index], {
@@ -45,12 +76,15 @@ const ClinicDashboard = () => {
     }
   };
 
-  const renderFlipCard = (index) => {
-    const animatedStyle = {
-      transform: [{ translateX: cardAnimations[index] }],
-    };
-
-    return <FlipCard key={index} style={animatedStyle} />;
+  const renderCard = (card, index) => {
+    return (
+      <Card
+        key={index}
+        text={card.text}
+        screen={card.screen}
+        image={require("../../images/dashboardPrint.png")}
+      />
+    );
   };
 
   // Restul logicii și a codului specific aplicației...
@@ -60,24 +94,27 @@ const ClinicDashboard = () => {
   return (
     <Fragment>
       <MainContainer>
-      <LinearGradient
-    colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
-    style={{flex:1}}
-  >
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            // backgroundColor: "#1F2628",
-            minHeight: screenHeight,
+        <LinearGradient
+          colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+          style={{
+            flex: 1,
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
-          <View style={styles.cardRow}>
-            {cardAnimations.map((_, index) => renderFlipCard(index))}
+          <GreetingBar />
+          <View
+            style={{
+              paddingTop: "23%",
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              minHeight: screenHeight,
+            }}
+          >
+            <View style={styles.cardRow}>
+              {cardData.map((card, index) => renderCard(card, index))}
+            </View>
           </View>
-        </ScrollView>
         </LinearGradient>
       </MainContainer>
     </Fragment>

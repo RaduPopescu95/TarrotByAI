@@ -5,6 +5,8 @@ import {
   Dimensions,
   Animated,
   ActivityIndicator,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,10 +17,14 @@ import FlipCard from "../../components/FlipCard/FlipCard";
 import { styles } from "./DashboardStyle";
 import { MainContainer } from "../../components/commonViews";
 import { LinearGradient } from "expo-linear-gradient";
+import GreetingBar from "../../components/UpperGreetingBar/GreetingBar";
+import CardLayout from "../../components/CardLayout/CardLayout";
+import CustomSpinner from "../../components/CustomSpinner/CustomSpinner";
+import { colors } from "../../utils/colors";
 
 const Dashboard2 = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
-  const initialAnimations = useRef(Array(4).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
+  const initialAnimations = useRef(Array(9).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
 
   useEffect(() => {
     const screenWidth = Dimensions.get("window").width;
@@ -60,24 +66,32 @@ const Dashboard2 = () => {
   return (
     <Fragment>
       <MainContainer>
-      <LinearGradient
-    colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
-    style={{flex:1}}
-  >
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "transparent",
-            minHeight: screenHeight,
+        <LinearGradient
+          colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+          style={{
+            flex: 1,
+            paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
-          <View style={styles.cardRow}>
-            {cardAnimations.map((_, index) => renderFlipCard(index))}
-          </View>
-        </ScrollView>
+          <GreetingBar />
+          {true ? (
+            <CustomSpinner size={74} color={colors.primary2} /> // Înlocuiește 'blue' cu culoarea dorită
+          ) : (
+            <ScrollView
+              contentContainerStyle={{
+                paddingBottom: 20,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "transparent",
+                minHeight: screenHeight,
+              }}
+            >
+              <CardLayout title="Titlul Secțiunii">
+                {cardAnimations.map((_, index) => renderFlipCard(index))}
+              </CardLayout>
+            </ScrollView>
+          )}
         </LinearGradient>
       </MainContainer>
     </Fragment>

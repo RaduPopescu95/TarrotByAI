@@ -1,4 +1,9 @@
 export const screenName = {
+  PersonalReadingDashboard: "PersonalReadingDashboard",
+  luckyNumberColor: "LuckyNumberColor",
+  luckyColor: "LuckyColor",
+  languageSelectScreen: "LanguageSelectScreen",
+  historyTarrot: "historyTarrot",
   clinicAllDoctorsCalendar: "ClinicAllDoctorsCalendar",
   patientInformation: "PatientInformation",
   addPhoneNumberToGuest: "addPhoneNumberToGuest",

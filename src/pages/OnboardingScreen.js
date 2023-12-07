@@ -42,28 +42,37 @@ import { doc, getDoc } from "firebase/firestore";
 import i18n from "../../i18n";
 import { handleGetGuestDetails } from "../utils/loginAsGuestHelper";
 import { getTimeFormat } from "../actions/comonActions";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../utils/colors";
+import {
+  H2fontBoldPrimary,
+  H6fontBoldPrimary,
+  H7fontBoldPrimary,
+  H7fontRegularLight,
+} from "../components/commonText";
+import { useAuth } from "../context/AuthContext";
 // import AppStackClinic from '../navigation/AppStackClinic';
 
 const { width, height } = Dimensions.get("window");
 
-const COLORS = { primary: "#282534", white: "#fff" };
+const COLORS = { primary: colors.primary2, white: "#fff" };
 
 const slides = [
   {
     id: "1",
-    image: require("../images/first.json"),
+    image: require("../images/tarotbyai1.png"),
     title: i18n.translate("onboardingFirstTitle"),
     subtitle: i18n.translate("onboardingFirstTitleMessage"),
   },
   {
     id: "2",
-    image: require("../images/second.json"),
+    image: require("../images/tarotbyai2.png"),
     title: i18n.translate("onboardingSecondTitle"),
     subtitle: i18n.translate("onboardingSecondTitleMessage"),
   },
   {
     id: "3",
-    image: require("../images/third.json"),
+    image: require("../images/tarotbyai3.png"),
     title: i18n.translate("onboardingThirdTitle"),
     subtitle: i18n.translate("onboardingThirdTitleMessage"),
   },
@@ -72,33 +81,39 @@ const slides = [
 const Slide = ({ item }) => {
   return (
     <View style={{ alignItems: "center" }}>
-      {/* <Image
-        source={item?.image}
-        style={{height: '75%', width, resizeMode: 'contain'}}
-      /> */}
-      <View
-        style={{
-          height: "65%",
-          width,
-          resizeMode: "contain",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <LottieView
-          autoPlay={false}
-          // ref={animation}
-          progress={0.5}
-          loop={false}
+      {/* Condiție pentru a verifica tipul fișierului și a alege între LottieView și Image */}
+      {item.fileType === "lottie" ? (
+        <View
           style={{
-            width: item.id === "1" ? 200 : 300,
-            height: item.id === "1" ? 200 : 300,
-            // backgroundColor: '#eee',
+            height: "auto",
+            width: "auto",
+            resizeMode: "contain",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          // Find more Lottie files at https://lottiefiles.com/featured
+        >
+          <LottieView
+            autoPlay={false}
+            progress={0.5}
+            loop={false}
+            style={{
+              width: 500,
+              height: 500,
+            }}
+            source={item.image}
+          />
+        </View>
+      ) : (
+        <Image
           source={item.image}
+          style={{
+            height: "75%",
+            width,
+            resizeMode: "contain",
+          }}
         />
-      </View>
+      )}
+      {/* Restul componentei rămâne neschimbat */}
       <View
         style={{
           width,
@@ -107,8 +122,10 @@ const Slide = ({ item }) => {
           justifyContent: "center",
         }}
       >
-        <Text style={styles.title}>{item?.title}</Text>
-        <Text style={styles.subtitle}>{item?.subtitle}</Text>
+        <H7fontRegularLight style={styles.subtitle}>
+          {i18n.translate("welcomeTo")}
+        </H7fontRegularLight>
+        <H2fontBoldPrimary>{i18n.translate("tarotByAi")}</H2fontBoldPrimary>
       </View>
     </View>
   );
@@ -116,163 +133,21 @@ const Slide = ({ item }) => {
 
 const OnboardingScreen = ({ navigation }) => {
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [userType, setUserType] = useState("");
-
-  const patientInfoDB = useSelector((state) => state.patientInfoData);
-  const { patientInformation, loading: patientLoading } = patientInfoDB;
-
-  const clinicInfoDB = useSelector((state) => state.clinicInfoData);
-  const { clinicInformation, loading } = clinicInfoDB;
 
   const auth = authentication;
   const isFocused = useIsFocused();
 
   const dispatch = useDispatch();
 
-  const animation = useRef(null);
-
-  // const getValueFunction = () => {
-  //   //function to get the value from AsyncStorage
-  //   AsyncStorage.getItem('userType').then(
-  //     (value) =>
-  //       //AsyncStorage returns a promise so adding a callback to get the value
-  //       setUserType(value)
-  //     //Setting the value in Text
-  //   );
-  // };
-
-  const handleChangeAuthState = async (user) => {
-    try {
-      const value = await AsyncStorage.getItem("userType");
-      if (value !== null) {
-        // value previously stored
-        // console.log('value...', value);
-        if (value === "Clinic") {
-          const docRef = doc(db, "Users", user.uid);
-          const docSnap = await getDoc(docRef);
-          dispatch(getClinicDoctors())
-            .then(() => {})
-            .then(() => {
-              dispatch(getClinicAppointments());
-            })
-            .then(() => {
-              dispatch(getClinicInfo()).then(() => {
-                if (docSnap.exists()) {
-                  if (!docSnap.data().hasProfile) {
-                    console.log("---second yes--CLINIC");
-
-                    if (docSnap.data().termsConditions) {
-                      console.log(
-                        "---patientInformation.termsConditions exists--"
-                      );
-                      if (!docSnap.data().termsConditions.isAccepted) {
-                        console.log(
-                          "---patientInformation.termsConditions not accepted--"
-                        );
-                        navigation.navigate(screenName.termConditionsClinic, {
-                          isAccepted: docSnap.data().termsConditions.isAccepted,
-                        });
-                      } else if (!docSnap.data().basicInfoData) {
-                        console.log("---not basic info data--");
-
-                        navigation.navigate(screenName.ClinicProfileSettings);
-                      }
-                    }
-                  } else {
-                    navigation.navigate(screenName.ClinicDashBoard);
-                  }
-                }
-              });
-            });
-
-          // navigation.navigate(AppStackClinic);
-          // console.log('user....testing2 clinic');
-        } else if (value === "Patient") {
-          const docRef = doc(db, "Users", user.uid);
-          const docSnap = await getDoc(docRef);
-
-          dispatch(getPatientInfo()).then(() => {
-            if (docSnap.exists()) {
-              if (!docSnap.data().hasProfile) {
-                console.log("---second yes--PATIENT");
-
-                if (docSnap.data().termsConditions) {
-                  console.log("---patientInformation.termsConditions exists--");
-                  console.log(docSnap.data().basicInfoData);
-                  if (!docSnap.data().termsConditions.isAccepted) {
-                    console.log(
-                      "---patientInformation.termsConditions not accepted--"
-                    );
-                    navigation.navigate(screenName.termConditionsPatients, {
-                      isAccepted: docSnap.data().termsConditions.isAccepted,
-                    });
-                  } else if (!docSnap.data().hasProfile) {
-                    console.log("---not basic info data--");
-
-                    navigation.navigate(screenName.ProfileSettingsPatient);
-                  }
-                }
-              } else {
-                navigation.navigate(screenName.PatientSearchDashboard);
-              }
-            }
-          });
-          // dispatch(getAllClinicsSearchDashboard()).then(() =>{
-
-          // });
-        }
-        // setUserType(value);
-        // return value;
-      }
-    } catch (e) {
-      // error reading valuezz
-      console.log("Error getting async storage info", e);
-    }
-  };
-
-  const handleNoUser = async () => {
-    setIsLoading(false);
-    const guestDetails = await handleGetGuestDetails();
-    console.log("guestDetails---------=");
-    console.log(guestDetails);
-    if (guestDetails) {
-      if (guestDetails.isGuest) {
-        navigation.navigate(screenName.SignInScreenPatient);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // handleSignOutFromSignIn()
-    // getValueFunction()
-
-    // console.log('asdadadad ONBOARD');
-
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        // console.log('is user...');
-        navigation.navigate(screenName.ClinicDashBoard);
-      } else {
-        navigation.navigate(screenName.SignInScreenClinic);
-      }
-    });
-
-    return unsubscribe;
-
-    // You can control the ref programmatically, for lottie rather than using autoPlay
-    // animation.current?.play();
-  }, [isFocused]);
-
   const ref = React.useRef();
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <View style={[styles.container, styles.horizontal]}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
 
   const updateCurrentSlideIndex = (e) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
@@ -339,21 +214,19 @@ const OnboardingScreen = ({ navigation }) => {
               }}
             >
               <TouchableOpacity
-                style={[styles.btnTwo, { backgroundColor: "white" }]}
-                onPress={() => navigation.replace("SignInScreenClinic")}
+                style={[styles.btnTwo, { backgroundColor: colors.primary2 }]}
+                onPress={() =>
+                  navigation.replace(screenName.languageSelectScreen)
+                }
               >
                 <Text
-                  style={{ fontWeight: "bold", fontSize: 15, color: "black" }}
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 15,
+                    color: colors.secondary2,
+                  }}
                 >
                   {i18n.translate("clinicLoginRedirect")}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.btnTwo}
-                onPress={() => navigation.replace("SignInScreenPatient")}
-              >
-                <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-                  {i18n.translate("patientLoginRedirect")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -364,7 +237,7 @@ const OnboardingScreen = ({ navigation }) => {
                 style={[
                   styles.btn,
                   {
-                    borderColor: COLORS.white,
+                    borderColor: colors.primary2,
                     borderWidth: 1,
                     backgroundColor: "transparent",
                   },
@@ -375,7 +248,7 @@ const OnboardingScreen = ({ navigation }) => {
                   style={{
                     fontWeight: "bold",
                     fontSize: 15,
-                    color: COLORS.white,
+                    color: colors.primary2,
                   }}
                 >
                   {i18n.translate("skip")}
@@ -391,6 +264,7 @@ const OnboardingScreen = ({ navigation }) => {
                   style={{
                     fontWeight: "bold",
                     fontSize: 15,
+                    color: colors.secondary2,
                   }}
                 >
                   {i18n.translate("nextOnboard")}
@@ -405,11 +279,7 @@ const OnboardingScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ImageBackground
-        source={require("../images/onboardingBG.jpeg")}
-        resizeMode="cover"
-        style={{ height: "100%", width: "100%" }}
-      >
+      <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
         {/* <StatusBar backgroundColor={COLORS.primary} /> */}
         <FlatList
           ref={ref}
@@ -422,14 +292,21 @@ const OnboardingScreen = ({ navigation }) => {
           renderItem={({ item }) => <Slide item={item} />}
         />
         <Footer />
-      </ImageBackground>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+
+    // Alte stiluri necesare pentru a pozitiona gradientul după cum este necesar
+  },
   subtitle: {
-    color: COLORS.white,
+    color: colors.primary2,
     fontSize: 13,
     marginTop: 10,
     maxWidth: "70%",
@@ -437,7 +314,7 @@ const styles = StyleSheet.create({
     lineHeight: 23,
   },
   title: {
-    color: COLORS.white,
+    color: colors.primary2,
     fontSize: 22,
     fontWeight: "bold",
     marginTop: 20,
@@ -460,14 +337,14 @@ const styles = StyleSheet.create({
     height: 50,
     width: 150,
     borderRadius: 5,
-    backgroundColor: "#fff",
+    backgroundColor: colors.primary2,
     justifyContent: "center",
     alignItems: "center",
   },
   btnTwo: {
     // flex: 1,
     height: 50,
-    width: 150,
+    width: "80%",
     borderRadius: 5,
     backgroundColor: "#fff",
     justifyContent: "center",

@@ -1,4 +1,4 @@
-import {authentication, db, storage} from '../../firebase';
+import { authentication, db, storage } from "../../firebase";
 // import { collection, query, where } from "firebase/firestore";
 import {
   doc,
@@ -12,58 +12,23 @@ import {
   deleteDoc,
   updateDoc,
   arrayRemove,
-} from 'firebase/firestore';
-import moment from 'moment';
+} from "firebase/firestore";
 
-import {ref, getDownloadURL, listAll, deleteObject} from 'firebase/storage';
+import { ref, getDownloadURL, listAll, deleteObject } from "firebase/storage";
+import { handleDeleteAccount } from "./authUtils";
 
 const auth = authentication;
 
-export const deleteDoctorFromClinic = async (doctorId, doctorImg) => {
-  console.log('---------------');
-  console.log('doctorId....', doctorId);
-
+export const deleteUserData = async () => {
+  console.log("deleting...user data from firebase...");
   try {
-    //DELETE IMAGE OF DOCTOR FROM STORAGE
-    let imageRef = ref(storage, `images/clinics/${auth.currentUser.uid}/doctors/${doctorImg}`);
-    deleteObject(imageRef).then(() => {
-      // File deleted successfully
-      console.log("File deleted successfully from storage...")
-    }).catch((error) => {
-      console.log("Error ON File deleted from storage...", error)
-      // Uh-oh, an error occurred!
-    });
-
     // DELETE DOC FROM DOCTOR COLLECTION AND SUBCOLLECTIO
     await deleteDoc(
-      doc(db, 'Users', auth.currentUser.uid, 'Doctors', doctorId),
-    );
-    await deleteDoc(
-      doc(db, 'Doctors', doctorId),
-    );
+      doc(db, "Users", auth.currentUser.uid, auth.currentUser.uid)
+    ).then(() => {
+      handleDeleteAccount();
+    });
   } catch (err) {
-    console.log('error deleting doctor', err);
+    console.log("error deleting doctor", err);
   }
-};
-
-
-export const deletePatientFromClinic = async (patientData) => {
-  console.log('---------------');
-  console.log('patientData....', patientData.phoneNumber);
-
-  try {
-
-    if(patientData.isUnregistered){
-   
-
-      await deleteDoc(doc(db, "Users", auth.currentUser.uid, "clinicsPatientsUnregistered", patientData.phoneNumber));
-    } else {
-      
-      // await deleteDoc(doc(db, "Userds", auth.currentUser.uid, "clinicsPatientsUnregistered", patientData.phoneNumber));
-    }
-
-  } catch (err) {
-    console.log('error deleting patient', err);
-  }
-
 };

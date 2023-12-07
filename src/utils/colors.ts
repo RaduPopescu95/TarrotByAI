@@ -15,7 +15,9 @@ export const colors = {
   lightGray: "#858585",
   lightGrayOpac: "rgba(133, 133, 133, 0.1)",
   facebook: "#944273",
-  primary2: "#FFD966",
+  primary2: "#EBDCAE",
+  secondary2: "#27282A",
+  secondary2rgba: "rgba(39, 40, 42, 0.95)",
   facebookLink: "#2F5597",
   facebookOpac: "rgba(47, 85, 151, 0.1)",
   google: "#DD4B39",
@@ -30,4 +32,6 @@ export const colors = {
   grayText: "#9e9e9e",
   ratingGray: "#D5D5D5",
   imageGray: "#CFCFCF",
+  lightSelect: "#7e7070",
+  darkSelect: "#453f3f",
 };

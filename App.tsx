@@ -4,7 +4,13 @@ import { screenName } from "./src/utils/screenName";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 import { Platform, View, ImageBackground, TextComponent } from "react-native";
-import { Button, Card, Paragraph, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Card,
+  Paragraph,
+  Text,
+} from "react-native-paper";
 import store from "./Store";
 
 import Geocoder from "react-native-geocoding";
@@ -14,7 +20,7 @@ import * as Device from "expo-device";
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import { I18n } from "i18n-js";
+
 import { langObj } from "./src/utils/labels";
 import { getGuestLoginDetails } from "./src/actions/patientActions";
 import {
@@ -27,10 +33,19 @@ import Purchases, { PurchasesOffering } from "react-native-purchases";
 import Bugsnag from "@bugsnag/expo";
 import { Mode } from "react-hook-form";
 import i18n from "./i18n";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  NavigationContext,
+  useNavigation,
+} from "@react-navigation/native";
 import { ErrorView } from "./src/components/ErrorView";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HourClockProvider } from "./src/context/HourClockContext";
+import { AuthProvider, useAuth } from "./src/context/AuthContext";
+import { NavBarVisibilityProvider } from "./src/context/NavbarVisibilityContext";
+import { NavigationProvider } from "./src/context/NavigationContext";
+import { LanguageProvider } from "./src/context/LanguageContext";
+import { ApiDataProvider } from "./src/context/ApiContext";
 
 // Start BugSnag first...
 Bugsnag.start();
@@ -120,6 +135,7 @@ async function registerForPushNotificationsAsync() {
 const App = () => {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
+  const [languageLoaded, setLanguageLoaded] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -220,6 +236,20 @@ const App = () => {
 
     // COMMENTED FOR WARNING
 
+    const loadLanguage = async () => {
+      try {
+        const savedLanguage = await AsyncStorage.getItem("@userLanguage");
+        if (savedLanguage !== null) {
+          i18n.locale = savedLanguage;
+        }
+      } catch (e) {
+        console.error("Failed to load the language from storage");
+      }
+      setLanguageLoaded(true);
+    };
+
+    loadLanguage();
+
     // handleDevicePushTokeNotification();
 
     registerForPushNotificationsAsync().then((token) =>
@@ -252,21 +282,34 @@ const App = () => {
     };
   }, []);
 
-  const screen = screenName.SignInScreenClinic;
-
   const Stack = createNativeStackNavigator();
+
+  if (!languageLoaded) {
+    return (
+      // Render a loading screen or spinner
+      <ActivityIndicator />
+    );
+  }
   return (
     <>
-      <HourClockProvider>
-        <NavigationContainer>
-          <StatusBar style="light" />
-          <Provider store={store}>
-            <MenuProvider>
-              <RootNavigation initialRouteName={screen} />
-            </MenuProvider>
-          </Provider>
-        </NavigationContainer>
-      </HourClockProvider>
+      <ApiDataProvider>
+        <LanguageProvider>
+          <NavigationProvider>
+            <NavBarVisibilityProvider>
+              <AuthProvider>
+                <NavigationContainer>
+                  <StatusBar style="light" />
+                  <Provider store={store}>
+                    <MenuProvider>
+                      <RootNavigation />
+                    </MenuProvider>
+                  </Provider>
+                </NavigationContainer>
+              </AuthProvider>
+            </NavBarVisibilityProvider>
+          </NavigationProvider>
+        </LanguageProvider>
+      </ApiDataProvider>
     </>
   );
 };

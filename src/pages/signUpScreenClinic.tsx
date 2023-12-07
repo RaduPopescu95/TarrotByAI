@@ -121,13 +121,8 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
     console.log(detaila);
     console.log(selectedCountry);
 
-    let str = detaila.mobileNo.replace(/\s/g, "");
-
-    let completePhoneNumber = selectedCountry.callingCode + " " + str;
-    console.log(completePhoneNumber);
-
-    console.log("START");
-    console.log("START");
+    let firstName = detaila.firstName;
+    let lastName = detaila.lastName;
     createUserWithEmailAndPassword(auth, detaila.email, detaila.password)
       .then((userCredentials) => {
         setTimeout(async () => {
@@ -137,17 +132,9 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
           const documentId = user.uid;
           const value = {
             owner_uid: user.uid,
-            phoneNumber: completePhoneNumber,
+            firstName,
+            lastName,
             email: user.email,
-            isClinic: true,
-            hasProfile: false,
-            clinicAppointments: [],
-            clinicAppointmentsUnregistered: [],
-            clinicsPatients: [],
-            clinicsPatientsUnregistered: [],
-            clinicReviews: [],
-            chat: [],
-            termsConditions: { text: "", isAccepted: false },
           };
           setDoc(doc(db, collectionId, documentId), value);
           console.log("success PASS");

@@ -12,6 +12,7 @@ import { Alert } from "react-native";
 import { authentication } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import i18n from "../../i18n";
+import { deleteUserData } from "./deleteFirebaseData";
 
 const auth = authentication;
 
@@ -102,15 +103,11 @@ export const handleLogout = async () => {
 
 export const handleDeleteAccount = async () => {
   try {
-    await deleteUser(auth.currentUser);
-
-    Alert.alert(
-      "Account Deleted",
-      "Your account has been successfully deleted."
-    );
+    await deleteUser(auth.currentUser).then(() => {
+      console.log("deleted successfuly...auth account");
+    });
   } catch (error) {
-    console.error(error);
-    Alert.alert("Error", "Failed to delete account.");
+    console.error("error delete user auth or firestore...", error);
   }
 };
 
