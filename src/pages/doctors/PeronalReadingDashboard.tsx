@@ -1,14 +1,12 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import {
-  View,
   ScrollView,
   Dimensions,
   Animated,
-  Platform,
   StatusBar,
+  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
 import FlipCard from "../../components/FlipCard/FlipCard";
 import GreetingBar from "../../components/UpperGreetingBar/GreetingBar";
 import CardLayout from "../../components/CardLayout/CardLayout";
@@ -20,61 +18,90 @@ import { MainContainer } from "../../components/commonViews";
 const PersonalReadingDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
   const initialAnimations = useRef(Array(9).fill(null)).current;
-  const { fetchData, data, loading, error } = useApiData();
-  const [areCardsFlipped, setAreCardsFlipped] = useState(false);
-  const [completedEntryAnimations, setCompletedEntryAnimations] = useState(0);
+  const { fetchData, data, loading, triggerExitAnimation } = useApiData();
 
+  const [shouldFlip, setShouldFlip] = useState(false);
+
+  // Initialize card animations and animate cards on mount and data change
   useEffect(() => {
     const screenWidth = Dimensions.get("window").width;
-    if (initialAnimations.every((elem) => elem === null)) {
-      initialAnimations.forEach((_, index) => {
-        initialAnimations[index] = new Animated.Value(screenWidth);
-      });
-      setCardAnimations(initialAnimations);
-      animateCard(0);
-    }
-  }, []);
+    const newAnimations = initialAnimations.map(
+      () => new Animated.Value(-screenWidth)
+    );
+    setCardAnimations(newAnimations);
 
-  useEffect(() => {
-    if (completedEntryAnimations === initialAnimations.length) {
-      // Toate animațiile de intrare sunt completate, declanșează flip-ul
-      setAreCardsFlipped(true);
-    }
-  }, [completedEntryAnimations]);
-
-  const animateCard = (index) => {
-    if (index < initialAnimations.length) {
-      Animated.timing(initialAnimations[index], {
+    // Sequentially animate cards into view
+    newAnimations.forEach((anim, index) => {
+      Animated.timing(anim, {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
+        delay: index * 100,
       }).start(() => {
-        setCompletedEntryAnimations((count) => count + 1);
-        animateCard(index + 1);
+        if (index === newAnimations.length - 1) {
+          console.log("test");
+          setShouldFlip(true);
+        }
+      });
+    });
+  }, [data]);
+
+  // Animate cards into view
+  //   const animateCards = () => {
+  //     cardAnimations.forEach((anim, index) => {
+  //       Animated.timing(anim, {
+  //         toValue: 0,
+  //         duration: 300,
+  //         useNativeDriver: true,
+  //         delay: index * 100, // Delay each card animation for sequential entry
+  //       }).start(() => {
+  //         if (index === cardAnimations.length - 1) {
+  //           setShouldFlip(true); // Trigger flip when all cards have entered
+  //         }
+  //       });
+  //     });
+  //   };
+
+  // Animate cards out of view
+  useEffect(() => {
+    if (triggerExitAnimation) {
+      cardAnimations.forEach((anim, index) => {
+        Animated.timing(anim, {
+          toValue: -Dimensions.get("window").width,
+          duration: 300,
+          useNativeDriver: true,
+          delay: index * 100, // Delay each card animation for sequential exit
+        }).start(() => {
+          if (index === cardAnimations.length - 1) {
+            console.log("multiple here...triggerExitAnimation");
+            fetchData(); // Fetch new data when all cards have exited
+          }
+        });
       });
     }
-  };
+  }, [triggerExitAnimation, cardAnimations]);
+
+  // Reset flip state after fetching new data
+  useEffect(() => {
+    if (!loading && data) {
+      setShouldFlip(false);
+    }
+  }, [data, loading]);
 
   const renderFlipCard = (item, index) => {
-    if (!cardAnimations[index]) {
-      return null;
-    }
-
+    if (!cardAnimations[index]) return null;
     const animatedStyle = {
       transform: [{ translateX: cardAnimations[index] }],
     };
-
     return (
       <FlipCard
         item={item}
         key={index}
         style={animatedStyle}
-        shouldFlip={areCardsFlipped}
+        shouldFlip={shouldFlip}
       />
     );
   };
-
-  const screenHeight = Dimensions.get("window").height;
 
   return (
     <Fragment>
@@ -97,11 +124,11 @@ const PersonalReadingDashboard = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 backgroundColor: "transparent",
-                minHeight: screenHeight,
+                minHeight: Dimensions.get("window").height,
               }}
             >
               <CardLayout title="Titlul Secțiunii">
-                {data && data.map((item, index) => renderFlipCard(item, index))}
+                {data && data.map(renderFlipCard)}
               </CardLayout>
             </ScrollView>
           )}

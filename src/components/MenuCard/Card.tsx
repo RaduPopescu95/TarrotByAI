@@ -43,10 +43,10 @@ const styles = StyleSheet.create({
   container: {
     height: Dimensions.get("window").width / 3,
     width: Dimensions.get("window").width / 2.5,
-    borderRadius: 5,
+    // borderRadius: 5,
     overflow: "hidden",
-    borderColor: colors.primary2,
-    borderWidth: 3,
+    // borderColor: colors.primary2,
+    // borderWidth: 3,
     elevation: 4,
     margin: 13,
   },

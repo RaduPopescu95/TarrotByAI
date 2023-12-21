@@ -119,3 +119,42 @@ export const handleResetPassword = async (email) => {
     console.error(error);
   }
 };
+
+// firebaseErrors.js
+
+// handleFirebaseAuthError.js
+export const handleFirebaseAuthError = (error) => {
+  let message = "";
+  switch (error.code) {
+    case "auth/invalid-email":
+      message = i18n.translate("firebaseErrorInvalidEmail");
+      break;
+    case "auth/email-already-in-use":
+      message = i18n.translate("firebaseErrorEmailAlreadyInUse");
+      break;
+    case "auth/weak-password":
+      message = i18n.translate("firebaseErrorWeakPassword");
+      break;
+    case "auth/user-not-found":
+      message = i18n.translate("firebaseErrorUserNotFound");
+      break;
+    case "auth/user-disabled":
+      message = i18n.translate("firebaseErrorUserDisabled");
+      break;
+    case "auth/wrong-password":
+      message = i18n.translate("firebaseErrorWrongPassword");
+      break;
+    case "auth/too-many-requests":
+      message = i18n.translate("firebaseErrorTooManyRequests");
+      break;
+    case "auth/operation-not-allowed":
+      message = i18n.translate("firebaseErrorOperationNotAllowed");
+      break;
+    case "auth/network-request-failed":
+      message = i18n.translate("firebaseErrorNetworkRequestFailed");
+      break;
+    default:
+      message = i18n.translate("firebaseErrorUnknown");
+  }
+  return message;
+};

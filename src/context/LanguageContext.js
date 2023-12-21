@@ -10,6 +10,7 @@ export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState("ro");
 
   const changeLanguage = async (newLanguage) => {
+    console.log("newLanguage...", newLanguage);
     setLanguage(newLanguage);
   };
 
@@ -27,6 +28,11 @@ export const LanguageProvider = ({ children }) => {
 
     loadLanguage();
   }, []);
+
+  useEffect(() => {
+    // ... codul existent ...
+    console.log("Language in Context:", language);
+  }, [language]);
 
   return (
     <LanguageContext.Provider value={{ language, changeLanguage }}>

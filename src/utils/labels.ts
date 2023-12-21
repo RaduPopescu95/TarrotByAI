@@ -1,5 +1,24 @@
 export const langObj = {
   en: {
+    motivationalQuoteOfTheDay: "Motivational quote of the day",
+    luckyColorOfTheDay: "Culoarea norocoasă a zilei",
+    luckyHours: "Lucky Hours",
+    motivationalQuotes: "Motivational Quotes",
+    //AUTH
+    firebaseErrorInvalidEmail: "The email address is invalid.",
+    firebaseErrorEmailAlreadyInUse:
+      "An account already exists with this email address.",
+    firebaseErrorWeakPassword: "The password is too weak.",
+    firebaseErrorUserNotFound: "No user found with this email address.",
+    firebaseErrorUserDisabled: "This user has been disabled.",
+    firebaseErrorWrongPassword: "Incorrect password. Please try again.",
+    firebaseErrorTooManyRequests: "Too many requests. Please try again later.",
+    firebaseErrorOperationNotAllowed:
+      "Operation not allowed. Please contact support.",
+    firebaseErrorNetworkRequestFailed:
+      "Network error. Please check your internet connection.",
+    firebaseErrorUnknown: "An unknown error occurred. Please try again.",
+    //AUTH
     personalReading: "Personalized Reading",
     futureReading: "Future Reading",
     luckyNumber: "Lucky Number",
@@ -51,6 +70,30 @@ export const langObj = {
     clinicLoginRedirect: "Continue",
   },
   ro: {
+    motivationalQuoteOfTheDay: "Citat motivațional al zilei",
+    luckyColorOfTheDay: "Culoarea norocoasă a zilei",
+    luckyHours: "Ore norocoase",
+    motivationalQuotes: "Citate Motivationale",
+    //AUTH
+    firebaseErrorInvalidEmail: "Adresa de email introdusă este invalidă.",
+    firebaseErrorEmailAlreadyInUse:
+      "Există deja un cont asociat cu această adresă de email.",
+    firebaseErrorWeakPassword: "Parola introdusă este prea slabă.",
+    firebaseErrorUserNotFound:
+      "Nu s-a găsit niciun utilizator cu această adresă de email.",
+    firebaseErrorUserDisabled: "Acest utilizator a fost dezactivat.",
+    firebaseErrorWrongPassword:
+      "Parolă incorectă. Vă rugăm să încercați din nou.",
+    firebaseErrorTooManyRequests:
+      "Prea multe solicitări. Vă rugăm să încercați din nou mai târziu.",
+    firebaseErrorOperationNotAllowed:
+      "Operațiunea nu este permisă. Vă rugăm să contactați suportul.",
+    firebaseErrorNetworkRequestFailed:
+      "Eroare de rețea. Vă rugăm să verificați conexiunea la internet.",
+    firebaseErrorUnknown:
+      "A apărut o eroare necunoscută. Vă rugăm să încercați din nou.",
+    //AUTH
+
     personalReading: "Citire personalizată",
     futureReading: "Citire de viitor",
     luckyNumber: "Numărul norocos",
@@ -63,8 +106,8 @@ export const langObj = {
     password: "Parolă",
     forgotPassword: "Ți-ai uitat parola?",
     dntHaveAccount: "Nu ai un cont?",
-    signUp: "Înregistrează-te",
-    loginNow: "Autentifică-te",
+    signUp: "Înregistrare",
+    loginNow: "Autentificare",
     alreadyAccount: "Ai deja un cont?",
     registerLogin: "Intră în cont",
     register: "Înregistrare",
@@ -102,6 +145,30 @@ export const langObj = {
     clinicLoginRedirect: "Continuă",
   },
   es: {
+    motivationalQuoteOfTheDay: "Frase motivacional del día",
+    luckyColorOfTheDay: "Color de la suerte del día",
+    luckyHours: "Horas de suerte",
+    motivationalQuotes: "Citas Motivacionales",
+    //AUTH
+    firebaseErrorInvalidEmail:
+      "La dirección de correo electrónico es inválida.",
+    firebaseErrorEmailAlreadyInUse:
+      "Ya existe una cuenta con esta dirección de correo electrónico.",
+    firebaseErrorWeakPassword: "La contraseña es demasiado débil.",
+    firebaseErrorUserNotFound:
+      "No se encontró ningún usuario con esta dirección de correo electrónico.",
+    firebaseErrorUserDisabled: "Este usuario ha sido deshabilitado.",
+    firebaseErrorWrongPassword:
+      "Contraseña incorrecta. Por favor, inténtalo de nuevo.",
+    firebaseErrorTooManyRequests:
+      "Demasiadas solicitudes. Por favor, inténtalo de nuevo más tarde.",
+    firebaseErrorOperationNotAllowed:
+      "Operación no permitida. Por favor, contacta con el soporte.",
+    firebaseErrorNetworkRequestFailed:
+      "Error de red. Por favor, verifica tu conexión a internet.",
+    firebaseErrorUnknown:
+      "Ocurrió un error desconocido. Por favor, inténtalo de nuevo.",
+    //AUTH
     personalReading: "Lectura personalizada",
     futureReading: "Lectura del futuro",
     luckyNumber: "Número de la suerte",

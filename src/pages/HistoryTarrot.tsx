@@ -14,6 +14,7 @@ import CustomLoader from "../components/customLoader";
 import { LinearGradient } from "expo-linear-gradient";
 import GreetingBar from "../components/UpperGreetingBar/GreetingBar";
 import ImageRow from "../components/HistoryRow/HistoryRow";
+import { colors } from "../utils/colors";
 
 export default function HistoryTarrot() {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,11 @@ export default function HistoryTarrot() {
         <MainContainer>
           <CustomLoader isLoading={isLoading} />
           <LinearGradient
-            colors={["#000000", "#434343"]}
+            colors={[
+              colors.gradientLogin1,
+              colors.gradientLogin2,
+              colors.gradientLogin3,
+            ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
             <GreetingBar isGoBack={true} />

@@ -160,14 +160,7 @@ const SignInScreenClinic: React.FC<Props> = ({
     // Use the replace method with a regular expression to remove white spaces
     const emailWithoutSpace = detaila.email.replace(/\s/g, "");
     detaila.email = emailWithoutSpace;
-
-    // setIsLoading(true)
-    let expoToken;
     try {
-      // console.log("sds");
-      // expoToken = await registerForPushNotificationsAsync()
-      // console.log("Sss")
-      // console.log(expoToken);
     } catch (err) {
       console.log("errror expo", err);
     }
@@ -177,10 +170,10 @@ const SignInScreenClinic: React.FC<Props> = ({
         const userType = await retrieveTypeOfUser(userCredentials.user.uid);
         console.log("test here....");
         if (userCredentials.user.uid) {
-          console.log("test here....with yes");
-          handleLoginAsGuest(false, true).then(() => {
-            dispatch(getGuestLoginDetails());
-          });
+          // console.log("test here....with yes");
+          // handleLoginAsGuest(false, true).then(() => {
+          //   dispatch(getGuestLoginDetails());
+          // });
         }
 
         console.log("userType...", userType);
@@ -269,7 +262,12 @@ const SignInScreenClinic: React.FC<Props> = ({
         <MainContainer>
           <CustomLoader isLoading={isLoading} />
           <LinearGradient
-            colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+            colors={[
+              colors.gradientLogin1,
+              colors.gradientLogin2,
+              colors.gradientLogin2,
+              colors.gradientLogin3,
+            ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
             <KeyboardAvoidingView

@@ -8,26 +8,27 @@ import {
   StyleSheet,
 } from "react-native";
 import i18n from "../../../i18n";
+import { useNavigation } from "@react-navigation/native"; // Importă hook-ul pentru navigare
+import { screenName } from "../../utils/screenName";
 
-const FlipCard = ({ item, style, shouldFlip }) => {
+const FlipCard = ({ item, style, shouldFlip, isFuture, categoryName }) => {
   const flipAnim = useRef(new Animated.Value(0)).current;
-  let flipped = false;
+  const navigation = useNavigation(); // Obține obiectul de navigare
 
   const flipCard = () => {
-    if (!flipped) {
-      Animated.spring(flipAnim, {
-        toValue: 180,
-        friction: 8,
-        tension: 10,
-        useNativeDriver: true,
-      }).start();
-      flipped = true;
-    }
+    Animated.spring(flipAnim, {
+      toValue: 180,
+      friction: 8,
+      tension: 10,
+      useNativeDriver: true,
+    }).start();
   };
 
   useEffect(() => {
     if (shouldFlip) {
       flipCard();
+    } else {
+      flipAnim.setValue(0); // Reset the flip animation
     }
   }, [shouldFlip]);
 
@@ -53,23 +54,41 @@ const FlipCard = ({ item, style, shouldFlip }) => {
     ],
   };
 
+  // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
+  const navigateToPersonalizedReading = () => {
+    console.log(item.image.finalUri);
+    if (isFuture) {
+      navigation.navigate(screenName.FutureReading, {
+        item,
+      });
+    } else {
+      navigation.navigate("PersonalizedReading", { item: { url: item.url } });
+    }
+    console.log(item.url);
+  };
+
   return (
     <TouchableWithoutFeedback onPress={flipCard}>
       <Animated.View style={[styles.container, style]}>
         <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
           <ImageBackground
-            source={require("../../images/dashboardPrint.png")}
-            style={styles.buttonStyle}
+            source={require("../../../assets/card-back.png")}
+            style={styles.cardImage}
+            resizeMode="cover"
           />
-          <Text style={styles.textStyle}>
-            {i18n.translate("upcomingAppointments")}
-          </Text>
         </Animated.View>
-        <Animated.View
-          style={[styles.flipCard, backAnimatedStyle, styles.flipCardBack]}
-        >
-          {/* Conținutul din spatele cardului */}
-        </Animated.View>
+        <TouchableWithoutFeedback onPress={navigateToPersonalizedReading}>
+          {/* Zonele de atingere pentru a naviga la PersonalizedReading */}
+          <Animated.View
+            style={[styles.flipCard, backAnimatedStyle, styles.flipCardBack]}
+          >
+            <ImageBackground
+              source={item.image.finalUri ? { uri: item.image.finalUri } : null}
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
+          </Animated.View>
+        </TouchableWithoutFeedback>
       </Animated.View>
     </TouchableWithoutFeedback>
   );
@@ -93,6 +112,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     position: "absolute",
   },
+  cardImage: {
+    height: "100%",
+    width: "100%", // Asigurați-vă că acesta este 100% pentru a acoperi întreaga suprafață a cartonașului
+    justifyContent: "center",
+    alignItems: "center",
+  },
   flipCard: {
     width: "100%",
     height: "100%",
@@ -110,7 +135,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
   },
-  // Alte stiluri necesare
+  // Other necessary styles
 });
 
 export default FlipCard;

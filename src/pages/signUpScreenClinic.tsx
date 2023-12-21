@@ -68,6 +68,10 @@ import {
 import CustomLoader from "../components/customLoader";
 import { TouchableWithoutFeedback } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import axios from "axios";
+import { Snackbar } from "react-native-paper";
+import SnackBar from "../components/SnackBar";
+import { handleFirebaseAuthError } from "../utils/authUtils";
 
 interface Props extends GeneralProps {
   route: Route<string, object | undefined>;
@@ -95,34 +99,17 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
 
   // const [registerType, setRegisterType] = useState(route.params.item)
   const [registerType, setRegisterType] = useState("email");
+  const [message, setMessage] = useState("email");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSnackback, setShowSnackback] = useState(false);
 
   let pwd = watch("password");
   const auth = authentication;
 
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem("userType", value);
-    } catch (e) {
-      // saving error
-    }
-  };
-
-  const [selectedCountry, setSelectedCountry] = useState<undefined | ICountry>(
-    getCountryByCca2("RO")
-  );
-
-  function handleSelectedCountry(country: ICountry) {
-    setSelectedCountry(country);
-  }
-
-  const onsubmit = (detaila) => {
+  const onSubmit = (detaila) => {
     setIsLoading(true);
     console.log(detaila);
-    console.log(selectedCountry);
 
-    let firstName = detaila.firstName;
-    let lastName = detaila.lastName;
     createUserWithEmailAndPassword(auth, detaila.email, detaila.password)
       .then((userCredentials) => {
         setTimeout(async () => {
@@ -132,9 +119,11 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
           const documentId = user.uid;
           const value = {
             owner_uid: user.uid,
-            firstName,
-            lastName,
-            email: user.email,
+            first_name: detaila.firstName,
+            last_name: detaila.lastName,
+            email: detaila.email,
+            password: detaila.password,
+            // Adaugă orice alte câmpuri necesare
           };
           setDoc(doc(db, collectionId, documentId), value);
           console.log("success PASS");
@@ -142,32 +131,18 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
       })
       .then(() => {
         // storeData('Clinic');
-        handleSignOut(navigation, false);
       })
       .then(() => {
         // navigation.navigate(screenName.SignInScreenClinic);
       })
       .catch((error) => {
-        Alert.alert(
-          "User already in use",
-          "Your e-mail is already in use. Please try again with another e-mail or log in into an existing account",
-          [
-            {
-              text: "Try Again",
-              onPress: () => console.log("Try Again pressed"),
-              style: "cancel",
-            },
-          ]
-        );
-
-        console.log(error);
+        const errorMessage = handleFirebaseAuthError(error);
+        // Aici puteți folosi errorMessage pentru a afișa un snackbar sau un alert
+        setShowSnackback(true);
+        setMessage(errorMessage);
       });
 
     setIsLoading(false);
-  };
-
-  const onChange = (password, score, { label, labelColor, activeBarColor }) => {
-    console.log(password, score, { label, labelColor, activeBarColor });
   };
 
   return (
@@ -176,7 +151,11 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
         <MainContainer>
           <CustomLoader isLoading={isLoading} />
           <LinearGradient
-            colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+            colors={[
+              colors.gradientLogin1,
+              colors.gradientLogin2,
+              colors.gradientLogin3,
+            ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
             <KeyboardAvoidingView
@@ -327,7 +306,7 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
 
                 <Button
                   disabled={false}
-                  funCallback={handleSubmit(onsubmit)}
+                  funCallback={handleSubmit(onSubmit)}
                   label={i18n.translate("register")}
                   success={true}
                   bgColor={colors.primary2}
@@ -358,6 +337,13 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
                 </View>
               </View>
             </KeyboardAvoidingView>
+            <SnackBar
+              showSnackBar={showSnackback}
+              setShowSnackback={setShowSnackback}
+              message={message}
+              bottom={2}
+              screen={screenName.SignInScreenClinic}
+            />
           </LinearGradient>
         </MainContainer>
       </Fragment>

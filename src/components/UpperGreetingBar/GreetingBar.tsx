@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Modal,
   SafeAreaView,
-  StatusBar,
+  ScrollView,
 } from "react-native";
 import { Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,50 +18,94 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
 
+const languages = [
+  {
+    name: "Romanian",
+    code: "ro",
+    flag: require("../../../assets/flags/romania.png"),
+  },
+  {
+    name: "English",
+    code: "en",
+    flag: require("../../../assets/flags/english.png"),
+  },
+  {
+    name: "Spanish",
+    code: "es",
+    flag: require("../../../assets/flags/spanish.png"),
+  },
+  {
+    name: "Bulgarian",
+    code: "bg",
+    flag: require("../../../assets/flags/bulgaria.png"),
+  },
+  {
+    name: "Czech",
+    code: "cs",
+    flag: require("../../../assets/flags/czech.png"),
+  },
+  {
+    name: "German",
+    code: "de",
+    flag: require("../../../assets/flags/germany.png"),
+  },
+  {
+    name: "Greek",
+    code: "el",
+    flag: require("../../../assets/flags/greece.png"),
+  },
+  {
+    name: "French",
+    code: "fr",
+    flag: require("../../../assets/flags/france.png"),
+  },
+  {
+    name: "Croatian",
+    code: "hr",
+    flag: require("../../../assets/flags/croatia.png"),
+  },
+  {
+    name: "Hindi",
+    code: "hi",
+    flag: require("../../../assets/flags/india.png"),
+  },
+  {
+    name: "Italian",
+    code: "it",
+    flag: require("../../../assets/flags/italy.png"),
+  },
+  {
+    name: "Polish",
+    code: "pl",
+    flag: require("../../../assets/flags/poland.png"),
+  },
+  {
+    name: "Indonesian",
+    code: "id",
+    flag: require("../../../assets/flags/indonesia.png"),
+  },
+  {
+    name: "Slovak",
+    code: "sk",
+    flag: require("../../../assets/flags/slovakia.png"),
+  },
+  // Adăugați aici alte limbi și steaguri, dacă este necesar
+];
+
 const GreetingBar = ({ isGoBack }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState("Romanian"); // Inițializează cu limba implicită
+  const [currentLanguage, setCurrentLanguage] = useState("Romanian");
   const { currentUser, userData } = useAuth();
   const { language, changeLanguage } = useLanguage();
 
-  const openModal = () => {
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  const languageHandle = (language) => {
-    switch (currentLanguage) {
-      case "Romanian":
-        return "ro";
-      case "English":
-        return "en";
-      case "Spanish":
-        return "es";
-      default:
-        return "en";
-    }
-  };
-
-  const handleLanguageSelect = (language) => {
-    const lang = languageHandle(language);
-    setCurrentLanguage(lang);
-    console.log(`${language} Selected`);
-    const l = handleLanguagei18n(language);
-    changeLanguage(l);
-    closeModal();
-  };
-
   useEffect(() => {
-    console.log("useEffect..");
     const loadLanguage = async () => {
       try {
         const savedLanguage = await AsyncStorage.getItem("@userLanguage");
         if (savedLanguage) {
-          setCurrentLanguage(savedLanguage);
+          const foundLanguage = languages.find((l) => l.code === savedLanguage);
+          setCurrentLanguage(foundLanguage ? foundLanguage.name : "English");
         }
       } catch (e) {
         console.error("Failed to load the language from storage");
@@ -69,109 +113,108 @@ const GreetingBar = ({ isGoBack }) => {
     };
 
     loadLanguage();
-  }, [currentLanguage]);
+  }, []);
 
-  // Alege imaginea în funcție de limba curentă
-  const flagImageSource = () => {
-    switch (currentLanguage) {
-      case "en":
-        return require("../../../assets/flags/english.png");
-      case "es":
-        return require("../../../assets/flags/spanish.png");
-      case "ro":
-      default:
-        return require("../../../assets/flags/romania.png");
-    }
+  const handleLanguageSelect = async (languageName) => {
+    const selectedLanguage = languages.find((l) => l.name === languageName);
+    const langCode = selectedLanguage ? selectedLanguage.code : "en";
+    setCurrentLanguage(languageName);
+    console.log(`${languageName} Selected`);
+    // Așteaptă finalizarea schimbării limbii
+    const newLangCode = await handleLanguagei18n(langCode);
+
+    // Apoi actualizează contextul
+    changeLanguage(newLangCode);
+    AsyncStorage.setItem("@userLanguage", langCode);
+    setModalVisible(false);
   };
+
+  const flagImageSource = languages.find((l) => l.name === currentLanguage)
+    ?.flag;
 
   return (
     <View style={styles.navbar}>
       {isGoBack ? (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ zIndex: 10 }}
+        >
           <Octicons
             name="chevron-left"
             size={29}
             color={colors.primary2}
-            style={{ marginLeft: 15 }}
+            style={{ marginLeft: 15, zIndex: 5 }}
           />
         </TouchableOpacity>
       ) : (
         <Text style={styles.text}>
           {i18n.translate("helloUser")},{" "}
           <Text style={styles.boldText}>
-            {userData.lastName} {userData.firstName}
+            {userData ? userData.first_name : ""}
           </Text>
         </Text>
       )}
-      <TouchableOpacity onPress={openModal}>
-        <Image
-          style={styles.image}
-          source={flagImageSource()} // Schimbă sursa imaginii în funcție de limba selectată
-        />
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)}
+        style={{ zIndex: 5 }}
+      >
+        <Image style={styles.image} source={flagImageSource} />
       </TouchableOpacity>
 
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={closeModal}
+        onRequestClose={() => setModalVisible(false)}
       >
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPressOut={closeModal}
+          onPressOut={() => setModalVisible(false)}
         >
-          <SafeAreaView style={{ flex: 0, backgroundColor: colors.secondary2 }}>
-            <View style={styles.modal}>
-              <Text
-                style={[
-                  styles.modalText,
-                  { color: colors.primary2, marginBottom: 15 },
-                ]}
-              >
-                Schimbă limba
-              </Text>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => {
-                  /* Handle language change to Romanian */
-                  handleLanguageSelect("Romanian");
-                }}
-              >
-                <Text style={styles.modalText}>Română</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => {
-                  /* Handle language change to English */
-                  handleLanguageSelect("English");
-                }}
-              >
-                <Text style={styles.modalText}>English</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => {
-                  /* Handle language change to Spanish */
-                  handleLanguageSelect("Spanish");
-                }}
-              >
-                <Text style={styles.modalText}>Español</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItemCancel}
-                onPress={closeModal}
-              >
-                <Text style={styles.modalTextCancel}>Renunță</Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
+          {/* <SafeAreaView style={styles.safeAreaView}> */}
+          <View style={styles.modal}>
+            <Text style={[styles.modalText, { marginBottom: 15 }]}>
+              Schimbă limba
+            </Text>
+            <ScrollView style={styles.scrollView}>
+              {languages.map((lang) => (
+                <TouchableOpacity
+                  key={lang.code}
+                  style={styles.modalItem}
+                  onPress={() => handleLanguageSelect(lang.name)}
+                >
+                  <Text style={styles.modalText}>{lang.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <TouchableOpacity
+              style={styles.modalItemCancel}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalTextCancel}>Renunță</Text>
+            </TouchableOpacity>
+          </View>
+          {/* </SafeAreaView> */}
         </TouchableOpacity>
       </Modal>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "flex-start",
+  },
+  safeAreaView: {
+    flex: 0,
+    backgroundColor: colors.secondary2,
+  },
+  scrollView: {
+    flex: 1, // Acest stil este important pentru a permite extinderea ScrollView
+    width: "100%",
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
@@ -182,18 +225,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingVertical: 20,
     paddingHorizontal: 35,
-    height: "32%",
+    height: "35%",
     justifyContent: "flex-start",
 
     alignItems: "flex-start",
   },
   modalItem: {
     paddingVertical: 10,
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   modalItemCancel: {
     paddingVertical: 10,
-    alignItems: "center",
+    alignItems: "flex-start",
     // marginTop: 10,
   },
   modalText: {

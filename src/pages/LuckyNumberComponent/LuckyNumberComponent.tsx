@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   StatusBar,
+  ImageBackground,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MainContainer } from "../../components/commonViews";
@@ -23,8 +24,22 @@ import {
   H8fontMediumWhite,
 } from "../../components/commonText";
 import { useNavBarVisibility } from "../../context/NavbarVisibilityContext";
+import { useApiData } from "../../context/ApiContext";
+import { useLanguage } from "../../context/LanguageContext";
 
-const PersonalReading = () => {
+const LuckyNumber = () => {
+  const {
+    zilnicNumereNorocoase,
+    zilnicCitateMotivationale,
+    zilnicCuloriNorocoase,
+    zilnicCategoriiViitor,
+    numereNorocoase,
+    citateMotivationale,
+    culoriNorocoase,
+
+    oreNorocoase,
+  } = useApiData();
+  const { language, changeLanguage } = useLanguage();
   const onPressHandler = () => {
     console.log("Pressed");
   };
@@ -32,6 +47,7 @@ const PersonalReading = () => {
   const { setIsNavBarVisible } = useNavBarVisibility();
 
   React.useEffect(() => {
+    console.log(zilnicNumereNorocoase);
     setIsNavBarVisible(false);
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);
@@ -40,37 +56,50 @@ const PersonalReading = () => {
     <TouchableWithoutFeedback onPress={onPressHandler}>
       <MainContainer>
         <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
-          <GreetingBar isGoBack={true} />
-          <View style={styles.overlay}>
-            <View style={styles.numberContainer}>
-              <Text style={styles.number}>5</Text>
-              {/* Aici pune numărul dorit */}
-            </View>
-            <View style={styles.secondImageContainer}>
-              <Image
-                source={require("../../../assets/headerIcon.png")}
-                style={styles.secondImage}
-                resizeMode="contain"
-              />
-            </View>
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                height: "23%",
-                bottom: "10%",
-              }}
-            >
-              <H7fontBoldWhite style={{ alignSelf: "center" }}>
-                Culoarea norocoasă a zilei
-              </H7fontBoldWhite>
+          <ImageBackground
+            source={require("../../../assets/shadowBg.png")}
+            resizeMode="cover"
+            style={{
+              flex: 1,
+              width: null,
+              height: null,
+              // alignItems: 'flex-end',
+            }}
+          >
+            <GreetingBar isGoBack={true} />
+            <View style={styles.overlay}>
+              <View style={styles.numberContainer}>
+                <Text style={styles.number}>
+                  {" "}
+                  {zilnicNumereNorocoase.number}
+                </Text>
+                {/* Aici pune numărul dorit */}
+              </View>
+              <View style={styles.secondImageContainer}>
+                <Image
+                  source={require("../../../assets/headerIcon.png")}
+                  style={styles.secondImage}
+                  resizeMode="contain"
+                />
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  height: "23%",
+                  bottom: "10%",
+                }}
+              >
+                {/* <H7fontBoldWhite style={{ alignSelf: "center" }}>
+                {zilnicNumereNorocoase.info[language].nume}
+              </H7fontBoldWhite> */}
 
-              <H8fontMediumWhite>
-                Această culoare îți aduce pasiune, iubire, poftă de viață, dar
-                și foarte multă energie!
-              </H8fontMediumWhite>
+                <H8fontMediumWhite>
+                  {zilnicNumereNorocoase.info[language].descriere}
+                </H8fontMediumWhite>
+              </View>
             </View>
-          </View>
+          </ImageBackground>
         </LinearGradient>
       </MainContainer>
     </TouchableWithoutFeedback>
@@ -165,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PersonalReading;
+export default LuckyNumber;

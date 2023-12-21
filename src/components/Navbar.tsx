@@ -17,7 +17,26 @@ const NavBarBottom = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
   const { setCurrentScreen, currentScreen } = useNavigationState();
-  const { fetchData, data, loading } = useApiData();
+
+  const {
+    oreNorocoase,
+    numereNorocoase,
+    culoriNorocoase,
+    citateMotivationale,
+    categoriiViitor,
+    cartiViitor,
+    varianteCarti,
+    categoriiPersonalizate,
+    cartiPersonalizate,
+    loading,
+    error,
+    fetchData,
+    triggerExitAnimation,
+    startExitAnimation,
+    resetExitAnimation,
+    shuffleCartiViitor,
+    shuffledCartiViitor,
+  } = useApiData();
 
   const animatedValues = useRef(
     Array.from({ length: 3 }, () => new Animated.Value(0))
@@ -48,13 +67,14 @@ const NavBarBottom = () => {
         }),
       ]),
       {
-        iterations: 3, // Setează numărul de repetiții aici
+        iterations: 3,
       }
     ).start();
 
     if (
       currentScreen === "Dashboard2" ||
-      currentScreen === "PersonalReadingDashboard"
+      currentScreen === "PersonalReadingDashboard" ||
+      currentScreen === "FutureReadingDashboard"
     ) {
       setSelected(1);
     }
@@ -62,15 +82,16 @@ const NavBarBottom = () => {
 
   const handlePress = (screen, index) => {
     if (index === 1 && selected === 1) {
-      fetchData();
-      console.log("Shuffling...");
+      startExitAnimation(); // Inițiază animația de ieșire
+      setCurrentScreen(screen);
+      shuffleCartiViitor();
     } else {
       setSelected(index);
       navigation.navigate(screen);
       setCurrentScreen(screen);
+      resetExitAnimation(); // Resetarea animației atunci când se navighează către un nou ecran
     }
   };
-
   const animatedStyle = (index) => ({
     transform: [
       {
@@ -104,9 +125,9 @@ const NavBarBottom = () => {
 
   return (
     <>
-      {selected === 1 && !data && !loading && (
+      {selected === 1 && shuffledCartiViitor.length === 0 && !loading && (
         <View style={styles.shuffleTextContainer}>
-          <H7fontBoldPrimary style={{ marginBottom: 10 }}>
+          <H7fontBoldPrimary>
             {i18n.translate("touchToShuffle")}
           </H7fontBoldPrimary>
           <Animated.View style={chevronStyle}>
@@ -202,7 +223,7 @@ const styles = StyleSheet.create({
   },
   shuffleTextContainer: {
     alignItems: "center",
-    marginBottom: 10,
+
     backgroundColor: "transparent",
     position: "relative",
     bottom: "12%",

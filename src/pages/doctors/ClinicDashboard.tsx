@@ -23,11 +23,29 @@ import { screenName } from "../../utils/screenName";
 import { useNavigationState } from "../../context/NavigationContext";
 import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
+import { useApiData } from "../../context/ApiContext";
+import { colors } from "../../utils/colors";
 
 const ClinicDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
   const initialAnimations = useRef(Array(4).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
   const { language, changeLanguage } = useLanguage();
+
+  const {
+    oreNorocoase,
+    numereNorocoase,
+    culoriNorocoase,
+    citateMotivationale,
+    categoriiViitor,
+    cartiViitor,
+    varianteCarti,
+    categoriiPersonalizate,
+    cartiPersonalizate,
+    loading,
+    error,
+    fetchData,
+    zilnicCitateMotivationale,
+  } = useApiData();
 
   const cardData = [
     {
@@ -36,20 +54,30 @@ const ClinicDashboard = () => {
     },
     {
       text: i18n.translate("futureReading"),
-      screen: "Dashboard2",
+      screen: screenName.FutureReadingDashboard,
     },
     {
       text: i18n.translate("luckyNumber"),
-      screen: screenName.luckyNumberColor,
+      screen: screenName.luckyNumber,
     },
     {
       text: i18n.translate("luckyColor"),
       screen: screenName.luckyColor,
     },
-    // Adăugați mai multe obiecte aici în funcție de câte cartonașe doriți să aveți
+    {
+      text: i18n.translate("luckyHours"),
+      screen: screenName.luckyHour,
+    },
+    {
+      text: i18n.translate("motivationalQuotes"),
+      screen: screenName.motivationalQuotes,
+    },
   ];
 
   useEffect(() => {
+    console.log("asdsa");
+    console.log(zilnicCitateMotivationale);
+    // console.log("asdsa");
     const screenWidth = Dimensions.get("window").width;
 
     // Inițializarea animațiilor doar dacă nu au fost setate anterior
@@ -82,7 +110,7 @@ const ClinicDashboard = () => {
         key={index}
         text={card.text}
         screen={card.screen}
-        image={require("../../images/dashboardPrint.png")}
+        image={require("../../../assets/dash-frame.png")}
       />
     );
   };
@@ -95,7 +123,13 @@ const ClinicDashboard = () => {
     <Fragment>
       <MainContainer>
         <LinearGradient
-          colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+          colors={[
+            colors.gradientLogin1,
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+            colors.gradientLogin1,
+            colors.gradientLogin3,
+          ]} // Înlocuiește cu culorile gradientului tău
           style={{
             flex: 1,
             paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../utils/colors";
 import {
@@ -21,41 +28,120 @@ const LanguageSelectScreen = () => {
 
   const navigation = useNavigation();
 
+  // Lista limbilor și a steagurilor corespunzătoare
+  const languages = [
+    {
+      code: "ro",
+      name: "Romanian",
+      flag: require("../../assets/flags/romania.png"),
+    },
+    {
+      code: "en",
+      name: "English",
+      flag: require("../../assets/flags/english.png"),
+    },
+    {
+      code: "es",
+      name: "Spanish",
+      flag: require("../../assets/flags/spanish.png"),
+    },
+    {
+      code: "bg",
+      name: "Bulgarian",
+      flag: require("../../assets/flags/bulgaria.png"),
+    },
+    {
+      code: "cs",
+      name: "Czech",
+      flag: require("../../assets/flags/czech.png"),
+    },
+    {
+      code: "de",
+      name: "German",
+      flag: require("../../assets/flags/germany.png"),
+    },
+    {
+      code: "el",
+      name: "Greek",
+      flag: require("../../assets/flags/greece.png"),
+    },
+    {
+      code: "fr",
+      name: "French",
+      flag: require("../../assets/flags/france.png"),
+    },
+    {
+      code: "hr",
+      name: "Croatian",
+      flag: require("../../assets/flags/croatia.png"),
+    },
+    {
+      code: "hi",
+      name: "Hindi",
+      flag: require("../../assets/flags/india.png"),
+    },
+    {
+      code: "it",
+      name: "Italian",
+      flag: require("../../assets/flags/italy.png"),
+    },
+    {
+      code: "pl",
+      name: "Polish",
+      flag: require("../../assets/flags/poland.png"),
+    },
+    {
+      code: "id",
+      name: "Indonesian",
+      flag: require("../../assets/flags/indonesia.png"),
+    },
+    {
+      code: "sk",
+      name: "Slovak",
+      flag: require("../../assets/flags/slovakia.png"),
+    },
+    // Adăugați aici alte limbi și steaguri, dacă este necesar
+  ];
+
   return (
     <View style={styles.container}>
-      <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
+      <LinearGradient
+        colors={[
+          colors.gradientLogin1,
+          colors.gradientLogin2,
+          colors.gradientLogin2,
+          colors.gradientLogin2,
+          colors.gradientLogin3,
+        ]} // Înlocuiește cu culorile gradientului tău
+        style={styles.gradient}
+      >
         <View style={styles.headerContainer}>
           <Image
             source={require("../images/tarotbyai1.png")}
             style={styles.headerImage}
             resizeMode="contain"
           />
-          <H7fontBoldPrimary style={{ marginTop: "2%" }}>
-            Selectează limba
-          </H7fontBoldPrimary>
+          <Text style={styles.headerText}>Selectează limba</Text>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <LanguageButton
-            language="Romanian"
-            flagSource={require("../../assets/flags/romania.png")}
-            onSelect={() => handleLanguageSelect("Romanian")}
-            isSelected={selectedLanguage === "Romanian"}
-          />
-
-          <LanguageButton
-            language="English"
-            flagSource={require("../../assets/flags/english.png")}
-            onSelect={() => handleLanguageSelect("English")}
-            isSelected={selectedLanguage === "English"}
-          />
-
-          <LanguageButton
-            language="Spanish"
-            flagSource={require("../../assets/flags/spanish.png")}
-            onSelect={() => handleLanguageSelect("Spanish")}
-            isSelected={selectedLanguage === "Spanish"}
-          />
+        <View
+          style={{
+            width: "100%",
+            height: "40%",
+            marginTop: "10%",
+          }}
+        >
+          <ScrollView contentContainerStyle={styles.buttonContainer}>
+            {languages.map((language) => (
+              <LanguageButton
+                key={language.code}
+                language={language.name}
+                flagSource={language.flag}
+                onSelect={() => handleLanguageSelect(language.name)}
+                isSelected={selectedLanguage === language.name}
+              />
+            ))}
+          </ScrollView>
         </View>
 
         <TouchableOpacity
@@ -80,40 +166,6 @@ const LanguageButton = ({ language, flagSource, onSelect, isSelected }) => (
 );
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    position: "absolute",
-    top: 50,
-    alignItems: "center",
-    width: "100%",
-  },
-
-  headerImage: {
-    width: 380,
-    height: 230,
-  },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    marginTop: "20%",
-  },
-  continueButton: {
-    position: "absolute",
-    bottom: 50,
-    backgroundColor: colors.primary2,
-    padding: 20,
-    width: 250,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  image: {
-    width: 30,
-    height: 30,
-    borderRadius: 20, // Face imaginea rotundă
-    borderWidth: 1,
-    borderColor: "#000", // Sau orice altă culoare pentru border
-  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -126,21 +178,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  headerContainer: {
+    alignItems: "center",
+    width: "100%",
+    height: "30%",
+  },
+  headerImage: {
+    width: 380,
+    height: 230,
+  },
   headerText: {
     color: colors.primary2,
     fontSize: 24,
     marginBottom: 30,
   },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingVertical: "25%",
+  },
   button: {
     backgroundColor: colors.darkSelect,
     paddingHorizontal: 10,
     marginVertical: 10,
-    width: "90%",
-    maxHeight: "8%",
+
+    width: "100%",
+    minHeight: "6%",
     borderRadius: 10,
     justifyContent: "space-between",
     alignItems: "center",
-    flex: 1,
     flexDirection: "row",
   },
   selectedButton: {
@@ -150,7 +218,22 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
   },
-
+  image: {
+    width: 30,
+    height: 30,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#000",
+  },
+  continueButton: {
+    marginTop: "10%",
+    backgroundColor: colors.primary2,
+    padding: 20,
+    width: 250,
+    borderRadius: 10,
+    alignItems: "center",
+    height: "auto",
+  },
   continueButtonText: {
     color: "black",
     fontSize: 18,

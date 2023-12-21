@@ -1,4 +1,8 @@
 export const colors = {
+  gradientLogin1: "#27253B",
+  gradientLogin2: "#16151A",
+  gradientLogin3: "#6D6D6F",
+
   background: "#f6f6f6",
   white: "#FFFFFF",
   black: "#131523",
@@ -15,7 +19,9 @@ export const colors = {
   lightGray: "#858585",
   lightGrayOpac: "rgba(133, 133, 133, 0.1)",
   facebook: "#944273",
+  primary1: "#040606",
   primary2: "#EBDCAE",
+  primary3: "#27282A",
   secondary2: "#27282A",
   secondary2rgba: "rgba(39, 40, 42, 0.95)",
   facebookLink: "#2F5597",

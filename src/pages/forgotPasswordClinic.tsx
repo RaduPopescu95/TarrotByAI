@@ -63,7 +63,11 @@ const ForgotPasswordClinic: React.FC<Props> = ({
         <MainContainer>
           <CustomLoader isLoading={isLoading} />
           <LinearGradient
-            colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+            colors={[
+              colors.gradientLogin1,
+              colors.gradientLogin2,
+              colors.gradientLogin3,
+            ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
             <View

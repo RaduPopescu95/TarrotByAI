@@ -76,6 +76,7 @@ import CheckCurrentPasswordModal from "../components/CheckCurrentPasswordModal";
 import SnackBar from "../components/SnackBar";
 import GreetingBar from "../components/UpperGreetingBar/GreetingBar";
 import CheckCurrentPasswordModalDelete from "../components/CheckPassDelete/CheckPasswordModalDelete";
+import { handleUpdateFirestore, userLocation } from "../utils/firestoreUtils";
 
 interface Props extends GeneralProps {
   route: Route<string, object | undefined>;
@@ -103,6 +104,8 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
 
   const passwordValue = watch(formKeys.password);
   const emailValue = watch(formKeys.email);
+  const firstNameValue = watch(formKeys.firstName);
+  const lastNameValue = watch(formKeys.lastName);
 
   const route = useRoute();
   const [currentPassword, setCurrentPassword] = useState("");
@@ -132,7 +135,7 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
     handleDeleteAccount(currentPassword).then(() => {
       setSnackMessage("Accound deleted succesfully");
       setShowSnackback(!showSnackBar);
-      // navigation.navigate(screenName.SignInScreenClinic)
+      navigation.navigate(screenName.SignInScreenClinic);
     });
   };
 
@@ -150,6 +153,7 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
   const onsubmit = (detaila) => {
     console.log("asas", currentPassword);
     console.log("asas", currentPassword.length);
+
     //change password
     if (passwordValue && currentPassword.length == 0) {
       console.log("first");
@@ -178,6 +182,33 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
         handleResetForm();
       });
     }
+
+    if (firstNameValue) {
+      const newData = {
+        first_name: firstNameValue,
+      };
+
+      handleUpdateFirestore(userLocation, newData)
+        .then(() => {
+          console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
+    }
+    if (lastNameValue) {
+      const newData = {
+        last_name: lastNameValue,
+      };
+
+      handleUpdateFirestore(userLocation, newData)
+        .then(() => {
+          console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
+    }
     console.log(detaila);
   };
 
@@ -187,7 +218,13 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
         <MainContainer>
           <CustomLoader isLoading={isLoading} />
           <LinearGradient
-            colors={["#000000", "#434343"]} // Înlocuiește cu culorile gradientului tău
+            colors={[
+              colors.gradientLogin1,
+              colors.gradientLogin2,
+              colors.gradientLogin2,
+              colors.gradientLogin1,
+              colors.gradientLogin3,
+            ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
             <KeyboardAvoidingView

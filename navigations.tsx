@@ -124,6 +124,12 @@ import {
 } from "./src/context/NavbarVisibilityContext";
 import LuckyNumberColor from "./src/pages/LuckyNumberComponent/LuckyNumberComponent";
 import PersonalReadingDashboard from "./src/pages/doctors/PeronalReadingDashboard";
+import PersonalizedReading from "./src/pages/PersonalizedReading/PersonalizedReading";
+import FutureReadingDashboard from "./src/pages/doctors/FutureReadingDashboard";
+import FutureReading from "./src/pages/FutureReading/FutureReading";
+import LuckyHour from "./src/pages/LuckyHourComponent/LuckyHourComponent";
+import MotivationalQuotes from "./src/pages/MotivationalQuotesComponent/MotivationalQuotes";
+import LuckyNumber from "./src/pages/LuckyNumberComponent/LuckyNumberComponent";
 
 const Stack = createNativeStackNavigator();
 
@@ -137,7 +143,7 @@ const HomeNavigation = (props: NavigationProps) => {
   onAuthStateChanged(authentication, (user) => {
     if (user) {
       // User is signed in, you can use the 'user' object to get user information
-      console.log("User is authenticated:", user);
+      // console.log("User is authenticated:", user);
       setIsUser(true);
     } else {
       // No user is signed in.
@@ -162,7 +168,19 @@ const HomeNavigation = (props: NavigationProps) => {
           name={screenName.languageSelectScreen}
           component={LanguageSelectScreen}
         />
-        <Stack.Screen name={screenName.luckyColor} component={LuckyColor} />
+
+        <Stack.Screen
+          name={screenName.PersonalizedReading}
+          component={PersonalizedReading}
+        />
+        <Stack.Screen
+          name={screenName.FutureReading}
+          component={FutureReading}
+        />
+        <Stack.Screen
+          name={screenName.FutureReadingDashboard}
+          component={FutureReadingDashboard}
+        />
         <Stack.Screen
           name={screenName.SignInScreenClinic}
           component={SignInScreenClinic}
@@ -171,10 +189,15 @@ const HomeNavigation = (props: NavigationProps) => {
           name={screenName.SignUpScreenClinic}
           component={SignUpScreenClinic}
         />
+
         <Stack.Screen
-          name={screenName.luckyNumberColor}
-          component={LuckyNumberColor}
+          name={screenName.motivationalQuotes}
+          component={MotivationalQuotes}
         />
+        <Stack.Screen name={screenName.luckyHour} component={LuckyHour} />
+        <Stack.Screen name={screenName.luckyColor} component={LuckyColor} />
+        <Stack.Screen name={screenName.luckyNumber} component={LuckyNumber} />
+
         <Stack.Screen name={"TarrotSettings"} component={TarrotSettings} />
 
         <Stack.Screen

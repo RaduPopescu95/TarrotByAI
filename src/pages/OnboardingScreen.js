@@ -58,61 +58,46 @@ const { width, height } = Dimensions.get("window");
 const COLORS = { primary: colors.primary2, white: "#fff" };
 
 const slides = [
-  {
-    id: "1",
-    image: require("../images/tarotbyai1.png"),
-    title: i18n.translate("onboardingFirstTitle"),
-    subtitle: i18n.translate("onboardingFirstTitleMessage"),
-  },
+  // {
+  //   id: "1",
+  //   image: require("../../assets/LogoPngTransparent.png"),
+  //   title: i18n.translate("onboardingFirstTitle"),
+  //   subtitle: i18n.translate("onboardingFirstTitleMessage"),
+  // },
   {
     id: "2",
-    image: require("../images/tarotbyai2.png"),
+    image: require("../../assets/onboardImg.png"),
     title: i18n.translate("onboardingSecondTitle"),
     subtitle: i18n.translate("onboardingSecondTitleMessage"),
   },
-  {
-    id: "3",
-    image: require("../images/tarotbyai3.png"),
-    title: i18n.translate("onboardingThirdTitle"),
-    subtitle: i18n.translate("onboardingThirdTitleMessage"),
-  },
+  // {
+  //   id: "3",
+  //   image: require("../../assets/Onboarding2.png"),
+  //   title: i18n.translate("onboardingThirdTitle"),
+  //   subtitle: i18n.translate("onboardingThirdTitleMessage"),
+  // },
 ];
 
 const Slide = ({ item }) => {
   return (
-    <View style={{ alignItems: "center" }}>
+    <View style={{ alignItems: "center", position: "relative", top: "12%" }}>
       {/* Condiție pentru a verifica tipul fișierului și a alege între LottieView și Image */}
-      {item.fileType === "lottie" ? (
-        <View
-          style={{
-            height: "auto",
-            width: "auto",
-            resizeMode: "contain",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <LottieView
-            autoPlay={false}
-            progress={0.5}
-            loop={false}
-            style={{
-              width: 500,
-              height: 500,
-            }}
-            source={item.image}
-          />
-        </View>
-      ) : (
-        <Image
-          source={item.image}
-          style={{
-            height: "75%",
-            width,
-            resizeMode: "contain",
-          }}
-        />
-      )}
+
+      <Image
+        source={require("../../assets/headerIcon.png")}
+        style={{ width: 300, height: 200 }}
+        resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
+      />
+      <Image
+        source={item.image}
+        style={{
+          height: 350,
+          width: 350,
+          position: "relative",
+          bottom: "10%",
+          resizeMode: "contain",
+        }}
+      />
       {/* Restul componentei rămâne neschimbat */}
       <View
         style={{
@@ -120,12 +105,19 @@ const Slide = ({ item }) => {
           resizeMode: "contain",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
+          bottom: "15%",
         }}
       >
         <H7fontRegularLight style={styles.subtitle}>
           {i18n.translate("welcomeTo")}
         </H7fontRegularLight>
         <H2fontBoldPrimary>{i18n.translate("tarotByAi")}</H2fontBoldPrimary>
+        <Image
+          source={require("../../assets/onboardSubImg.png")}
+          style={{ width: 200, height: 100 }}
+          resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
+        />
       </View>
     </View>
   );
@@ -175,7 +167,7 @@ const OnboardingScreen = ({ navigation }) => {
     return (
       <View
         style={{
-          height: height * 0.25,
+          height: height * 0.15,
           justifyContent: "space-between",
           paddingHorizontal: 20,
         }}
@@ -279,12 +271,21 @@ const OnboardingScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
+      <LinearGradient
+        colors={[
+          colors.gradientLogin1,
+          colors.gradientLogin2,
+          colors.gradientLogin2,
+          colors.gradientLogin1,
+          colors.gradientLogin3,
+        ]} // Înlocuiește cu culorile gradientului tău
+        style={styles.gradient}
+      >
         {/* <StatusBar backgroundColor={COLORS.primary} /> */}
         <FlatList
           ref={ref}
           onMomentumScrollEnd={updateCurrentSlideIndex}
-          contentContainerStyle={{ height: height * 0.75 }}
+          contentContainerStyle={{ height: "100%" }}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={slides}
