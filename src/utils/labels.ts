@@ -1,5 +1,6 @@
 export const langObj = {
   en: {
+    loginNowNoAccount: "Login without account",
     motivationalQuoteOfTheDay: "Motivational quote of the day",
     luckyColorOfTheDay: "Culoarea norocoasă a zilei",
     luckyHours: "Lucky Hours",
@@ -70,6 +71,7 @@ export const langObj = {
     clinicLoginRedirect: "Continue",
   },
   ro: {
+    loginNowNoAccount: "Autentificare fără cont",
     motivationalQuoteOfTheDay: "Citat motivațional al zilei",
     luckyColorOfTheDay: "Culoarea norocoasă a zilei",
     luckyHours: "Ore norocoase",
@@ -145,6 +147,7 @@ export const langObj = {
     clinicLoginRedirect: "Continuă",
   },
   es: {
+    loginNowNoAccount: "Iniciar sesión sin una cuenta",
     motivationalQuoteOfTheDay: "Frase motivacional del día",
     luckyColorOfTheDay: "Color de la suerte del día",
     luckyHours: "Horas de suerte",

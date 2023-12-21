@@ -40,7 +40,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { handleSignOutFromSignIn } from "../utils/handleSignOut";
 import { doc, getDoc } from "firebase/firestore";
 import i18n from "../../i18n";
-import { handleGetGuestDetails } from "../utils/loginAsGuestHelper";
+
 import { getTimeFormat } from "../actions/comonActions";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../utils/colors";

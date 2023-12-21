@@ -15,6 +15,16 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isGuestUser, setIsGuestUser] = useState(false); // Inițializat ca false
 
+  // Funcția pentru a seta utilizatorul ca guest user
+  const setAsGuestUser = async (isGuest) => {
+    try {
+      await AsyncStorage.setItem("isGuestUser", isGuest ? "true" : "false");
+      setIsGuestUser(isGuest);
+    } catch (e) {
+      console.error("Failed to update isGuestUser in AsyncStorage:", e);
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = authentication.onAuthStateChanged(async (user) => {
       if (user) {
@@ -48,6 +58,7 @@ export const AuthProvider = ({ children }) => {
     userData,
     loading,
     isGuestUser, // Includeți isGuestUser în context
+    setAsGuestUser, // Expuși funcția prin context
   };
 
   return (

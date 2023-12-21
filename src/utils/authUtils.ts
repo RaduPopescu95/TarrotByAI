@@ -13,6 +13,7 @@ import { authentication } from "../../firebase";
 import { FirebaseError } from "firebase/app";
 import i18n from "../../i18n";
 import { deleteUserData } from "./deleteFirebaseData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const auth = authentication;
 

@@ -74,7 +74,6 @@ import {
 import { Divider } from "react-native-elements";
 import i18n from "../../i18n";
 import RoundInitials from "../components/RoundInitials";
-import { handleGetGuestDetails } from "../utils/loginAsGuestHelper";
 
 interface Props {
   setModalVisible?: any;

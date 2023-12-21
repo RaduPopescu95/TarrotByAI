@@ -75,7 +75,7 @@ import { Modal } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getGuestLoginDetails } from "../actions/patientActions";
 import { useDispatch } from "react-redux";
-import { handleGetGuestDetails } from "../utils/loginAsGuestHelper";
+
 import { useAppSelector } from "../hooks/hooks";
 
 interface Props extends GeneralProps {
@@ -130,7 +130,7 @@ const GuestPhoneInputModal: React.FC<Props> = ({
 
       // const success = await updateClinicPhoneNumber(completePhoneNumber);
 
-      const guestDetails = await handleGetGuestDetails();
+      const guestDetails = {};
 
       // guestDetails.myAppointments = myAppointments
       // guestDetails.clinicsHistory = clinicsHistory

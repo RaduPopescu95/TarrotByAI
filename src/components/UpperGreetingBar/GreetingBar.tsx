@@ -96,7 +96,7 @@ const GreetingBar = ({ isGoBack }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState("Romanian");
-  const { currentUser, userData } = useAuth();
+  const { currentUser, userData, isGuestUser } = useAuth();
   const { language, changeLanguage } = useLanguage();
 
   useEffect(() => {
@@ -146,6 +146,8 @@ const GreetingBar = ({ isGoBack }) => {
             style={{ marginLeft: 15, zIndex: 5 }}
           />
         </TouchableOpacity>
+      ) : isGuestUser ? (
+        <Text style={styles.text}>{i18n.translate("helloUser")}! </Text>
       ) : (
         <Text style={styles.text}>
           {i18n.translate("helloUser")},{" "}

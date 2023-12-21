@@ -100,7 +100,7 @@ import { handleSignOutFromSignIn } from "../utils/handleSignOut";
 import CustomLoader from "../components/customLoader";
 import { MaterialIcons } from "@expo/vector-icons";
 import i18n from "../../i18n";
-import { handleLoginAsGuest } from "../utils/loginAsGuestHelper";
+
 import { useAppSelector } from "../hooks/hooks";
 
 // import AsyncStorage from '@react-native-community/async-storage';

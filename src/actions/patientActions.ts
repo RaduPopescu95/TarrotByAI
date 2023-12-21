@@ -33,7 +33,6 @@ import {
   retrievePatientData,
   retrievePatientForReviews,
 } from "../utils/getFirebaseData";
-import { handleGetGuestDetails } from "../utils/loginAsGuestHelper";
 
 export const getPatientClinicHistory = () => async (dispatch) => {
   try {
@@ -191,7 +190,7 @@ export const getGuestLoginDetails = () => async (dispatch) => {
   try {
     dispatch({ type: "GUEST_DETAILS_REQUEST" });
 
-    const guestDetails = await handleGetGuestDetails();
+    const guestDetails = "";
 
     dispatch({
       type: "GUEST_DETAILS_SUCCESS",

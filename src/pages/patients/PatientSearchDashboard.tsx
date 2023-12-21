@@ -65,7 +65,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { schedulePushNotificationOnAppointment } from "../../utils/Notification/scheduleLocalNotification";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import i18n from "../../../i18n";
-import { handleGetGuestDetails } from "../../utils/loginAsGuestHelper";
+
 import {
   filterAppointmentsForNot,
   filterLocalNotificationStorage,

@@ -60,7 +60,7 @@ import {
 import { useAppSelector } from "../hooks/hooks";
 import moment from "moment";
 import { addAppointmentToGuest } from "../utils/asyncStorageHandler";
-import { handleGetGuestDetails } from "../utils/loginAsGuestHelper";
+
 import {
   convertTimeTo12Hours,
   createTimeFormat,
@@ -219,7 +219,7 @@ const Checkout: React.FC<Props> = ({ onpress }): JSX.Element => {
 
       let isApproved = false;
 
-      let guestDetails = await handleGetGuestDetails();
+      let guestDetails = {};
 
       console.log("guestDetails.....");
       console.log(guestDetails.phoneNumberCountry);

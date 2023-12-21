@@ -12,6 +12,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+
 import { Button, SocialMediaLogin } from "../components/commonButton";
 import { GeneralProps } from "../interfaces/generalProps";
 import { Route } from "@react-navigation/native";
@@ -67,12 +68,7 @@ import {
 } from "../utils/validationConfig";
 import { useForm, Controller } from "react-hook-form";
 import { InputFields } from "../components/commonInputFields";
-import LoginIcon from "../../assets/images/login-img.svg";
-import LogoIcon from "../../assets/images/logo.svg";
-import FacebookIcon from "../../assets/images/facebook-letter.svg";
-import GoogleIcon from "../../assets/images/google-plus-letter.svg";
-import EmailIcon from "../../assets/images/email.svg";
-import LockIcon from "../../assets/images/lock-icon.svg";
+
 import { Text } from "react-native-paper";
 
 import {
@@ -114,7 +110,7 @@ import {
   PhoneInput,
   getCountryByCca2,
 } from "react-native-international-phone-number";
-import { handleLoginAsGuest } from "../utils/loginAsGuestHelper";
+import { useAuth } from "../context/AuthContext";
 
 interface Props extends GeneralProps {
   route: Route<string, object | undefined>;
@@ -124,6 +120,7 @@ const SignInScreenClinic: React.FC<Props> = ({
   navigation,
   route,
 }): JSX.Element => {
+  const { setAsGuestUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [borderWhite, setBorderWhite] = useState(false);
   const [isWhite1, setIsWhite1] = useState(false);
@@ -153,6 +150,23 @@ const SignInScreenClinic: React.FC<Props> = ({
       await AsyncStorage.setItem("userType", value);
     } catch (e) {
       // saving error
+    }
+  };
+
+  const handleLoginAsGuest = async () => {
+    try {
+      // Setează valoarea pentru a indica că utilizatorul este un guest user
+      await setAsGuestUser(true).then(() => {
+        navigation.navigate(screenName.ClinicDashBoard);
+      });
+
+      console.log("Utilizatorul este acum setat ca guest user.");
+    } catch (error) {
+      // Gestionează orice erori care pot apărea la scrierea în AsyncStorage
+      console.error(
+        "Eroare la setarea guest user-ului în AsyncStorage:",
+        error
+      );
     }
   };
 
@@ -363,6 +377,16 @@ const SignInScreenClinic: React.FC<Props> = ({
                   borderWidth={0.2}
                   bgColor={colors.primary2}
                   label={i18n.translate("loginNow")}
+                  borderColor={colors.white}
+                  success={true}
+                />
+                <Button
+                  disabled={false}
+                  funCallback={handleLoginAsGuest}
+                  borderWidth={0.2}
+                  bgColor={"transparent"}
+                  txtColor={colors.primary2}
+                  label={i18n.translate("loginNowNoAccount")}
                   borderColor={colors.white}
                   success={true}
                 />

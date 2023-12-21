@@ -23,10 +23,7 @@ import { StatusBar } from "expo-status-bar";
 
 import { langObj } from "./src/utils/labels";
 import { getGuestLoginDetails } from "./src/actions/patientActions";
-import {
-  handleGetGuestDetails,
-  handleLoginAsGuest,
-} from "./src/utils/loginAsGuestHelper";
+
 // import messaging from '@react-native-firebase/messaging';
 
 import Purchases, { PurchasesOffering } from "react-native-purchases";

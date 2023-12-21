@@ -138,6 +138,7 @@ interface NavigationProps {
 }
 
 const HomeNavigation = (props: NavigationProps) => {
+  const { currentUser, isGuestUser } = useAuth();
   const [isUser, setIsUser] = useState(false);
   const { isNavBarVisible } = useNavBarVisibility();
   onAuthStateChanged(authentication, (user) => {
@@ -238,16 +239,20 @@ const HomeNavigation = (props: NavigationProps) => {
         {/* <Stack.Screen name={screenName.VoiceCall} component={VoiceCall} /> */}
         {/* <Stack.Screen name={screenName.VideoCall} component={VideoCall} /> */}
       </Stack.Navigator>
-      {isUser && isNavBarVisible && <NavBarBottom />}
+      {(isUser && isNavBarVisible) || (isGuestUser && isNavBarVisible) ? (
+        <NavBarBottom />
+      ) : null}
     </LinearGradient>
   );
 };
 
 const RootNavigation = () => {
-  const { currentUser } = useAuth();
-  const screen = currentUser
-    ? screenName.SignInScreenClinic
-    : screenName.OnboardingScreen;
+  const { currentUser, isGuestUser } = useAuth();
+  const screen = isGuestUser
+    ? screenName.ClinicDashBoard
+    : currentUser
+      ? screenName.SignInScreenClinic
+      : screenName.OnboardingScreen;
 
   return <HomeNavigation initialRouteName={screen} />;
 };
