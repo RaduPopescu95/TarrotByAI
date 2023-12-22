@@ -5,6 +5,8 @@ import {
   Animated,
   StatusBar,
   Platform,
+  View,
+  Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import FlipCard from "../../components/FlipCard/FlipCard";
@@ -14,16 +16,53 @@ import CustomSpinner from "../../components/CustomSpinner/CustomSpinner";
 import { colors } from "../../utils/colors";
 import { useApiData } from "../../context/ApiContext";
 import { MainContainer } from "../../components/commonViews";
+import i18n, { languageCode } from "../../../i18n";
+import CardLayoutViitor from "../../components/CardLayout/CardLayoutViitor";
+import {
+  H6fontRegularBlack,
+  H7fontBoldPrimary,
+  H8fontMediumBlack,
+} from "../../components/commonText";
+import { useLanguage } from "../../context/LanguageContext";
 
 const PersonalReadingDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
+
+  const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0));
+
   const initialAnimations = useRef(Array(9).fill(null)).current;
-  const { fetchData, data, loading, triggerExitAnimation } = useApiData();
+  const {
+    oreNorocoase,
+    numereNorocoase,
+    culoriNorocoase,
+    citateMotivationale,
+
+    varianteCarti,
+    categoriiPersonalizate,
+    cartiPersonalizate,
+    shuffleCartiPersonalizate,
+    shuffledCartiPersonalizate,
+    setShuffledCartiPersonalizate,
+    loading,
+    error,
+    fetchData,
+    triggerExitAnimation,
+    startExitAnimation,
+    resetExitAnimation,
+    categoriiViitor,
+    cartiViitor,
+    shuffleCartiViitor,
+    shuffledCartiViitor,
+    setShuffledCartiViitor,
+  } = useApiData();
+  const { language, changeLanguage } = useLanguage();
 
   const [shouldFlip, setShouldFlip] = useState(false);
 
-  // Initialize card animations and animate cards on mount and data change
+  // Initialize card animations and animate cards on mount and categoriiPersonalizate change
   useEffect(() => {
+    if (shuffledCartiPersonalizate.length === 0 || triggerExitAnimation) return;
+
     const screenWidth = Dimensions.get("window").width;
     const newAnimations = initialAnimations.map(
       () => new Animated.Value(-screenWidth)
@@ -39,28 +78,15 @@ const PersonalReadingDashboard = () => {
         delay: index * 100,
       }).start(() => {
         if (index === newAnimations.length - 1) {
-          console.log("test");
           setShouldFlip(true);
         }
       });
     });
-  }, [data]);
+  }, [shuffledCartiPersonalizate, triggerExitAnimation]); // Depend on shuffledCartiPersonalizate and triggerExitAnimation
 
-  // Animate cards into view
-  //   const animateCards = () => {
-  //     cardAnimations.forEach((anim, index) => {
-  //       Animated.timing(anim, {
-  //         toValue: 0,
-  //         duration: 300,
-  //         useNativeDriver: true,
-  //         delay: index * 100, // Delay each card animation for sequential entry
-  //       }).start(() => {
-  //         if (index === cardAnimations.length - 1) {
-  //           setShouldFlip(true); // Trigger flip when all cards have entered
-  //         }
-  //       });
-  //     });
-  //   };
+  useEffect(() => {
+    console.log("language...", language);
+  }, [language]);
 
   // Animate cards out of view
   useEffect(() => {
@@ -70,36 +96,107 @@ const PersonalReadingDashboard = () => {
           toValue: -Dimensions.get("window").width,
           duration: 300,
           useNativeDriver: true,
-          delay: index * 100, // Delay each card animation for sequential exit
+          delay: index * 100,
         }).start(() => {
           if (index === cardAnimations.length - 1) {
-            console.log("multiple here...triggerExitAnimation");
-            fetchData(); // Fetch new data when all cards have exited
+            fetchData();
+            resetExitAnimation();
+            setShouldFlip(false); // Resetați aici
           }
         });
       });
     }
   }, [triggerExitAnimation, cardAnimations]);
 
-  // Reset flip state after fetching new data
+  // Reset flip state after fetching new categoriiPersonalizate
   useEffect(() => {
-    if (!loading && data) {
+    if (!loading && categoriiPersonalizate) {
       setShouldFlip(false);
     }
-  }, [data, loading]);
+  }, [categoriiPersonalizate, loading]);
 
-  const renderFlipCard = (item, index) => {
+  useEffect(() => {
+    if (shouldFlip) {
+      // Inițiați animația de fade in
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Inițiați animația de fade out
+      Animated.timing(opacityAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [shouldFlip]);
+
+  useEffect(() => {
+    // Acest useEffect va fi activat când `triggerExitAnimation` se schimbă
+    if (triggerExitAnimation) {
+      // Inițiați animația de fade out
+      Animated.timing(opacityAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [triggerExitAnimation, opacityAnim]); // Dependențe: triggerExitAnimation și opacityAnim
+
+  useEffect(() => {
+    console.log("Tryyy...", categoriiPersonalizate.length);
+  }, []);
+
+  const renderFlipCard = (category, index) => {
     if (!cardAnimations[index]) return null;
+
+    // Asociază fiecare categorie cu o carte, repetând cărțile dacă este necesar
+    const card =
+      shuffledCartiPersonalizate[index % shuffledCartiPersonalizate.length];
     const animatedStyle = {
       transform: [{ translateX: cardAnimations[index] }],
     };
+
     return (
-      <FlipCard
-        item={item}
-        key={index}
-        style={animatedStyle}
-        shouldFlip={shouldFlip}
-      />
+      <View
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FlipCard
+          item={card}
+          key={index}
+          style={animatedStyle}
+          shouldFlip={shouldFlip}
+          isFuture={false}
+          categoryName={category.info[language].nume}
+          triggerExitAnimation={triggerExitAnimation}
+          varianteCarti={varianteCarti}
+        />
+
+        {shouldFlip && (
+          <Animated.View
+            style={{
+              opacity: opacityAnim, // Aplică animația de opacitate
+              backgroundColor: colors.primary2,
+              borderRadius: 5,
+              display: "flex",
+              width: "auto",
+              alignItems: "center",
+              marginTop: 10,
+              padding: 5,
+            }}
+          >
+            <H8fontMediumBlack>
+              {category.info[language].nume}
+            </H8fontMediumBlack>
+          </Animated.View>
+        )}
+      </View>
     );
   };
 
@@ -107,14 +204,27 @@ const PersonalReadingDashboard = () => {
     <Fragment>
       <MainContainer>
         <LinearGradient
-          colors={["#000000", "#434343"]}
+          colors={[
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+            colors.gradientLogin1,
+          ]}
           style={{
             flex: 1,
             paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
-          <GreetingBar />
-          {loading || !cardAnimations.length ? (
+          <Image
+            source={require("../../../assets/bg-inner.png")}
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: 200,
+              top: 0, // Ajustează dacă este necesar
+            }}
+          />
+          {/* <GreetingBar isGoBack={true} /> */}
+          {loading ? (
             <CustomSpinner size={74} color={colors.primary2} />
           ) : (
             <ScrollView
@@ -127,8 +237,11 @@ const PersonalReadingDashboard = () => {
                 minHeight: Dimensions.get("window").height,
               }}
             >
-              <CardLayout title="Titlul Secțiunii">
-                {data && data.map(renderFlipCard)}
+              <CardLayout title={i18n.translate("personalReading")}>
+                {categoriiPersonalizate &&
+                  categoriiPersonalizate.map((category, index) =>
+                    renderFlipCard(category, index)
+                  )}
               </CardLayout>
             </ScrollView>
           )}

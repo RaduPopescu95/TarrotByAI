@@ -17,6 +17,7 @@ const NavBarBottom = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
   const { setCurrentScreen, currentScreen } = useNavigationState();
+  const [firstVisit, setFirstVisit] = useState(true);
 
   const {
     oreNorocoase,
@@ -29,6 +30,7 @@ const NavBarBottom = () => {
     categoriiPersonalizate,
     cartiPersonalizate,
     loading,
+    setLoading,
     error,
     fetchData,
     triggerExitAnimation,
@@ -36,6 +38,10 @@ const NavBarBottom = () => {
     resetExitAnimation,
     shuffleCartiViitor,
     shuffledCartiViitor,
+    setShuffledCartiViitor,
+    shuffleCartiPersonalizate,
+    shuffledCartiPersonalizate,
+    setShuffledCartiPersonalizate,
   } = useApiData();
 
   const animatedValues = useRef(
@@ -81,15 +87,33 @@ const NavBarBottom = () => {
   }, [selected, animatedValues, chevronAnimation, currentScreen]);
 
   const handlePress = (screen, index) => {
-    if (index === 1 && selected === 1) {
-      startExitAnimation(); // Inițiază animația de ieșire
-      setCurrentScreen(screen);
-      shuffleCartiViitor();
+    if (loading) {
+      console.log("Is loading...please wait...");
     } else {
-      setSelected(index);
-      navigation.navigate(screen);
-      setCurrentScreen(screen);
-      resetExitAnimation(); // Resetarea animației atunci când se navighează către un nou ecran
+      if (index === 1 && selected === 1) {
+        if (
+          shuffledCartiViitor.length === 0 &&
+          shuffledCartiPersonalizate.length === 0
+        ) {
+          setLoading(true);
+        }
+        if (currentScreen === "PersonalReadingDashboard") {
+          shuffleCartiPersonalizate();
+        } else if (currentScreen === "FutureReadingDashboard") {
+          shuffleCartiViitor();
+        }
+        // startExitAnimation();
+        setCurrentScreen(screen);
+        setFirstVisit(false); // Adăugat aici
+      } else {
+        setSelected(index);
+        navigation.navigate(screen);
+        setCurrentScreen(screen);
+        resetExitAnimation();
+        setShuffledCartiViitor([]);
+        setShuffledCartiPersonalizate([]);
+        setFirstVisit(true);
+      }
     }
   };
   const animatedStyle = (index) => ({
@@ -125,20 +149,23 @@ const NavBarBottom = () => {
 
   return (
     <>
-      {selected === 1 && shuffledCartiViitor.length === 0 && !loading && (
-        <View style={styles.shuffleTextContainer}>
-          <H7fontBoldPrimary>
-            {i18n.translate("touchToShuffle")}
-          </H7fontBoldPrimary>
-          <Animated.View style={chevronStyle}>
-            <MaterialCommunityIcons
-              name="chevron-down"
-              size={34}
-              color={colors.primary2}
-            />
-          </Animated.View>
-        </View>
-      )}
+      {selected === 1 &&
+        shuffledCartiViitor.length === 0 &&
+        firstVisit &&
+        shuffledCartiPersonalizate.length === 0 && (
+          <View style={styles.shuffleTextContainer}>
+            <H7fontBoldPrimary>
+              {i18n.translate("touchToShuffle")}
+            </H7fontBoldPrimary>
+            <Animated.View style={chevronStyle}>
+              <MaterialCommunityIcons
+                name="chevron-down"
+                size={34}
+                color={colors.primary2}
+              />
+            </Animated.View>
+          </View>
+        )}
       <View
         style={[
           styles.navbar,

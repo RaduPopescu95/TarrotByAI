@@ -10,6 +10,9 @@ export const useApiData = () => useContext(ApiDataContext);
 export const ApiDataProvider = ({ children }) => {
   const [cartiPersonalizate, setCartiPersonalizate] = useState([]);
   const [categoriiPersonalizate, setCategoriiPersonalizate] = useState([]);
+  const [shuffledCartiPersonalizate, setShuffledCartiPersonalizate] = useState(
+    []
+  );
   const [varianteCarti, setVarianteCarti] = useState([]);
   const [cartiViitor, setCartiViitor] = useState([]);
   const [shuffledCartiViitor, setShuffledCartiViitor] = useState([]);
@@ -40,7 +43,55 @@ export const ApiDataProvider = ({ children }) => {
 
   const [shuffleTrigger, setShuffleTrigger] = useState(false);
 
-  // Funcția de amestecare și completare a cărților
+  // Funcția de amestecare și completare a cărților PERSONALIZATE
+  const shuffleCartiPersonalizate = () => {
+    // Inițiază animația de ieșire
+    startExitAnimation();
+
+    // Așteaptă finalizarea animației de ieșire înainte de a amesteca cărțile
+    setTimeout(() => {
+      setLoading(true);
+
+      // Funcție ajutătoare pentru amestecarea unui array
+      const shuffleArray = (array) => {
+        let currentIndex = array.length,
+          randomIndex;
+        while (currentIndex !== 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex],
+            array[currentIndex],
+          ];
+        }
+        return array;
+      };
+
+      // Apelează funcția ajutătoare pentru a amesteca array-ul de cărți
+      let shuffledArray = shuffleArray([...cartiPersonalizate]);
+
+      // Completează sau taie array-ul pentru a avea exact numărul dorit de cărți
+      while (shuffledArray.length < 8) {
+        const randomCard =
+          shuffledArray[Math.floor(Math.random() * shuffledArray.length)];
+        shuffledArray.push({ ...randomCard });
+      }
+      if (shuffledArray.length > 8) {
+        shuffledArray = shuffledArray.slice(0, 8);
+      }
+
+      // Actualizează state-ul cu noile cărți amestecate
+      setShuffledCartiPersonalizate(shuffledArray);
+      setLoading(false);
+
+      // Resetare animație pentru a pregăti animația de intrare
+      resetExitAnimation();
+
+      // Setează shouldFlip pe true după reîncărcarea cărților
+      // setShouldFlip(true);
+    }, 3100); // Durata totală a animației de ieșire
+  };
+  // Funcția de amestecare și completare a cărților VIITOR
   const shuffleCartiViitor = () => {
     // Inițiază animația de ieșire
     startExitAnimation();
@@ -67,7 +118,7 @@ export const ApiDataProvider = ({ children }) => {
       // Apelează funcția ajutătoare pentru a amesteca array-ul de cărți
       let shuffledArray = shuffleArray([...cartiViitor]);
 
-      // Completează sau taie array-ul pentru a avea exact 7 cărți
+      // Completează sau taie array-ul pentru a avea exact numărul dorit de cărți
       while (shuffledArray.length < 7) {
         const randomCard =
           shuffledArray[Math.floor(Math.random() * shuffledArray.length)];
@@ -83,7 +134,10 @@ export const ApiDataProvider = ({ children }) => {
 
       // Resetare animație pentru a pregăti animația de intrare
       resetExitAnimation();
-    }, 300 * 7); // Durata totală a animației de ieșire
+
+      // Setează shouldFlip pe true după reîncărcarea cărților
+      // setShouldFlip(true);
+    }, 3100); // Durata totală a animației de ieșire
   };
 
   const startExitAnimation = () => {
@@ -145,6 +199,9 @@ export const ApiDataProvider = ({ children }) => {
       value={{
         cartiPersonalizate,
         categoriiPersonalizate,
+        setShuffledCartiPersonalizate,
+        shuffledCartiPersonalizate,
+        shuffleCartiPersonalizate,
         varianteCarti,
         cartiViitor,
         categoriiViitor,
@@ -153,6 +210,7 @@ export const ApiDataProvider = ({ children }) => {
         numereNorocoase,
         oreNorocoase,
         loading,
+        setLoading,
         error,
         setCartiPersonalizate,
         setCategoriiPersonalizate,
@@ -169,6 +227,7 @@ export const ApiDataProvider = ({ children }) => {
         resetExitAnimation,
         shuffleCartiViitor,
         shuffledCartiViitor,
+        setShuffledCartiViitor,
         zilnicNumereNorocoase,
         zilnicCitateMotivationale,
         zilnicCuloriNorocoase,

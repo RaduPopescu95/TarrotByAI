@@ -27,7 +27,8 @@ import { useLanguage } from "../../context/LanguageContext";
 
 const FutureReadingDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
-  const [cardOpacity, setCardOpacity] = useState(new Animated.Value(0));
+
+  const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0));
 
   const initialAnimations = useRef(Array(9).fill(null)).current;
   const {
@@ -48,6 +49,7 @@ const FutureReadingDashboard = () => {
     resetExitAnimation,
     shuffleCartiViitor,
     shuffledCartiViitor,
+    setShuffledCartiViitor,
   } = useApiData();
   const { language, changeLanguage } = useLanguage();
 
@@ -85,7 +87,6 @@ const FutureReadingDashboard = () => {
   // Animate cards out of view
   useEffect(() => {
     if (triggerExitAnimation) {
-      setShouldFlip(false); // Ascunde textul înainte de animația de ieșire
       cardAnimations.forEach((anim, index) => {
         Animated.timing(anim, {
           toValue: -Dimensions.get("window").width,
@@ -96,6 +97,7 @@ const FutureReadingDashboard = () => {
           if (index === cardAnimations.length - 1) {
             fetchData();
             resetExitAnimation();
+            setShouldFlip(false); // Resetați aici
           }
         });
       });
@@ -108,6 +110,36 @@ const FutureReadingDashboard = () => {
       setShouldFlip(false);
     }
   }, [categoriiViitor, loading]);
+
+  useEffect(() => {
+    if (shouldFlip) {
+      // Inițiați animația de fade in
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Inițiați animația de fade out
+      Animated.timing(opacityAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [shouldFlip]);
+
+  useEffect(() => {
+    // Acest useEffect va fi activat când `triggerExitAnimation` se schimbă
+    if (triggerExitAnimation) {
+      // Inițiați animația de fade out
+      Animated.timing(opacityAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [triggerExitAnimation, opacityAnim]); // Dependențe: triggerExitAnimation și opacityAnim
 
   const renderFlipCard = (category, index) => {
     if (!cardAnimations[index]) return null;
@@ -133,11 +165,13 @@ const FutureReadingDashboard = () => {
           shouldFlip={shouldFlip}
           isFuture={true}
           categoryName={category.info[language].nume}
+          triggerExitAnimation={triggerExitAnimation}
         />
 
         {shouldFlip && (
-          <View
+          <Animated.View
             style={{
+              opacity: opacityAnim, // Aplică animația de opacitate
               backgroundColor: colors.primary2,
               borderRadius: 5,
               display: "flex",
@@ -150,7 +184,7 @@ const FutureReadingDashboard = () => {
             <H8fontMediumBlack>
               {category.info[language].nume}
             </H8fontMediumBlack>
-          </View>
+          </Animated.View>
         )}
       </View>
     );
@@ -179,7 +213,7 @@ const FutureReadingDashboard = () => {
               top: 0, // Ajustează dacă este necesar
             }}
           />
-
+          {/* <GreetingBar isGoBack={true} /> */}
           {loading ? (
             <CustomSpinner size={74} color={colors.primary2} />
           ) : (
