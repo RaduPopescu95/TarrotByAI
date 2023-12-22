@@ -255,7 +255,7 @@ const App = () => {
 
     // COMMENTED FOR WARNING
 
-    handleRequestLocationPermission();
+    // handleRequestLocationPermission();
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
