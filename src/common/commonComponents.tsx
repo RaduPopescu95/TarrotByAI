@@ -14,8 +14,7 @@ import { colors } from "../utils/colors";
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 // import Icon1 from 'react-native-vector-icons/Octicons';
 import Modal from "react-native-modal";
-import SideMenu from "../pages/sideMenu";
-import LeftArrow from "../../assets/images/left-arrow-big-black.svg";
+
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   Menu,
@@ -25,11 +24,9 @@ import {
 } from "react-native-popup-menu";
 
 import { screenName } from "../utils/screenName";
-import BackIcon from "../../assets/images/left-arrow-white.svg";
-import Patient6 from "../../assets/images/patients/patient6.svg";
-import PhoneIcon from "../../assets/images/phone-icon.svg";
+
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../Store";
+
 import { useAppSelector } from "../hooks/hooks";
 
 interface NavBarProps {
@@ -64,9 +61,6 @@ export const NavBar: React.FC<NavBarProps> = ({
   isFirstDoctors,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-
-  const clinicInfoDB = useSelector((state) => state.clinicInfoData);
-  const { clinicInformation, loading } = clinicInfoDB;
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -166,7 +160,7 @@ export const NavBar: React.FC<NavBarProps> = ({
         propagateSwipe
         style={styles.sideMenuStyle}
       >
-        <SideMenu
+        {/* <SideMenu
           setModalVisible={() => setModalVisible(false)}
           userTitle={
             clinicInformation && clinicInformation.clinicInfoData
@@ -174,7 +168,7 @@ export const NavBar: React.FC<NavBarProps> = ({
               : ""
           }
           isClinicSettings={true}
-        />
+        /> */}
       </Modal>
     </Fragment>
   );
@@ -282,7 +276,7 @@ export const NavBarPatient: React.FC<NavBarProps> = ({
         propagateSwipe
         style={styles.sideMenuStyle}
       >
-        <SideMenu
+        {/* <SideMenu
           isPatient={true}
           setModalVisible={() => setModalVisible(false)}
           userTitle={
@@ -290,7 +284,7 @@ export const NavBarPatient: React.FC<NavBarProps> = ({
               ? `${patientInformation.basicInfoData.firstName} ${patientInformation.basicInfoData.lastName}`
               : ""
           }
-        />
+        /> */}
       </Modal>
     </Fragment>
   );

@@ -4,44 +4,27 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { screenName } from "./src/utils/screenName";
 
 import DashBoardScreen from "./src/pages/dashboard";
-import SideMenu from "./src/pages/sideMenu";
-import PatientAppointments from "./src/pages/patients/patientAppointment";
-import AppointmentList from "./src/pages/patients/appointmentsClinic";
-import PrescriptionList from "./src/pages/patients/prescriptions";
-import MedicalRecords from "./src/pages/patients/medicalRecords";
-import Billing from "./src/pages/patients/billing";
+
 import DoctorProfile from "./src/pages/doctors/doctorProfile";
 import DoctorOverView from "./src/pages/doctors/doctorOverview";
 import LocationView from "./src/pages/doctors/location";
 import Reviews from "./src/pages/doctors/reviews";
 import HoursView from "./src/pages/doctors/hours";
-import PatientProfile from "./src/pages/patients/patientProfile";
+
 import PatientOverView from "./src/pages/patients/overView";
 import MyPatient from "./src/pages/doctors/myPatient";
 import DoctorDashBoard from "./src/pages/doctors/doctorDashboard";
 import CircularProgress from "./src/components/circularProgress";
 import InvoiceList from "./src/pages/invoiceList";
 import InvoiceView from "./src/pages/invoiceView";
-import FavouritesScreen from "./src/pages/favourites";
+
 import NotificationScreen from "./src/pages/notifications";
 import Pages from "./src/pages/pages";
 import SearchDoctor from "./src/pages/showAllDoctorsLinked";
 import SocialMedia from "./src/pages/socialMedia";
-import ClinicProfileSettings from "./src/pages/ClinicProfileSettings";
-import BasicInfo from "./src/pages/profileSettings/basicInfo";
-import AboutMe from "./src/pages/profileSettings/aboutMe";
-import ClinicInfo from "./src/pages/profileSettings/clinicInfo";
-import ContactDetails from "./src/pages/profileSettings/contactDetails";
-import Pricing from "./src/pages/profileSettings/pricing";
-import Education from "./src/pages/profileSettings/education";
-import Awards from "./src/pages/profileSettings/awards";
-import Registrations from "./src/pages/profileSettings/registraction";
-import ChatList from "./src/pages/chatListClinic";
-import ChatView from "./src/pages/chatViewClinic";
+
 import ScheduleTimings from "./src/pages/doctors/scheduleTimings";
-import BookAppointment from "./src/pages/bookAppointment";
-import VoiceCall from "./src/pages/voiceCall";
-import VideoCall from "./src/pages/videoCall";
+
 import OnboardingScreen from "./src/pages/OnboardingScreen";
 // import SignInScreenClinic from './src/pages/SignInScreenClinic';
 // import SignUpScreenClinic from './src/pages/SignUpScreenClinic';
@@ -54,26 +37,20 @@ import SignInScreenPatient from "./src/pages/signInScreenPatient";
 
 import ForgotPasswordClinic from "./src/pages/forgotPasswordClinic";
 import ForgotPasswordPatient from "./src/pages/forgotPasswordPatient";
-import ChangePasswordClinic from "./src/pages/changePasswordClinic";
+
 import ChangePasswordPatient from "./src/pages/changePasswordPatient";
 import ClinicCalendar from "./src/pages/doctors/clinicCalendar";
-import ClinicCalendarTime from "./src/pages/ClinicCalendarTime";
+
 import ProfileSettingsPatient from "./src/pages/profileSettingsPatient";
-import myProfilePatient from "./src/pages/patients/myProfilePatient";
 
 import Checkout from "./src/pages/checkout";
 
-import CheckAppointmentClinic from "./src/pages/checkAppointmentClinic";
-
 import clinicAppointments from "./src/pages/doctors/appointmentsClinic";
-import ChatListClinic from "./src/pages/chatListClinic";
-import ChatListPatient from "./src/pages/chatListPatient";
-import ChatViewClinic from "./src/pages/chatViewClinic";
-import ChatViewPatient from "./src/pages/chatViewPatient";
+
 import PatientCalendarTime from "./src/pages/PatientCalendarTime";
 import ClinicAppointmentsDay from "./src/pages/doctors/appointmentsClinicDay";
 import TermsConditionsClinic from "./src/pages/doctors/TermsConditionsClinic";
-import TermsConditionsPatient from "./src/pages/patients/TermsConditionsPatient";
+
 import BookingCanceledClinic from "./src/pages/doctors/bookingCanceledClinic";
 import DoctorProfileSettings from "./src/pages/doctors/DoctorProfileSettings";
 import ClinicDashboard from "./src/pages/doctors/ClinicDashboard";
@@ -81,30 +58,22 @@ import ClinicDoctors from "./src/pages/doctors/ClinicDoctors";
 import DoctorScheduleTimings from "./src/pages/doctors/DoctorScheduleTimings";
 import DoctorCalendarTime from "./src/pages/doctors/DoctorCalendarTime";
 import PatientSearchDashboard from "./src/pages/patients/PatientSearchDashboard";
-import SearchResultPatient from "./src/pages/patients/SearchResultPatient";
+
 import ShowAllDoctorsLinked from "./src/pages/showAllDoctorsLinked";
-import AroundPatient from "./src/pages/patients/DocAroundPatient";
-import DocAroundPatient from "./src/pages/patients/DocAroundPatient";
-import ClinicsAroundPatient from "./src/pages/patients/ClinicsAroundPatient";
-import ClinicDoctorsPatient from "./src/pages/patients/ClinicDoctorsPatient";
-import DoctorCalendarTimePatient from "./src/pages/patients/DoctorCalendarTimePatient";
-import UserSettingsPatient from "./src/pages/UserSettingsPatient";
+
 import ClinicProfile from "./src/pages/doctors/ClinicProfile";
 import PatientFeedback from "./src/pages/PatientFeedback";
 import ClinicFeedback from "./src/pages/doctors/ClinicFeedback";
 import ChangePhoneClinic from "./src/pages/doctors/changePhoneClinic";
-import ChangeEmailClinic from "./src/pages/changeEmailClinic";
-import ChangeEmailPatient from "./src/pages/ChangeEmailPatient";
-import ChangePhonePatient from "./src/pages/patients/ChangePhonePatient";
+
 import { SettingsPage } from "./src/pages/SettingsPage";
 
 import PaywallScreen from "./src/pages/PaywallScreen/PawywallScreen";
 import PatientInformation from "./src/pages/PatientInformation";
-import GuestAppointemnts from "./src/pages/patients/GuestAppointments";
-import ClinicAllDoctorsCalendar from "./src/pages/ClinicAllDoctorsCalendar";
+
 import { ErrorView } from "./src/components/ErrorView";
 import Bugsnag from "@bugsnag/expo";
-import ClinicHistoryPatient from "./src/pages/patients/ClinicHistoryPatient";
+
 import GuestPhoneInputModal from "./src/components/GuestPhoneInputModal";
 import Dashboard2 from "./src/pages/doctors/Dashboard2";
 
@@ -204,11 +173,6 @@ const HomeNavigation = (props: NavigationProps) => {
         <Stack.Screen
           name={screenName.ForgotPasswordClinic}
           component={ForgotPasswordClinic}
-        />
-
-        <Stack.Screen
-          name={screenName.ChangePasswordClinic}
-          component={ChangePasswordClinic}
         />
 
         <Stack.Screen

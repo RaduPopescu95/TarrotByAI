@@ -61,6 +61,7 @@ const PersonalReadingDashboard = () => {
 
   // Initialize card animations and animate cards on mount and categoriiPersonalizate change
   useEffect(() => {
+    console.log("TEst...", shuffledCartiPersonalizate.length);
     if (shuffledCartiPersonalizate.length === 0 || triggerExitAnimation) return;
 
     const screenWidth = Dimensions.get("window").width;
@@ -100,7 +101,7 @@ const PersonalReadingDashboard = () => {
         }).start(() => {
           if (index === cardAnimations.length - 1) {
             fetchData();
-            resetExitAnimation();
+            // resetExitAnimation(); COMENTAT PENTRU CA AVEA ERORI
             setShouldFlip(false); // Resetați aici
           }
         });
@@ -150,6 +151,17 @@ const PersonalReadingDashboard = () => {
   }, []);
 
   const renderFlipCard = (category, index) => {
+    // Function to get the categoryName based on the language
+    const getCategoryName = (category, language) => {
+      if (language === "hi") {
+        return category.info.hu?.nume;
+      } else if (language === "id") {
+        return category.info.ru?.nume;
+      } else {
+        return category.info[language]?.nume;
+      }
+    };
+
     if (!cardAnimations[index]) return null;
 
     // Asociază fiecare categorie cu o carte, repetând cărțile dacă este necesar
@@ -173,11 +185,11 @@ const PersonalReadingDashboard = () => {
           style={animatedStyle}
           shouldFlip={shouldFlip}
           isFuture={false}
-          categoryName={category.info[language].nume}
+          categoryName={getCategoryName(category, language)}
           triggerExitAnimation={triggerExitAnimation}
           varianteCarti={varianteCarti}
+          conditieCategorie={category.info.ro.nume}
         />
-
         {shouldFlip && (
           <Animated.View
             style={{
@@ -192,7 +204,7 @@ const PersonalReadingDashboard = () => {
             }}
           >
             <H8fontMediumBlack>
-              {category.info[language].nume}
+              {getCategoryName(category, language)}
             </H8fontMediumBlack>
           </Animated.View>
         )}

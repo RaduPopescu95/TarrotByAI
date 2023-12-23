@@ -72,6 +72,7 @@ import axios from "axios";
 import { Snackbar } from "react-native-paper";
 import SnackBar from "../components/SnackBar";
 import { handleFirebaseAuthError } from "../utils/authUtils";
+import { useAuth } from "../context/AuthContext";
 
 interface Props extends GeneralProps {
   route: Route<string, object | undefined>;
@@ -102,6 +103,7 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
   const [message, setMessage] = useState("email");
   const [isLoading, setIsLoading] = useState(false);
   const [showSnackback, setShowSnackback] = useState(false);
+  const { setUserData } = useAuth();
 
   let pwd = watch("password");
   const auth = authentication;
@@ -125,6 +127,7 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
             password: detaila.password,
             // Adaugă orice alte câmpuri necesare
           };
+          setUserData({ ...value });
           setDoc(doc(db, collectionId, documentId), value);
           console.log("success PASS");
         }, 1500);

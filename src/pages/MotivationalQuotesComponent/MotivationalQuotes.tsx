@@ -87,9 +87,15 @@ const MotivationalQuotes = () => {
                   bottom: "10%",
                 }}
               >
-                <H8fontMediumWhite>
-                  {zilnicCitateMotivationale.info[language].descriere}
-                </H8fontMediumWhite>
+                {zilnicCitateMotivationale.info ? (
+                  <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                    {language === "hi"
+                      ? zilnicCitateMotivationale.info.hu.descriere
+                      : language === "id"
+                        ? zilnicCitateMotivationale.info.ru.descriere
+                        : zilnicCitateMotivationale.info[language].descriere}
+                  </H8fontMediumWhite>
+                ) : null}
               </View>
             </View>
           </ImageBackground>

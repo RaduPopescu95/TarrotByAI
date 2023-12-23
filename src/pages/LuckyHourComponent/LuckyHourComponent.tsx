@@ -69,8 +69,10 @@ const LuckyHour = () => {
             <GreetingBar isGoBack={true} />
             <View style={styles.overlay}>
               <View style={styles.numberContainer}>
-                <Text style={styles.number}> {zilnicOreNorocoase.ora}</Text>
-                {/* Aici pune numărul dorit */}
+                <Text style={styles.number}>
+                  {" "}
+                  {zilnicOreNorocoase.ora ? zilnicOreNorocoase.ora : ""}
+                </Text>
               </View>
               <View style={styles.secondImageContainer}>
                 <Image
@@ -90,10 +92,15 @@ const LuckyHour = () => {
                 {/* <H7fontBoldWhite style={{ alignSelf: "center" }}>
                 {zilnicOreNorocoase.info[language].nume}
               </H7fontBoldWhite> */}
-
-                <H8fontMediumWhite>
-                  {zilnicOreNorocoase.info[language].descriere}
-                </H8fontMediumWhite>
+                {zilnicOreNorocoase.info ? (
+                  <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                    {language === "hi"
+                      ? zilnicOreNorocoase.info.hu.descriere
+                      : language === "id"
+                        ? zilnicOreNorocoase.info.ru.descriere
+                        : zilnicOreNorocoase.info[language].descriere}
+                  </H8fontMediumWhite>
+                ) : null}
               </View>
             </View>
           </ImageBackground>
@@ -124,6 +131,7 @@ const styles = StyleSheet.create({
   number: {
     fontSize: 40, // Mărimea fontului pentru număr
     color: "white", // Culoarea textului
+    textAlign: "center",
     // Adaugă alte stiluri pentru text dacă este necesar
   },
   imageContainer: {

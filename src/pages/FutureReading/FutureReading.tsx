@@ -78,14 +78,22 @@ const FutureReading = ({ route }) => {
                 <H7fontBoldWhite
                   style={{ alignSelf: "center", marginBottom: 10 }}
                 >
-                  {item.info[language].nume}
+                  {language === "hi"
+                    ? item.info.hu.nume
+                    : language === "id"
+                      ? item.info.ru.nume
+                      : item.info[language].nume}
                 </H7fontBoldWhite>
                 {/* <H8fontMediumPrimary style={{ alignSelf: "center" }}>
                 Roșu
               </H8fontMediumPrimary> */}
 
-                <H8fontMediumWhite>
-                  {item.info[language].descriere}
+                <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                  {language === "hi"
+                    ? item.info.hu.descriere
+                    : language === "id"
+                      ? item.info.ru.descriere
+                      : item.info[language].descriere}
                 </H8fontMediumWhite>
               </View>
             </View>

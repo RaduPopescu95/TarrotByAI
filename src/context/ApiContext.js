@@ -22,6 +22,7 @@ export const ApiDataProvider = ({ children }) => {
   const [numereNorocoase, setNumereNorocoase] = useState([]);
   const [oreNorocoase, setOreNorocoase] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [reentryAnimation, setReentryAnimation] = useState(false);
   const [error, setError] = useState(null);
   const [triggerExitAnimation, setTriggerExitAnimation] = useState(false);
 
@@ -50,6 +51,7 @@ export const ApiDataProvider = ({ children }) => {
 
     // Așteaptă finalizarea animației de ieșire înainte de a amesteca cărțile
     setTimeout(() => {
+      console.log("Inside Timeout");
       setLoading(true);
 
       // Funcție ajutătoare pentru amestecarea unui array
@@ -93,11 +95,13 @@ export const ApiDataProvider = ({ children }) => {
   };
   // Funcția de amestecare și completare a cărților VIITOR
   const shuffleCartiViitor = () => {
+    console.log("Shuffle Carti Viitor Start");
     // Inițiază animația de ieșire
     startExitAnimation();
 
     // Așteaptă finalizarea animației de ieșire înainte de a amesteca cărțile
     setTimeout(() => {
+      console.log("Inside Timeout");
       setLoading(true);
 
       // Funcție ajutătoare pentru amestecarea unui array
@@ -119,13 +123,13 @@ export const ApiDataProvider = ({ children }) => {
       let shuffledArray = shuffleArray([...cartiViitor]);
 
       // Completează sau taie array-ul pentru a avea exact numărul dorit de cărți
-      while (shuffledArray.length < 7) {
+      while (shuffledArray.length < 8) {
         const randomCard =
           shuffledArray[Math.floor(Math.random() * shuffledArray.length)];
         shuffledArray.push({ ...randomCard });
       }
-      if (shuffledArray.length > 7) {
-        shuffledArray = shuffledArray.slice(0, 7);
+      if (shuffledArray.length > 8) {
+        shuffledArray = shuffledArray.slice(0, 8);
       }
 
       // Actualizează state-ul cu noile cărți amestecate
@@ -141,10 +145,12 @@ export const ApiDataProvider = ({ children }) => {
   };
 
   const startExitAnimation = () => {
+    console.log("Start Exit Animation");
     setTriggerExitAnimation(true);
   };
 
   const resetExitAnimation = () => {
+    console.log("Reset Exit Animation");
     setTriggerExitAnimation(false);
   };
 
@@ -232,6 +238,8 @@ export const ApiDataProvider = ({ children }) => {
         zilnicCitateMotivationale,
         zilnicCuloriNorocoase,
         zilnicOreNorocoase,
+        reentryAnimation,
+        setReentryAnimation,
       }}
     >
       {children}

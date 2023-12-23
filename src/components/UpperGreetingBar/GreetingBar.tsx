@@ -96,7 +96,7 @@ const GreetingBar = ({ isGoBack }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState("Romanian");
-  const { currentUser, userData, isGuestUser } = useAuth();
+  const { currentUser, userData, isGuestUser, setUserData } = useAuth();
   const { language, changeLanguage } = useLanguage();
 
   useEffect(() => {

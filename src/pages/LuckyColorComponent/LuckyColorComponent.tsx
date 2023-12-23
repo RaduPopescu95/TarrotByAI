@@ -72,7 +72,11 @@ const LuckyColor = () => {
               <View style={styles.imageContainer}>
                 <Image
                   style={styles.image}
-                  source={{ uri: zilnicCuloriNorocoase.image.finalUri }}
+                  source={{
+                    uri: zilnicCuloriNorocoase.image
+                      ? zilnicCuloriNorocoase.image.finalUri
+                      : "",
+                  }}
                 />
               </View>
               <View style={styles.secondImageContainer}>
@@ -93,13 +97,25 @@ const LuckyColor = () => {
                 <H7fontBoldWhite style={{ alignSelf: "center" }}>
                   {i18n.translate("luckyColorOfTheDay")}
                 </H7fontBoldWhite>
-                <H8fontMediumPrimary style={{ alignSelf: "center" }}>
-                  {zilnicCuloriNorocoase.info[language].nume}
-                </H8fontMediumPrimary>
+                {zilnicCuloriNorocoase.info ? (
+                  <>
+                    <H8fontMediumPrimary style={{ alignSelf: "center" }}>
+                      {language === "hi"
+                        ? zilnicCuloriNorocoase.info.hu.nume
+                        : language === "id"
+                          ? zilnicCuloriNorocoase.info.ru.nume
+                          : zilnicCuloriNorocoase.info[language].nume}
+                    </H8fontMediumPrimary>
 
-                <H8fontMediumWhite>
-                  {zilnicCuloriNorocoase.info[language].descriere}
-                </H8fontMediumWhite>
+                    <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                      {language === "hi"
+                        ? zilnicCuloriNorocoase.info.hu.descriere
+                        : language === "id"
+                          ? zilnicCuloriNorocoase.info.ru.descriere
+                          : zilnicCuloriNorocoase.info[language].descriere}
+                    </H8fontMediumWhite>
+                  </>
+                ) : null}
               </View>
             </View>
           </ImageBackground>

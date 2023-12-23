@@ -36,17 +36,21 @@ const FutureReadingDashboard = () => {
     numereNorocoase,
     culoriNorocoase,
     citateMotivationale,
-    categoriiViitor,
-    cartiViitor,
+
     varianteCarti,
     categoriiPersonalizate,
     cartiPersonalizate,
+    shuffleCartiPersonalizate,
+    shuffledCartiPersonalizate,
+    setShuffledCartiPersonalizate,
     loading,
     error,
     fetchData,
     triggerExitAnimation,
     startExitAnimation,
     resetExitAnimation,
+    categoriiViitor,
+    cartiViitor,
     shuffleCartiViitor,
     shuffledCartiViitor,
     setShuffledCartiViitor,
@@ -80,10 +84,6 @@ const FutureReadingDashboard = () => {
     });
   }, [shuffledCartiViitor, triggerExitAnimation]); // Depend on shuffledCartiViitor and triggerExitAnimation
 
-  useEffect(() => {
-    console.log("language...", language);
-  }, [language]);
-
   // Animate cards out of view
   useEffect(() => {
     if (triggerExitAnimation) {
@@ -95,9 +95,9 @@ const FutureReadingDashboard = () => {
           delay: index * 100,
         }).start(() => {
           if (index === cardAnimations.length - 1) {
+            setShouldFlip(false);
             fetchData();
-            resetExitAnimation();
-            setShouldFlip(false); // Resetați aici
+            // resetExitAnimation(); MODIFICAT PENTRU CA DADEA ERORI
           }
         });
       });
@@ -113,14 +113,12 @@ const FutureReadingDashboard = () => {
 
   useEffect(() => {
     if (shouldFlip) {
-      // Inițiați animația de fade in
       Animated.timing(opacityAnim, {
         toValue: 1,
         duration: 500,
         useNativeDriver: true,
       }).start();
     } else {
-      // Inițiați animația de fade out
       Animated.timing(opacityAnim, {
         toValue: 0,
         duration: 500,
@@ -141,7 +139,22 @@ const FutureReadingDashboard = () => {
     }
   }, [triggerExitAnimation, opacityAnim]); // Dependențe: triggerExitAnimation și opacityAnim
 
+  useEffect(() => {
+    console.log("Tryyy...", categoriiViitor.length);
+  }, []);
+
   const renderFlipCard = (category, index) => {
+    // Function to get the categoryName based on the language
+    const getCategoryName = (category, language) => {
+      if (language === "hi") {
+        return category.info.hu?.nume;
+      } else if (language === "id") {
+        return category.info.ru?.nume;
+      } else {
+        return category.info[language]?.nume;
+      }
+    };
+
     if (!cardAnimations[index]) return null;
 
     // Asociază fiecare categorie cu o carte, repetând cărțile dacă este necesar
@@ -164,10 +177,11 @@ const FutureReadingDashboard = () => {
           style={animatedStyle}
           shouldFlip={shouldFlip}
           isFuture={true}
-          categoryName={category.info[language].nume}
+          categoryName={getCategoryName(category, language)}
           triggerExitAnimation={triggerExitAnimation}
+          varianteCarti={varianteCarti}
+          conditieCategorie={category.info.ro.nume}
         />
-
         {shouldFlip && (
           <Animated.View
             style={{
@@ -182,7 +196,7 @@ const FutureReadingDashboard = () => {
             }}
           >
             <H8fontMediumBlack>
-              {category.info[language].nume}
+              {getCategoryName(category, language)}
             </H8fontMediumBlack>
           </Animated.View>
         )}

@@ -136,10 +136,10 @@ const PaywallScreen = ({ navigation }) => {
       >
         <View style={styles.blackBox}>
           <View style={{ width: "100%", height: "10%", flexDirection: "row" }}>
-            <Image
+            {/* <Image
               source={require("../../images/smallicon.jpg")}
               style={{ width: "15%", height: 22, borderRadius: 5 }}
-            />
+            /> */}
             <Text style={{ color: "white", marginLeft: 5, fontWeight: "bold" }}>
               {/* <Text style={styles.bold}>only $2/month</Text> */}
               {i18n.translate("styleConnectUpgradeMessage7")}
@@ -171,10 +171,10 @@ const PaywallScreen = ({ navigation }) => {
         </View>
         <View style={styles.blackBox}>
           <View style={{ width: "100%", height: "10%", flexDirection: "row" }}>
-            <Image
+            {/* <Image
               source={require("../../images/smallicon.jpg")}
               style={{ width: "15%", height: 22, borderRadius: 5 }}
-            />
+            /> */}
             <Text style={{ color: "white", marginLeft: 5, fontWeight: "bold" }}>
               {/* <Text style={styles.bold}>only $2/month</Text> */}
               {i18n.translate("styleConnectUpgradeMessage8")}

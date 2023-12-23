@@ -15,25 +15,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { authentication, db } from "../../firebase";
 import { screenName } from "../utils/screenName";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getCalendarTimes,
-  getClinicAppointments,
-  getClinicApprovedAppointments,
-  getClinicDoctors,
-  getClinicInfo,
-  getClinics,
-  getPatientsOfClinic,
-  getScheduleTimings,
-} from "../actions/clinicActions";
-import {
-  getClinicsOfPatient,
-  getPatientAppointments,
-  getPatientInfo,
-  setTemporaryPatientClinicReview,
-  setTemporaryPatientReview,
-  getAllClinicsSearchDashboard,
-  getGuestLoginDetails,
-} from "../actions/patientActions";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LottieView from "lottie-react-native";
 import { ActivityIndicator } from "react-native-paper";
@@ -41,7 +23,6 @@ import { handleSignOutFromSignIn } from "../utils/handleSignOut";
 import { doc, getDoc } from "firebase/firestore";
 import i18n from "../../i18n";
 
-import { getTimeFormat } from "../actions/comonActions";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../utils/colors";
 import {
@@ -128,8 +109,6 @@ const OnboardingScreen = ({ navigation }) => {
 
   const auth = authentication;
   const isFocused = useIsFocused();
-
-  const dispatch = useDispatch();
 
   const ref = React.useRef();
 

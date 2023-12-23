@@ -11,7 +11,6 @@ import {
   Paragraph,
   Text,
 } from "react-native-paper";
-import store from "./Store";
 
 import Geocoder from "react-native-geocoding";
 import * as Location from "expo-location";
@@ -35,6 +34,7 @@ import {
   NavigationContext,
   useNavigation,
 } from "@react-navigation/native";
+import * as Analytics from "expo-firebase-analytics";
 import { ErrorView } from "./src/components/ErrorView";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HourClockProvider } from "./src/context/HourClockContext";
@@ -43,6 +43,7 @@ import { NavBarVisibilityProvider } from "./src/context/NavbarVisibilityContext"
 import { NavigationProvider } from "./src/context/NavigationContext";
 import { LanguageProvider } from "./src/context/LanguageContext";
 import { ApiDataProvider } from "./src/context/ApiContext";
+import store from "./Store";
 
 // Start BugSnag first...
 Bugsnag.start();
@@ -226,7 +227,33 @@ const App = () => {
     }
   };
 
+  const handleTestAnalytics = async () => {
+    await Analytics.logEvent("add_to_cart", {
+      currency: "USD",
+      value: 29.98,
+      items: [
+        {
+          id: "P12345",
+          name: "Expo Warhol T-Shirt",
+          brand: "Expo",
+          category: "Apparel/T-Shirts",
+          coupon: "SUMMER_DISCOUNT",
+          list_name: "Search Results",
+          list_position: 1,
+          price: 14.99,
+          quantity: 2,
+          variant: "Blue",
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
+    handleTestAnalytics();
+    Analytics.logEvent("your_event", {
+      param1: "value1",
+      param2: "value2",
+    });
     // setupRevenueCat();
     // fetchDataRevenueCat();
     // Bugsnag.notify(new Error("Test error"));

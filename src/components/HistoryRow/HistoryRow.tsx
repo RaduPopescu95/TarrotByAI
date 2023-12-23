@@ -18,7 +18,7 @@ const ImageRow = ({ images }) => {
         <H7fontMediumWhite>#1231231</H7fontMediumWhite>
         <H7fontMediumWhite>05.11.2023</H7fontMediumWhite>
       </View>
-      <FlatList
+      {/* <FlatList
         horizontal
         data={images}
         renderItem={({ item }) => (
@@ -31,7 +31,7 @@ const ImageRow = ({ images }) => {
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         style={styles.row}
-      />
+      /> */}
     </View>
   );
 };

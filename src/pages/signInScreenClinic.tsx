@@ -111,6 +111,8 @@ import {
   getCountryByCca2,
 } from "react-native-international-phone-number";
 import { useAuth } from "../context/AuthContext";
+import { handleFirebaseAuthError } from "../utils/authUtils";
+import SnackBar from "../components/SnackBar";
 
 interface Props extends GeneralProps {
   route: Route<string, object | undefined>;
@@ -126,6 +128,8 @@ const SignInScreenClinic: React.FC<Props> = ({
   const [isWhite1, setIsWhite1] = useState(false);
   const [isWhite2, setIsWhite2] = useState(false);
   const [loginType, setLoginType] = useState("email");
+  const [message, setMessage] = useState("email");
+  const [showSnackback, setShowSnackback] = useState(false);
 
   const formKeys = {
     email: "email",
@@ -195,58 +199,13 @@ const SignInScreenClinic: React.FC<Props> = ({
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log("error.name...", error.name);
-        if (error.name === "Not the right user type") {
-          Alert.alert(
-            "Could Not Log In",
-            "We found an account with this e-mail created as a patient account. Please use a clinic account or register for a clinic account",
-            [
-              {
-                text: "Try Again",
-                onPress: () => {
-                  console.log("Try Again pressed");
+        const errorMessage = handleFirebaseAuthError(error);
+        // Aici puteți folosi errorMessage pentru a afișa un snackbar sau un alert
+        setShowSnackback(true);
+        setMessage(errorMessage);
 
-                  setIsLoading(false);
-                },
-                style: "cancel",
-              },
-              {
-                text: "Register",
-                onPress: () => {
-                  navigation.push(screenName.SignUpScreenClinic);
-
-                  setIsLoading(false);
-                },
-              },
-            ]
-          );
-        } else {
-          Alert.alert(
-            "Could Not Log In",
-            "Your email or password is incorect or there is no existing user with this account. Please try again or register for an account",
-            [
-              {
-                text: "Try Again",
-                onPress: () => {
-                  console.log("Try Again pressed");
-
-                  setIsLoading(false);
-                },
-                style: "cancel",
-              },
-              {
-                text: "Register",
-                onPress: () => {
-                  navigation.push(screenName.SignUpScreenClinic);
-
-                  setIsLoading(false);
-                },
-              },
-            ]
-          );
-        }
-
-        console.log("error on sign in clinic...", error.name);
+        console.log("error on sign in user...", error.message);
+        console.log("error on sign in user...", error.code);
       });
   };
 
@@ -413,6 +372,13 @@ const SignInScreenClinic: React.FC<Props> = ({
               </View>
               {/* </View> */}
             </KeyboardAvoidingView>
+            <SnackBar
+              showSnackBar={showSnackback}
+              setShowSnackback={setShowSnackback}
+              message={message}
+              bottom={2}
+              screen={screenName.SignInScreenClinic}
+            />
           </LinearGradient>
         </MainContainer>
       </Fragment>

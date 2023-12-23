@@ -70,8 +70,9 @@ const LuckyNumber = () => {
             <View style={styles.overlay}>
               <View style={styles.numberContainer}>
                 <Text style={styles.number}>
-                  {" "}
-                  {zilnicNumereNorocoase.number}
+                  {zilnicNumereNorocoase.number
+                    ? zilnicNumereNorocoase.number
+                    : ""}
                 </Text>
                 {/* Aici pune numărul dorit */}
               </View>
@@ -93,10 +94,15 @@ const LuckyNumber = () => {
                 {/* <H7fontBoldWhite style={{ alignSelf: "center" }}>
                 {zilnicNumereNorocoase.info[language].nume}
               </H7fontBoldWhite> */}
-
-                <H8fontMediumWhite>
-                  {zilnicNumereNorocoase.info[language].descriere}
-                </H8fontMediumWhite>
+                {zilnicNumereNorocoase.info ? (
+                  <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                    {language === "hi"
+                      ? zilnicNumereNorocoase.info.hu.descriere
+                      : language === "id"
+                        ? zilnicNumereNorocoase.info.ru.descriere
+                        : zilnicNumereNorocoase.info[language].descriere}
+                  </H8fontMediumWhite>
+                ) : null}
               </View>
             </View>
           </ImageBackground>

@@ -16,13 +16,15 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../utils/screenName";
 import { handleLanguagei18n } from "../utils/handleLanguageGeneral";
+import i18n from "../../i18n";
 
 const LanguageSelectScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
 
-  const handleLanguageSelect = (language) => {
-    setSelectedLanguage(language);
-    console.log(`${language} Selected`);
+  const handleLanguageSelect = (language, name) => {
+    console.log("test...", language);
+    setSelectedLanguage(name);
+    console.log(`${name} Selected`);
     handleLanguagei18n(language);
   };
 
@@ -121,7 +123,9 @@ const LanguageSelectScreen = () => {
             style={styles.headerImage}
             resizeMode="contain"
           />
-          <Text style={styles.headerText}>Selectează limba</Text>
+          <Text style={styles.headerText}>
+            {i18n.translate("selectLanguage")}
+          </Text>
         </View>
 
         <View
@@ -137,7 +141,9 @@ const LanguageSelectScreen = () => {
                 key={language.code}
                 language={language.name}
                 flagSource={language.flag}
-                onSelect={() => handleLanguageSelect(language.name)}
+                onSelect={() =>
+                  handleLanguageSelect(language.code, language.name)
+                }
                 isSelected={selectedLanguage === language.name}
               />
             ))}

@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isGuestUser, // Includeți isGuestUser în context
     setAsGuestUser, // Expuși funcția prin context
+    setUserData,
   };
 
   return (

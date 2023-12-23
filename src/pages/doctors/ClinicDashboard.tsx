@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StatusBar,
   Platform,
+  ImageBackground,
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
@@ -135,20 +136,31 @@ const ClinicDashboard = () => {
             paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           }}
         >
-          <GreetingBar />
-          <View
+          <ImageBackground
+            source={require("../../../assets/bg-horizontalLines.png")}
+            resizeMode="cover"
             style={{
-              paddingTop: "23%",
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              minHeight: screenHeight,
+              flex: 1,
+              width: null,
+              height: null,
+              // alignItems: 'flex-end',
             }}
           >
-            <View style={styles.cardRow}>
-              {cardData.map((card, index) => renderCard(card, index))}
+            <GreetingBar />
+            <View
+              style={{
+                paddingTop: "23%",
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                minHeight: screenHeight,
+              }}
+            >
+              <View style={styles.cardRow}>
+                {cardData.map((card, index) => renderCard(card, index))}
+              </View>
             </View>
-          </View>
+          </ImageBackground>
         </LinearGradient>
       </MainContainer>
     </Fragment>

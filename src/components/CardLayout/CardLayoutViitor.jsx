@@ -30,9 +30,19 @@ const CardLayoutViitor = ({ title, children }) => {
     return acc;
   }, []);
 
+  // Verifică dacă există rânduri
+  const hasRows = rows.length > 0;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <View
+        style={[
+          styles.titleContainer,
+          hasRows ? styles.titleTop : styles.titleCenter,
+        ]}
+      >
+        <Text style={styles.title}>{title}</Text>
+      </View>
       {rows.map((row, rowIndex) => (
         <View
           key={rowIndex}
@@ -69,12 +79,23 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     height: "100%",
   },
+  titleContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center", // Asigură că titlul este centrat în containerul său
+  },
+  titleTop: {
+    marginTop: 20, // Spațiu suplimentar atunci când există rânduri
+  },
+  titleCenter: {
+    flex: 1, // Întinde containerul pentru a centra titlul când nu sunt rânduri
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 1,
     color: "white",
     textAlign: "center",
+    marginBottom: 1, // Poți ajusta această valoare după preferințe
   },
   cardRow: {
     flexDirection: "row",
@@ -85,10 +106,10 @@ const styles = StyleSheet.create({
     marginHorizontal: Dimensions.get("window").width * 0.02,
   },
   lowerCard: {
-    marginTop: 20, // Ajustează această valoare pentru a poziționa mai jos cartonașele laterale
+    marginTop: 20, // Spațiu pentru a poziționa mai jos cartonașele laterale
   },
   emptySpace: {
-    width: Dimensions.get("window").width / 3.8,
+    width: Dimensions.get("window").width / 3.8, // Lățimea spațiului gol
   },
 });
 

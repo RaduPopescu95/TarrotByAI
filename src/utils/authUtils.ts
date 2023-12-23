@@ -102,9 +102,20 @@ export const handleLogout = async () => {
   }
 };
 
-export const handleDeleteAccount = async () => {
+export const handleDeleteAccount = async (currentPassword) => {
   try {
-    await deleteUser(auth.currentUser).then(() => {
+    const auth = authentication;
+    const credential = EmailAuthProvider.credential(
+      auth.currentUser.email,
+      currentPassword
+    );
+    console.log("-------test----");
+    const result = await reauthenticateWithCredential(
+      auth.currentUser,
+      credential
+    );
+
+    await deleteUser(result.user).then(() => {
       console.log("deleted successfuly...auth account");
     });
   } catch (error) {
@@ -126,6 +137,7 @@ export const handleResetPassword = async (email) => {
 // handleFirebaseAuthError.js
 export const handleFirebaseAuthError = (error) => {
   let message = "";
+  console.log("test...", error.code);
   switch (error.code) {
     case "auth/invalid-email":
       message = i18n.translate("firebaseErrorInvalidEmail");
@@ -153,6 +165,9 @@ export const handleFirebaseAuthError = (error) => {
       break;
     case "auth/network-request-failed":
       message = i18n.translate("firebaseErrorNetworkRequestFailed");
+      break;
+    case "auth/invalid-credential":
+      message = i18n.translate("firebaseErrorInvalidCredentials");
       break;
     default:
       message = i18n.translate("firebaseErrorUnknown");

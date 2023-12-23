@@ -14,6 +14,7 @@ import { screenName } from "../../utils/screenName";
 import { useLanguage } from "../../context/LanguageContext";
 import { colors } from "../../utils/colors";
 import { Image } from "react-native";
+import { normalizeString } from "../../utils/stringUtils";
 
 const FlipCard = ({
   item,
@@ -23,6 +24,7 @@ const FlipCard = ({
   categoryName,
   triggerExitAnimation,
   varianteCarti,
+  conditieCategorie,
 }) => {
   const flipAnim = useRef(new Animated.Value(0)).current;
 
@@ -43,7 +45,7 @@ const FlipCard = ({
     if (shouldFlip) {
       flipCard();
     } else {
-      flipAnim.setValue(0); // Reset the flip animation
+      flipAnim.setValue(0);
     }
   }, [shouldFlip]);
 
@@ -101,45 +103,52 @@ const FlipCard = ({
 
   // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
   const navigateToPersonalizedReading = () => {
-    console.log(item.image.finalUri);
-    if (isFuture) {
-      navigation.navigate(screenName.FutureReading, {
-        item,
-      });
-    } else {
-      const cardName = item.info[language].nume.trim().toLowerCase();
-      const categoryNameNormalized = categoryName.trim().toLowerCase();
-
-      // Filtrare cu verificare pentru undefined și normalizare pentru litere mari/mici și spații
-      const filteredVariante = varianteCarti.filter((carte) => {
-        const categorieNume = carte.categorie?.info[language]?.nume
-          ?.trim()
-          .toLowerCase();
-        const carteNume = carte.carte?.info[language]?.nume
-          ?.trim()
-          .toLowerCase();
-
-        return (
-          categorieNume === categoryNameNormalized &&
-          carteNume === cardName &&
-          categorieNume &&
-          carteNume
-        );
-      });
-
-      // Verificare dacă există elemente în array-ul filtrat
-      if (filteredVariante.length > 0) {
-        // Selectare aleatorie a unui element
-        const randomIndex = Math.floor(Math.random() * filteredVariante.length);
-        const selectedCard = filteredVariante[randomIndex];
-
-        // Navigație cu cartea selectată
-        navigation.navigate("PersonalizedReading", { item: selectedCard });
+    try {
+      // console.log(item.image.finalUri);
+      if (isFuture) {
+        navigation.navigate(screenName.FutureReading, {
+          item,
+        });
       } else {
-        console.log(
-          "Nicio carte nu a fost găsită pentru criteriile specificate."
-        );
+        const cardName = item.info.ro.nume.trim().toLowerCase();
+        const categoryNameNormalized = conditieCategorie.trim().toLowerCase();
+        // console.log(cardName);
+        // console.log(categoryNameNormalized);
+
+        // Filtrare cu verificare pentru undefined și normalizare pentru litere mari/mici și spații
+        const filteredVariante = varianteCarti.filter((carte) => {
+          const cardNameNormalized = normalizeString(item.info.ro.nume);
+          const categoryNameNormalized = normalizeString(conditieCategorie);
+          const carteNumeNormalized = normalizeString(
+            carte.carte?.info.ro?.nume || ""
+          );
+          const categorieNumeNormalized = normalizeString(
+            carte.categorie?.info.ro?.nume || ""
+          );
+
+          return (
+            cardNameNormalized === carteNumeNormalized &&
+            categoryNameNormalized === categorieNumeNormalized
+          );
+        });
+        // Verificare dacă există elemente în array-ul filtrat
+        if (filteredVariante.length > 0) {
+          // Selectare aleatorie a unui element
+          const randomIndex = Math.floor(
+            Math.random() * filteredVariante.length
+          );
+          const selectedCard = filteredVariante[randomIndex];
+
+          // Navigație cu cartea selectată
+          navigation.navigate("PersonalizedReading", { item: selectedCard });
+        } else {
+          console.log(
+            "Nicio carte nu a fost găsită pentru criteriile specificate."
+          );
+        }
       }
+    } catch (err) {
+      console.log("Error at navigateToPersonalizedReading...", err);
     }
   };
 
@@ -177,7 +186,7 @@ const FlipCard = ({
             >
               <ImageBackground
                 source={
-                  item.image.finalUri ? { uri: item.image.finalUri } : null
+                  item ? { uri: item.image ? item.image.finalUri : "" } : null
                 }
                 style={styles.fullCardImage}
                 resizeMode="stretch" // Folosiți "stretch" pentru a întinde imaginea

@@ -45,7 +45,7 @@ export default function HistoryTarrot() {
                 alignItems: "center",
               }}
             >
-              <H6fontBoldPrimary>History</H6fontBoldPrimary>
+              <H6fontBoldPrimary>{i18n.translate("history")}</H6fontBoldPrimary>
               <H7fontMediumWhite style={{ marginTop: 10 }}>
                 {historyType}
               </H7fontMediumWhite>

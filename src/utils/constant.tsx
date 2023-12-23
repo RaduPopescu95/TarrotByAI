@@ -1,30 +1,5 @@
 import { screenName } from "./screenName";
 
-import BrainIcon from "../../assets/images/brain.svg";
-import DentistIcon from "../../assets/images/dentist.svg";
-import CardiologyIcon from "../../assets/images/cardiology.svg";
-import KidneysIcon from "../../assets/images/kidneys.svg";
-
-import Feature1 from "../../assets/images/features/feature-01.svg";
-import Feature2 from "../../assets/images/features/feature-02.svg";
-import Feature3 from "../../assets/images/features/feature-03.svg";
-import Feature4 from "../../assets/images/features/feature-04.svg";
-
-import Patient1 from "../../assets/images/patients/patient1.svg";
-import Patient2 from "../../assets/images/patients/patient2.svg";
-import Patient3 from "../../assets/images/patients/patient3.svg";
-import Patient4 from "../../assets/images/patients/patient4.svg";
-import SmileIcon from "../../assets/images/smile.svg";
-
-import StarIcon from "../../assets/images/star.svg";
-import StethoscopeIcon from "../../assets/images/stethoscope.svg";
-import PurseIcon from "../../assets/images/purse.svg";
-
-import FacebookIcon from "../../assets/images/facebook-circle.svg";
-import TwitterIcon from "../../assets/images/twitter.svg";
-import GooglePlusIcon from "../../assets/images/google-plus-circle.svg";
-import LinkedinIcon from "../../assets/images/linkedin.svg";
-import InstagramIcon from "../../assets/images/instagram.svg";
 import { colors } from "./colors";
 import i18n from "../../i18n";
 
@@ -107,12 +82,6 @@ export const segments = [
 ];
 
 //location
-export const menuOptions = [
-  { Img: Feature1 },
-  { Img: Feature2 },
-  { Img: Feature3 },
-  { Img: Feature4 },
-];
 
 //patient appointment
 // export const segment = [
@@ -164,60 +133,8 @@ export const tab = [
 ];
 
 //chatList
-export const chatArray = [
-  {
-    name: "Bernadette Carol",
-    Img: Patient1,
-    content: "Lorem Ipsum is simply dummy ",
-    date: "09:25 AM",
-    active: true,
-    noofmessage: null,
-    message: "read",
-    Icon: SmileIcon,
-  },
-  {
-    name: "Gabrielle",
-    Img: Patient2,
-    content: "Contrary to popular belief...",
-    date: "Mar 27, 2020",
-    active: false,
-    noofmessage: null,
-    message: "notread",
-    Icon: null,
-  },
-  {
-    name: "Connor Dan",
-    Img: Patient3,
-    content: "There are many variations ",
-    date: "12:15 PM",
-    active: true,
-    noofmessage: 2,
-    message: "notread",
-    Icon: null,
-  },
-  {
-    name: "Harry Ian",
-    Img: Patient4,
-    content: "Lorem Ipsum is simply dummy ",
-    date: "09:25 AM",
-    active: false,
-    noofmessage: null,
-    message: "notread",
-    Icon: SmileIcon,
-  },
-];
 
 //dashboard
-export const menu = [
-  { Img: KidneysIcon, name: "Urology" },
-  { Img: BrainIcon, name: "Neurology" },
-  { Img: CardiologyIcon, name: "Cardiology" },
-  { Img: DentistIcon, name: "Dentist" },
-  { Img: KidneysIcon, name: "Urology" },
-  { Img: BrainIcon, name: "Neurology" },
-  { Img: CardiologyIcon, name: "Cardiology" },
-  { Img: DentistIcon, name: "Dentist" },
-];
 
 //invoice view
 export const tableHead = ["Description", "Quantity", "VAT", "Total"];
@@ -290,23 +207,8 @@ export const profilesegmentsPatient = [
 ];
 
 //search doctor
-export const searchMenuOptions = [
-  { Img: StarIcon, name: "Rating" },
-  { Img: StethoscopeIcon, name: "Stethoscope" },
-  { Img: PurseIcon, name: "Purse" },
-  { Img: StarIcon, name: "Rating" },
-  { Img: StethoscopeIcon, name: "Stethoscope" },
-  { Img: PurseIcon, name: "Purse" },
-];
 
 //social media
-export const socialMediaMenuOptions = [
-  { Img: FacebookIcon, name: "Facebook" },
-  { Img: TwitterIcon, name: "Twitter" },
-  { Img: GooglePlusIcon, name: "Google Plus" },
-  { Img: LinkedinIcon, name: "Linkedin" },
-  { Img: InstagramIcon, name: "Instagram" },
-];
 
 export const genderOptions = [
   { name: "Male", type: "m", isSelected: false },
@@ -393,7 +295,6 @@ export const clinicSettingsSections = [
     header: i18n.translate("preferences"),
     icon: "settings",
     items: [
-
       // { icon: 'alarm', color: '#0c0c0c', label: 'Notifications', screenName: screenName.UserSettingsPatient , type: 'link' },
       {
         icon: "email",

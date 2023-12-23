@@ -76,7 +76,11 @@ import CheckCurrentPasswordModal from "../components/CheckCurrentPasswordModal";
 import SnackBar from "../components/SnackBar";
 import GreetingBar from "../components/UpperGreetingBar/GreetingBar";
 import CheckCurrentPasswordModalDelete from "../components/CheckPassDelete/CheckPasswordModalDelete";
-import { handleUpdateFirestore, userLocation } from "../utils/firestoreUtils";
+import {
+  handleDeleteFirestore,
+  handleUpdateFirestore,
+  userLocation,
+} from "../utils/firestoreUtils";
 import { useAuth } from "../context/AuthContext";
 
 interface Props extends GeneralProps {
@@ -109,7 +113,7 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
   const lastNameValue = watch(formKeys.lastName);
 
   const route = useRoute();
-  const { setAsGuestUser, isGuestUser } = useAuth();
+  const { setAsGuestUser, isGuestUser, userData, setUserData } = useAuth();
   const [currentPassword, setCurrentPassword] = useState("");
   const [registerType, setRegisterType] = useState("email");
   const [isLoading, setIsLoading] = useState(false);
@@ -134,7 +138,10 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
   };
 
   const handleDelete = () => {
-    handleDeleteAccount(currentPassword).then(() => {
+    const userLocation = `Users/${
+      userData.owner_uid ? userData.owner_uid : ""
+    }`; // Calea către document
+    handleDeleteFirestore(userLocation, currentPassword).then(() => {
       setSnackMessage("Accound deleted succesfully");
       setShowSnackback(!showSnackBar);
       navigation.navigate(screenName.SignInScreenClinic);
@@ -153,6 +160,7 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
   };
 
   const onsubmit = (detaila) => {
+    let copyUserData = { ...userData };
     console.log("asas", currentPassword);
     console.log("asas", currentPassword.length);
 
@@ -186,26 +194,44 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
     }
 
     if (firstNameValue) {
-      const newData = {
-        first_name: firstNameValue,
-      };
+      // const newData = {
+      //   first_name: firstNameValue,
+      // };
+      copyUserData.first_name = firstNameValue;
 
-      handleUpdateFirestore(userLocation, newData)
+      const userLocation = `Users/${
+        userData.owner_uid ? userData.owner_uid : ""
+      }`; // Calea către document
+      setUserData(copyUserData);
+      handleUpdateFirestore(userLocation, copyUserData)
         .then(() => {
           console.log("Document successfully updated!");
+          setSnackMessage("Name updated successfully");
+          setShowSnackback(!showSnackBar);
         })
         .catch((error) => {
           console.error("Error updating document: ", error);
         });
     }
     if (lastNameValue) {
-      const newData = {
-        last_name: lastNameValue,
-      };
+      // const newData = {
+      //   ...userData,
+      //   last_name: lastNameValue,
+      // };
 
-      handleUpdateFirestore(userLocation, newData)
+      copyUserData.last_name = lastNameValue;
+
+      const userLocation = `Users/${
+        userData.owner_uid ? userData.owner_uid : ""
+      }`; // Calea către document
+      // setUserData(newData);
+      console.log("TEst...here", copyUserData);
+      setUserData(copyUserData);
+      handleUpdateFirestore(userLocation, copyUserData)
         .then(() => {
           console.log("Document successfully updated!");
+          setSnackMessage("Name updated successfully");
+          setShowSnackback(!showSnackBar);
         })
         .catch((error) => {
           console.error("Error updating document: ", error);
@@ -229,278 +255,65 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
             ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
-            <KeyboardAvoidingView
-              style={{ flex: 1, marginTop: "10%" }}
-              keyboardVerticalOffset={65}
+            <ImageBackground
+              source={require("../../assets/bg-horizontalLines.png")}
+              resizeMode="cover"
+              style={{
+                flex: 1,
+                width: null,
+                height: null,
+                // alignItems: 'flex-end',
+              }}
             >
-              <View style={styles.subContainer}>
-                {isGuestUser ? (
-                  <>
-                    <View
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                        height: "100%",
-                      }}
-                    >
-                      <View style={{ height: "30%" }}>
-                        <Image
-                          source={require("../../assets/createAccount.png")}
-                          style={{ width: 300, height: 150 }}
-                          resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
-                        />
-                        <Image
-                          source={require("../../assets/headerIcon.png")}
-                          style={{ width: 300, height: 150, bottom: "20%" }}
-                          resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
-                        />
-                      </View>
-                      <View
-                        style={{
-                          height: "70%",
-                          paddingTop: "20%",
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
-                        }}
-                      >
-                        <H6fontBoldPrimary style={{ textAlign: "center" }}>
-                          Explorează mai multe cu propriul tău cont
-                        </H6fontBoldPrimary>
-
-                        <H7fontMediumPrimary
-                          style={{ textAlign: "center", marginTop: "10%" }}
-                        >
-                          Creează-ți un cont pentru a salva și vizualiza
-                          istoricul citirilor tale de tarot
-                        </H7fontMediumPrimary>
-                        <Button
-                          disabled={false}
-                          funCallback={() => {
-                            handleLogout().then(() => {
-                              setAsGuestUser(false).then(() => {
-                                navigation.navigate(
-                                  screenName.SignInScreenClinic as any
-                                );
-                              });
-                            });
-                          }}
-                          borderWidth={0.2}
-                          bgColor={colors.primary2}
-                          // txtColor={colors.primary2}
-                          label={i18n.translate("register")}
-                          borderColor={colors.white}
-                          success={true}
-                          style={{ marginTop: "10%", width: "70%" }}
-                        />
-                      </View>
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "30%",
-                      }}
-                    >
-                      <H6fontBoldPrimary>
-                        {i18n.translate("myAccount")}
-                      </H6fontBoldPrimary>
-
-                      <Image
-                        source={require("../../assets/headerIcon.png")}
-                        style={{ width: 300, height: 150 }}
-                        resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
-                      />
-                    </View>
-
-                    <ScrollView style={{ height: "70%" }}>
+              <KeyboardAvoidingView
+                style={{ flex: 1, marginTop: "10%" }}
+                keyboardVerticalOffset={65}
+              >
+                <View style={styles.subContainer}>
+                  {isGuestUser ? (
+                    <>
                       <View
                         style={{
                           display: "flex",
-                          justifyContent: "center",
+                          justifyContent: "space-around",
                           alignItems: "center",
+                          height: "100%",
                         }}
                       >
-                        <TouchableOpacity
-                          onPress={() => {
-                            // Traduceți valoarea
-                            const translatedHistoryType = i18n.translate(
-                              "historyTypePersonalized"
-                            );
-
-                            // Navigați cu parametrul
-                            navigation.navigate(
-                              screenName.historyTarrot as any,
-                              {
-                                historyType: translatedHistoryType,
-                              }
-                            );
+                        <View style={{ height: "30%" }}>
+                          <Image
+                            source={require("../../assets/createAccount.png")}
+                            style={{ width: 300, height: 150 }}
+                            resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
+                          />
+                          <Image
+                            source={require("../../assets/headerIcon.png")}
+                            style={{ width: 300, height: 150, bottom: "20%" }}
+                            resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
+                          />
+                        </View>
+                        <View
+                          style={{
+                            height: "70%",
+                            paddingTop: "20%",
+                            display: "flex",
+                            alignItems: "center",
+                            width: "100%",
                           }}
                         >
-                          <H7fontMediumPrimary>
-                            {i18n.translate("historyPersonalized")}
+                          <H6fontBoldPrimary style={{ textAlign: "center" }}>
+                            Explorează mai multe cu propriul tău cont
+                          </H6fontBoldPrimary>
+
+                          <H7fontMediumPrimary
+                            style={{ textAlign: "center", marginTop: "10%" }}
+                          >
+                            Creează-ți un cont pentru a salva și vizualiza
+                            istoricul citirilor tale de tarot
                           </H7fontMediumPrimary>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{ marginTop: 10 }}
-                          onPress={() => {
-                            // Traduceți valoarea
-                            const translatedHistoryType =
-                              i18n.translate("historyTypeFuture");
-
-                            // Navigați cu parametrul
-                            navigation.navigate(
-                              screenName.historyTarrot as any,
-                              {
-                                historyType: translatedHistoryType,
-                              }
-                            );
-                          }}
-                        >
-                          <H7fontMediumPrimary>
-                            {i18n.translate("historyFuture")}
-                          </H7fontMediumPrimary>
-                        </TouchableOpacity>
-                      </View>
-                      <View>
-                        {registerType === "email" && (
-                          <Controller
-                            name={formKeys.firstName}
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                              <InputFields
-                                errorMessage={errors[
-                                  formKeys.firstName
-                                ]?.message.toString()}
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={i18n.translate("firstName")}
-                                image={"person"}
-                              />
-                            )}
-                          />
-                        )}
-                        {registerType === "email" && (
-                          <Controller
-                            name={formKeys.lastName}
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                              <InputFields
-                                errorMessage={errors[
-                                  formKeys.lastName
-                                ]?.message.toString()}
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={i18n.translate("lastName")}
-                                image={"person"}
-                              />
-                            )}
-                          />
-                        )}
-                        {registerType === "email" && (
-                          <Controller
-                            name={formKeys.email}
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                              <InputFields
-                                errorMessage={errors[
-                                  formKeys.email
-                                ]?.message.toString()}
-                                value={value}
-                                onChangeText={onChange}
-                                placeholder={i18n.translate("email")}
-                                image={"email"}
-                              />
-                            )}
-                            rules={{
-                              required: emailValue
-                                ? requiredValidation(i18n.translate("email"))
-                                : undefined,
-                              validate: emailValidation,
-                            }}
-                          />
-                        )}
-
-                        {registerType === "email" && (
-                          <Controller
-                            name={formKeys.password}
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                              <InputFields
-                                isPassword={true}
-                                value={value}
-                                isSecure={true}
-                                onChangeText={onChange}
-                                placeholder={i18n.translate("createPassword")}
-                                errorMessage={errors[
-                                  formKeys.password
-                                ]?.message.toString()}
-                                image={"lock-outline"}
-                              />
-                            )}
-                            rules={{
-                              required: passwordValue
-                                ? requiredValidation(
-                                    i18n.translate("createPassword")
-                                  )
-                                : undefined,
-                              minLength: passwordValue
-                                ? minLengthValidation(
-                                    validationSchema.password.minLength
-                                  )
-                                : undefined,
-                              // Poți adăuga aici alte validări pentru complexitate, dacă este necesar.
-                            }}
-                          />
-                        )}
-
-                        {registerType === "email" && (
-                          <Controller
-                            name={formKeys.confirmPassword}
-                            control={control}
-                            render={({ field: { onChange, value } }) => (
-                              <InputFields
-                                isPassword={true}
-                                value={value}
-                                isSecure={true}
-                                onChangeText={onChange}
-                                placeholder={i18n.translate("confirmPassword")}
-                                errorMessage={errors[
-                                  formKeys.confirmPassword
-                                ]?.message.toString()}
-                                image={"lock-outline"}
-                              />
-                            )}
-                            rules={{
-                              validate: passwordValue
-                                ? (value) =>
-                                    value === passwordValue ||
-                                    i18n.translate("passDontMatch")
-                                : undefined,
-                            }}
-                          />
-                        )}
-                      </View>
-
-                      <Button
-                        disabled={false}
-                        funCallback={handleSubmit(onsubmit)}
-                        label={i18n.translate("saveChanges")}
-                        success={true}
-                        bgColor={colors.primary2}
-                        borderColor={colors.white}
-                        borderWidth={0.2}
-                      />
-
-                      <View>
-                        <View style={styles.infoTextViewStyle}>
-                          <TouchableOpacity
-                            onPress={() => {
+                          <Button
+                            disabled={false}
+                            funCallback={() => {
                               handleLogout().then(() => {
                                 setAsGuestUser(false).then(() => {
                                   navigation.navigate(
@@ -509,68 +322,294 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                                 });
                               });
                             }}
-                          >
-                            <H7fontMediumPrimary>
-                              {i18n.translate("logOut")}
-                            </H7fontMediumPrimary>
-                          </TouchableOpacity>
+                            borderWidth={0.2}
+                            bgColor={colors.primary2}
+                            // txtColor={colors.primary2}
+                            label={i18n.translate("register")}
+                            borderColor={colors.white}
+                            success={true}
+                            style={{ marginTop: "10%", width: "70%" }}
+                          />
                         </View>
-                        <View style={styles.infoTextViewStyle}>
+                      </View>
+                    </>
+                  ) : (
+                    <>
+                      <View
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "30%",
+                        }}
+                      >
+                        <H6fontBoldPrimary>
+                          {i18n.translate("myAccount")}
+                        </H6fontBoldPrimary>
+
+                        <Image
+                          source={require("../../assets/headerIcon.png")}
+                          style={{ width: 300, height: 150 }}
+                          resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
+                        />
+                      </View>
+
+                      <ScrollView style={{ height: "70%" }}>
+                        <View
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
                           <TouchableOpacity
-                            onPress={() =>
-                              Alert.alert(
-                                "Are you sure you want to delete your account?",
-                                "You will have to register again",
-                                [
-                                  {
-                                    text: "Cancel",
-                                    onPress: () =>
-                                      console.log("Cancel Pressed"),
-                                    style: "cancel",
-                                  },
-                                  {
-                                    text: "Delete",
-                                    onPress: () => handleDelete(),
-                                  },
-                                ]
-                              )
-                            }
+                            onPress={() => {
+                              // Traduceți valoarea
+                              const translatedHistoryType = i18n.translate(
+                                "historyTypePersonalized"
+                              );
+
+                              // Navigați cu parametrul
+                              navigation.navigate(
+                                screenName.historyTarrot as any,
+                                {
+                                  historyType: translatedHistoryType,
+                                }
+                              );
+                            }}
                           >
                             <H7fontMediumPrimary>
-                              {i18n.translate("deleteAccount")}
+                              {i18n.translate("historyPersonalized")}
+                            </H7fontMediumPrimary>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{ marginTop: 10 }}
+                            onPress={() => {
+                              // Traduceți valoarea
+                              const translatedHistoryType =
+                                i18n.translate("historyTypeFuture");
+
+                              // Navigați cu parametrul
+                              navigation.navigate(
+                                screenName.historyTarrot as any,
+                                {
+                                  historyType: translatedHistoryType,
+                                }
+                              );
+                            }}
+                          >
+                            <H7fontMediumPrimary>
+                              {i18n.translate("historyFuture")}
                             </H7fontMediumPrimary>
                           </TouchableOpacity>
                         </View>
-                        {/* <View style={styles.borderLineStyle}>
+                        <View>
+                          {registerType === "email" && (
+                            <Controller
+                              name={formKeys.firstName}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                <InputFields
+                                  errorMessage={errors[
+                                    formKeys.firstName
+                                  ]?.message.toString()}
+                                  value={value}
+                                  onChangeText={onChange}
+                                  placeholder={i18n.translate("firstName")}
+                                  image={"person"}
+                                />
+                              )}
+                            />
+                          )}
+                          {registerType === "email" && (
+                            <Controller
+                              name={formKeys.lastName}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                <InputFields
+                                  errorMessage={errors[
+                                    formKeys.lastName
+                                  ]?.message.toString()}
+                                  value={value}
+                                  onChangeText={onChange}
+                                  placeholder={i18n.translate("lastName")}
+                                  image={"person"}
+                                />
+                              )}
+                            />
+                          )}
+                          {registerType === "email" && (
+                            <Controller
+                              name={formKeys.email}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                <InputFields
+                                  errorMessage={errors[
+                                    formKeys.email
+                                  ]?.message.toString()}
+                                  value={value}
+                                  onChangeText={onChange}
+                                  placeholder={i18n.translate("email")}
+                                  image={"email"}
+                                />
+                              )}
+                              rules={{
+                                required: emailValue
+                                  ? requiredValidation(i18n.translate("email"))
+                                  : undefined,
+                                validate: emailValidation,
+                              }}
+                            />
+                          )}
+
+                          {registerType === "email" && (
+                            <Controller
+                              name={formKeys.password}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                <InputFields
+                                  isPassword={true}
+                                  value={value}
+                                  isSecure={true}
+                                  onChangeText={onChange}
+                                  placeholder={i18n.translate("createPassword")}
+                                  errorMessage={errors[
+                                    formKeys.password
+                                  ]?.message.toString()}
+                                  image={"lock-outline"}
+                                />
+                              )}
+                              rules={{
+                                required: passwordValue
+                                  ? requiredValidation(
+                                      i18n.translate("createPassword")
+                                    )
+                                  : undefined,
+                                minLength: passwordValue
+                                  ? minLengthValidation(
+                                      validationSchema.password.minLength
+                                    )
+                                  : undefined,
+                                // Poți adăuga aici alte validări pentru complexitate, dacă este necesar.
+                              }}
+                            />
+                          )}
+
+                          {registerType === "email" && (
+                            <Controller
+                              name={formKeys.confirmPassword}
+                              control={control}
+                              render={({ field: { onChange, value } }) => (
+                                <InputFields
+                                  isPassword={true}
+                                  value={value}
+                                  isSecure={true}
+                                  onChangeText={onChange}
+                                  placeholder={i18n.translate(
+                                    "confirmPassword"
+                                  )}
+                                  errorMessage={errors[
+                                    formKeys.confirmPassword
+                                  ]?.message.toString()}
+                                  image={"lock-outline"}
+                                />
+                              )}
+                              rules={{
+                                validate: passwordValue
+                                  ? (value) =>
+                                      value === passwordValue ||
+                                      i18n.translate("passDontMatch")
+                                  : undefined,
+                              }}
+                            />
+                          )}
+                        </View>
+
+                        <Button
+                          disabled={false}
+                          funCallback={handleSubmit(onsubmit)}
+                          label={i18n.translate("saveChanges")}
+                          success={true}
+                          bgColor={colors.primary2}
+                          borderColor={colors.white}
+                          borderWidth={0.2}
+                        />
+
+                        <View>
+                          <View style={styles.infoTextViewStyle}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                handleLogout().then(() => {
+                                  setAsGuestUser(false).then(() => {
+                                    navigation.navigate(
+                                      screenName.SignInScreenClinic as any
+                                    );
+                                  });
+                                });
+                              }}
+                            >
+                              <H7fontMediumPrimary>
+                                {i18n.translate("logOut")}
+                              </H7fontMediumPrimary>
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.infoTextViewStyle}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                Alert.alert(
+                                  "Are you sure you want to delete your account?",
+                                  "You will have to register again",
+                                  [
+                                    {
+                                      text: "Cancel",
+                                      onPress: () =>
+                                        console.log("Cancel Pressed"),
+                                      style: "cancel",
+                                    },
+                                    {
+                                      text: "Delete",
+                                      onPress: () => handleDeleteModal(),
+                                    },
+                                  ]
+                                )
+                              }
+                            >
+                              <H7fontMediumPrimary>
+                                {i18n.translate("deleteAccount")}
+                              </H7fontMediumPrimary>
+                            </TouchableOpacity>
+                          </View>
+                          {/* <View style={styles.borderLineStyle}>
                   <CommonLineView />
                 </View> */}
-                      </View>
-                    </ScrollView>
-                  </>
-                )}
-              </View>
-            </KeyboardAvoidingView>
-            <CheckCurrentPasswordModal
-              setIsModalVisible={setModalVisible}
-              isModalVisible={modalVisible}
-              setCurrentPassword={setCurrentPassword}
-              handleSubmit={handleSubmit(onsubmit)}
-            />
-            <CheckCurrentPasswordModalDelete
-              setIsModalVisible={setModalVisibleDelete}
-              isModalVisible={modalVisibleDelete}
-              setCurrentPassword={setCurrentPassword}
-              handleSubmit={handleDelete}
-            />
-            {showSnackBar && (
-              <SnackBar
-                showSnackBar={showSnackBar}
-                setShowSnackback={() => setShowSnackback(!showSnackBar)}
-                message={snackMessage}
-                // screen={screenName.SignInScreenClinic}
-                bottom={"13%"}
+                        </View>
+                      </ScrollView>
+                    </>
+                  )}
+                </View>
+              </KeyboardAvoidingView>
+              <CheckCurrentPasswordModal
+                setIsModalVisible={setModalVisible}
+                isModalVisible={modalVisible}
+                setCurrentPassword={setCurrentPassword}
+                handleSubmit={handleSubmit(onsubmit)}
               />
-            )}
+              <CheckCurrentPasswordModalDelete
+                setIsModalVisible={setModalVisibleDelete}
+                isModalVisible={modalVisibleDelete}
+                setCurrentPassword={setCurrentPassword}
+                handleSubmit={handleDelete}
+              />
+              {showSnackBar && (
+                <SnackBar
+                  showSnackBar={showSnackBar}
+                  setShowSnackback={() => setShowSnackback(!showSnackBar)}
+                  message={snackMessage}
+                  // screen={screenName.SignInScreenClinic}
+                  bottom={"13%"}
+                />
+              )}
+            </ImageBackground>
           </LinearGradient>
         </MainContainer>
       </Fragment>

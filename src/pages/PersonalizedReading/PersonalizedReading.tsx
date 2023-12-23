@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Platform,
   StatusBar,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MainContainer } from "../../components/commonViews";
@@ -28,8 +29,10 @@ import {
 import { useNavBarVisibility } from "../../context/NavbarVisibilityContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { ScrollView } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 
 const PersonalizedReading = ({ route }) => {
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
   const { language, changeLanguage } = useLanguage();
   const { item } = route.params;
   const onPressHandler = () => {
@@ -39,10 +42,6 @@ const PersonalizedReading = ({ route }) => {
   const { setIsNavBarVisible } = useNavBarVisibility();
 
   React.useEffect(() => {
-    console.log("test...", item.carte.image.finalUri);
-    console.log("test...", item.info[language].descriere);
-    console.log("test...", item.info[language].url);
-    console.log("test...", item.info[language].video);
     setIsNavBarVisible(false);
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);
@@ -51,48 +50,85 @@ const PersonalizedReading = ({ route }) => {
     <View style={{ flex: 1 }}>
       <MainContainer style={{ flex: 1 }}>
         <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
-          <GreetingBar isGoBack={true} />
+          <ImageBackground
+            source={require("../../../assets/shadowBg.png")}
+            resizeMode="cover"
+            style={{
+              flex: 1,
+              width: null,
+              height: null,
+              // alignItems: 'flex-end',
+            }}
+          >
+            <GreetingBar isGoBack={true} />
 
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={{ uri: item.carte.image.finalUri }}
-              resizeMode="stretch" // Folosiți "stretch" pentru a întinde imaginea
-            />
-          </View>
-
-          <View style={styles.secondImageContainer}>
-            {/* Utilizează Video din expo-av */}
-            <Video
-              source={{ uri: item.info[language].url }} // Folosește URL-ul din parametrii de navigare
-              resizeMode="cover"
-              style={styles.secondImage}
-              shouldPlay={true} // Poate fi setat pe true pentru a începe automat videoclipul
-              useNativeControls
-            />
-          </View>
-          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                height: "auto",
-                // marginTop: "10%",
-                paddingHorizontal: "5%",
-                // bottom: "10%",
-              }}
-            >
-              <H6fontBoldPrimary
-                style={{ alignSelf: "center", marginBottom: "5%" }}
-              >
-                {item.carte.info[language].nume}
-              </H6fontBoldPrimary>
-
-              <H8fontMediumWhite>
-                {item.info[language].descriere}
-              </H8fontMediumWhite>
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.image}
+                source={{ uri: item.carte.image.finalUri }}
+                resizeMode="stretch" // Folosiți "stretch" pentru a întinde imaginea
+              />
             </View>
-          </ScrollView>
+
+            <View style={styles.secondImageContainer}>
+              {isVideoLoading && (
+                <ActivityIndicator
+                  size="large"
+                  color={colors.primary2}
+                  style={{ position: "relative", top: "40%" }}
+                /> // Spinner de încărcare
+              )}
+              <Video
+                source={{
+                  uri:
+                    language === "hi"
+                      ? item.info.hu.url
+                      : language === "id"
+                        ? item.info.ru.url
+                        : item.info[language].url,
+                }}
+                resizeMode="cover"
+                style={[
+                  styles.secondImage,
+                  { height: isVideoLoading ? 0 : 250 },
+                ]}
+                shouldPlay={true}
+                useNativeControls
+                onLoadStart={() => setIsVideoLoading(true)} // Începe afișarea spinner-ului
+                onLoad={() => setIsVideoLoading(false)} // Ascunde spinner-ul când videoclipul este încărcat
+              />
+            </View>
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  height: "auto",
+                  // marginTop: "10%",
+                  paddingHorizontal: "5%",
+                  // bottom: "10%",
+                }}
+              >
+                <H6fontBoldPrimary
+                  style={{ alignSelf: "center", marginBottom: "5%" }}
+                >
+                  {language === "hi"
+                    ? item.carte.info.hu.nume
+                    : language === "id"
+                      ? item.carte.info.ru.nume
+                      : item.carte.info[language].nume}
+                </H6fontBoldPrimary>
+
+                <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                  {language === "hi"
+                    ? item.info.hu.descriere
+                    : language === "id"
+                      ? item.info.ru.descriere
+                      : item.info[language].descriere}
+                </H8fontMediumWhite>
+              </View>
+            </ScrollView>
+          </ImageBackground>
         </LinearGradient>
       </MainContainer>
     </View>
@@ -129,7 +165,7 @@ const styles = StyleSheet.create({
 
     position: "relative",
 
-    height: "auto",
+    height: 250,
     width: "auto",
   },
   secondImage: {
