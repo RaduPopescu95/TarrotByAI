@@ -10,6 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../utils/colors";
 import { useNavigationState } from "../../context/NavigationContext";
+import { H7fontBoldPrimary, H8fontBoldPrimary } from "../commonText";
 
 // Adaugă 'text', 'screen', și 'image' ca props-uri ale componentei Card
 const Card = ({ text, screen, image }) => {
@@ -30,7 +31,9 @@ const Card = ({ text, screen, image }) => {
             source={image} // Utilizează prop-ul 'image' pentru a seta sursa
             style={styles.buttonStyle}
           >
-            <Text style={styles.textStyle}>{text}</Text>
+            <H8fontBoldPrimary style={styles.textStyle}>
+              {text}
+            </H8fontBoldPrimary>
           </ImageBackground>
         </View>
         {/* Se poate adăuga conținutul pentru partea din spate a cardului aici, dacă este necesar */}
@@ -69,9 +72,11 @@ const styles = StyleSheet.create({
     // Stiluri pentru partea din spate a cardului, dacă este utilizată
   },
   textStyle: {
-    width: "70%",
     textAlign: "center",
-    color: "white",
+    flexShrink: 0, // Previne strângerea textului
+    width: "70%", // Ajustează lățimea după necesități
+    paddingHorizontal: 5,
+    color: colors.gradientLogin2,
   },
   // Alte stiluri necesare
 });

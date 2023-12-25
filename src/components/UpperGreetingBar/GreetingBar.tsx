@@ -142,7 +142,7 @@ const GreetingBar = ({ isGoBack }) => {
           <Octicons
             name="chevron-left"
             size={29}
-            color={colors.primary2}
+            color={colors.primary1}
             style={{ marginLeft: 15, zIndex: 5 }}
           />
         </TouchableOpacity>

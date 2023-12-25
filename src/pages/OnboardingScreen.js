@@ -28,6 +28,8 @@ import { colors } from "../utils/colors";
 import {
   H2fontBoldPrimary,
   H6fontBoldPrimary,
+  H6fontRegularBlack,
+  H6fontRegularPrimary,
   H7fontBoldPrimary,
   H7fontRegularLight,
 } from "../components/commonText";
@@ -36,7 +38,7 @@ import { useAuth } from "../context/AuthContext";
 
 const { width, height } = Dimensions.get("window");
 
-const COLORS = { primary: colors.primary2, white: "#fff" };
+const COLORS = { primary: colors.primary3, white: "#fff" };
 
 const slides = [
   // {
@@ -90,15 +92,15 @@ const Slide = ({ item }) => {
           bottom: "15%",
         }}
       >
-        <H7fontRegularLight style={styles.subtitle}>
+        <H6fontRegularPrimary style={styles.subtitle}>
           {i18n.translate("welcomeTo")}
-        </H7fontRegularLight>
+        </H6fontRegularPrimary>
         <H2fontBoldPrimary>{i18n.translate("tarotByAi")}</H2fontBoldPrimary>
-        <Image
+        {/* <Image
           source={require("../../assets/onboardSubImg.png")}
           style={{ width: 200, height: 100 }}
           resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
-        />
+        /> */}
       </View>
     </View>
   );
@@ -166,7 +168,7 @@ const OnboardingScreen = ({ navigation }) => {
               style={[
                 styles.indicator,
                 currentSlideIndex == index && {
-                  backgroundColor: COLORS.white,
+                  backgroundColor: colors.primary3,
                   width: 25,
                 },
               ]}
@@ -185,7 +187,7 @@ const OnboardingScreen = ({ navigation }) => {
               }}
             >
               <TouchableOpacity
-                style={[styles.btnTwo, { backgroundColor: colors.primary2 }]}
+                style={[styles.btnTwo, { backgroundColor: colors.primary3 }]}
                 onPress={() =>
                   navigation.replace(screenName.languageSelectScreen)
                 }
@@ -194,7 +196,7 @@ const OnboardingScreen = ({ navigation }) => {
                   style={{
                     fontWeight: "bold",
                     fontSize: 15,
-                    color: colors.secondary2,
+                    color: colors.white,
                   }}
                 >
                   {i18n.translate("clinicLoginRedirect")}
@@ -208,7 +210,7 @@ const OnboardingScreen = ({ navigation }) => {
                 style={[
                   styles.btn,
                   {
-                    borderColor: colors.primary2,
+                    borderColor: colors.primary3,
                     borderWidth: 1,
                     backgroundColor: "transparent",
                   },
@@ -219,7 +221,7 @@ const OnboardingScreen = ({ navigation }) => {
                   style={{
                     fontWeight: "bold",
                     fontSize: 15,
-                    color: colors.primary2,
+                    color: colors.primary3,
                   }}
                 >
                   {i18n.translate("skip")}
@@ -255,12 +257,10 @@ const OnboardingScreen = ({ navigation }) => {
           colors.gradientLogin1,
           colors.gradientLogin2,
           colors.gradientLogin2,
-          colors.gradientLogin1,
-          colors.gradientLogin3,
         ]} // Înlocuiește cu culorile gradientului tău
         style={styles.gradient}
       >
-        {/* <StatusBar backgroundColor={COLORS.primary} /> */}
+        {/* <StatusBar backgroundColor={COLORS.primary3 /> */}
         <FlatList
           ref={ref}
           onMomentumScrollEnd={updateCurrentSlideIndex}
@@ -286,15 +286,12 @@ const styles = StyleSheet.create({
     // Alte stiluri necesare pentru a pozitiona gradientul după cum este necesar
   },
   subtitle: {
-    color: colors.primary2,
-    fontSize: 13,
-    marginTop: 10,
+    marginTop: "10%",
     maxWidth: "70%",
     textAlign: "center",
-    lineHeight: 23,
   },
   title: {
-    color: colors.primary2,
+    color: colors.primary3,
     fontSize: 22,
     fontWeight: "bold",
     marginTop: 20,
@@ -317,7 +314,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 150,
     borderRadius: 5,
-    backgroundColor: colors.primary2,
+    backgroundColor: colors.primary3,
     justifyContent: "center",
     alignItems: "center",
   },

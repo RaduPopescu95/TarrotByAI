@@ -55,7 +55,14 @@ const LuckyHour = () => {
   return (
     <TouchableWithoutFeedback onPress={onPressHandler}>
       <MainContainer>
-        <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
+        <LinearGradient
+          colors={[
+            colors.gradientLogin1,
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+          ]}
+          style={styles.gradient}
+        >
           <ImageBackground
             source={require("../../../assets/shadowBg.png")}
             resizeMode="cover"
@@ -85,7 +92,7 @@ const LuckyHour = () => {
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
-                  height: "23%",
+                  height: "auto",
                   bottom: "10%",
                 }}
               >
@@ -93,13 +100,13 @@ const LuckyHour = () => {
                 {zilnicOreNorocoase.info[language].nume}
               </H7fontBoldWhite> */}
                 {zilnicOreNorocoase.info ? (
-                  <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                  <H7fontMediumPrimary style={{ textAlign: "justify" }}>
                     {language === "hi"
                       ? zilnicOreNorocoase.info.hu.descriere
                       : language === "id"
                         ? zilnicOreNorocoase.info.ru.descriere
                         : zilnicOreNorocoase.info[language].descriere}
-                  </H8fontMediumWhite>
+                  </H7fontMediumPrimary>
                 ) : null}
               </View>
             </View>
@@ -118,7 +125,7 @@ const styles = StyleSheet.create({
     width: 130, // Dimensiunea containerului
     height: 130, // Dimensiunea containerului
     borderRadius: 65, // Jumătate din width/height pentru a face cerc perfect
-    backgroundColor: colors.secondary2, // Culoarea de fundal
+    backgroundColor: colors.primary3, // Culoarea de fundal
     justifyContent: "center", // Centrează conținutul vertical
     alignItems: "center", // Centrează conținutul orizontal
     // Stiluri pentru efect 3D

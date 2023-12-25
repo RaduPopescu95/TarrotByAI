@@ -250,8 +250,6 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
               colors.gradientLogin1,
               colors.gradientLogin2,
               colors.gradientLogin2,
-              colors.gradientLogin1,
-              colors.gradientLogin3,
             ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
@@ -323,12 +321,13 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                               });
                             }}
                             borderWidth={0.2}
-                            bgColor={colors.primary2}
+                            bgColor={colors.primary3}
                             // txtColor={colors.primary2}
                             label={i18n.translate("register")}
                             borderColor={colors.white}
                             success={true}
                             style={{ marginTop: "10%", width: "70%" }}
+                            txtColor={colors.white}
                           />
                         </View>
                       </View>

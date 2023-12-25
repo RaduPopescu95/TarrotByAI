@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import { Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { colors } from '../utils/colors';
-import { FormErrorMessage } from './commonText';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { colors } from "../utils/colors";
+import { FormErrorMessage } from "./commonText";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 interface InputFieldsProps {
   value: string;
@@ -13,8 +19,8 @@ interface InputFieldsProps {
   isNumber?: boolean;
   isSecure?: boolean;
   isPassword?: boolean;
-  setIsWhite1?:any,
-  setIsWhite2?:any
+  setIsWhite1?: any;
+  setIsWhite2?: any;
 }
 
 export const InputFields: React.FC<InputFieldsProps> = ({
@@ -27,48 +33,60 @@ export const InputFields: React.FC<InputFieldsProps> = ({
   isSecure,
   isPassword,
   setIsWhite1,
-  setIsWhite2
+  setIsWhite2,
 }) => {
   const [showPass, setShowPass] = useState<boolean>(isSecure);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  
 
-const handleOnBlur = () => {
-  setIsFocused(false)
-  
-}
-const handleOnFocus = () => {
-  setIsFocused(true)
- 
-
-}
+  const handleOnBlur = () => {
+    setIsFocused(false);
+  };
+  const handleOnFocus = () => {
+    setIsFocused(true);
+  };
 
   return (
     <>
-      <View style={[styles.testBoxRowStyle, { borderColor: isFocused ? 'white' : colors.primary2 }]}>
+      <View
+        style={[
+          styles.testBoxRowStyle,
+          { borderColor: isFocused ? "white" : colors.primary3 },
+        ]}
+      >
         <View style={{ marginRight: 15 }}>
-        <View style={styles.passwordIconStyle}>
-                            <MaterialIcons
-                              name={image}
-                              size={24}
-                              color={isFocused ? "white" :"#746A6B"} 
-                            />
-                          </View>
+          <View style={styles.passwordIconStyle}>
+            <MaterialIcons
+              name={image}
+              size={24}
+              color={isFocused ? "white" : colors.grayText}
+            />
+          </View>
         </View>
         <TextInput
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
-          style={{ flex: 1, marginRight: isPassword ? 30 : 0, color: isFocused ? 'white' : 'white' }} // Ajustează margin-right dacă este o parolă pentru a face loc pentru icon
+          style={{
+            flex: 1,
+            marginRight: isPassword ? 30 : 0,
+            color: isFocused ? "white" : "white",
+          }} // Ajustează margin-right dacă este o parolă pentru a face loc pentru icon
           placeholder={placeholder}
           value={value}
-          placeholderTextColor={isFocused ? "white" : '#746A6B'}
+          placeholderTextColor={isFocused ? "white" : colors.grayText}
           onChangeText={onChangeText}
-          keyboardType={isNumber ? 'numeric' : 'default'}
+          keyboardType={isNumber ? "numeric" : "default"}
           secureTextEntry={showPass}
         />
         {isPassword && (
-          <TouchableOpacity onPress={() => setShowPass(!showPass)} style={styles.eyeIcon}>
-            <Feather name={showPass ? 'eye-off' : 'eye'} size={24} color={ isFocused ? "white" :  colors.primary2} />
+          <TouchableOpacity
+            onPress={() => setShowPass(!showPass)}
+            style={styles.eyeIcon}
+          >
+            <Feather
+              name={showPass ? "eye-off" : "eye"}
+              size={24}
+              color={isFocused ? "white" : colors.primary2}
+            />
           </TouchableOpacity>
         )}
       </View>
@@ -79,17 +97,17 @@ const handleOnFocus = () => {
 
 const styles = StyleSheet.create({
   testBoxRowStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 35,
     borderWidth: 0.5,
-    backgroundColor: '#2F2929',
+    backgroundColor: colors.primary3,
     paddingHorizontal: 15,
     marginTop: 12,
     height: 55,
-    alignItems: 'center',
+    alignItems: "center",
   },
   eyeIcon: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
   },
   passwordIconStyle: { alignItems: "center", justifyContent: "center" },

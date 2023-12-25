@@ -17,6 +17,8 @@ import { TouchableWithoutFeedback } from "react-native";
 import { Video } from "expo-av";
 
 import {
+  H6fontBoldPrimary,
+  H7fontBoldPrimary,
   H7fontBoldWhite,
   H7fontMediumPrimary,
   H8fontMediumPrimary,
@@ -44,7 +46,11 @@ const FutureReading = ({ route }) => {
     <View style={{ flex: 1 }}>
       <MainContainer>
         <LinearGradient
-          colors={[colors.primary1, colors.primary1]}
+          colors={[
+            colors.gradientLogin1,
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+          ]}
           style={styles.gradient}
         >
           <ImageBackground
@@ -75,7 +81,7 @@ const FutureReading = ({ route }) => {
                   // bottom: "10%",
                 }}
               >
-                <H7fontBoldWhite
+                <H6fontBoldPrimary
                   style={{ alignSelf: "center", marginBottom: 10 }}
                 >
                   {language === "hi"
@@ -83,18 +89,18 @@ const FutureReading = ({ route }) => {
                     : language === "id"
                       ? item.info.ru.nume
                       : item.info[language].nume}
-                </H7fontBoldWhite>
+                </H6fontBoldPrimary>
                 {/* <H8fontMediumPrimary style={{ alignSelf: "center" }}>
                 Roșu
               </H8fontMediumPrimary> */}
 
-                <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                <H7fontMediumPrimary style={{ textAlign: "justify" }}>
                   {language === "hi"
                     ? item.info.hu.descriere
                     : language === "id"
                       ? item.info.ru.descriere
                       : item.info[language].descriere}
-                </H8fontMediumWhite>
+                </H7fontMediumPrimary>
               </View>
             </View>
           </ImageBackground>

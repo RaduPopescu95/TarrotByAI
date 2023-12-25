@@ -10,6 +10,10 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../utils/colors";
 import {
+  H15fontMediumBlack,
+  H2fontBoldPrimary,
+  H6fontBoldPrimary,
+  H6fontRegularWhite,
   H7fontBoldPrimary,
   H8fontMediumPrimary,
 } from "../components/commonText";
@@ -112,20 +116,18 @@ const LanguageSelectScreen = () => {
           colors.gradientLogin1,
           colors.gradientLogin2,
           colors.gradientLogin2,
-          colors.gradientLogin2,
-          colors.gradientLogin3,
         ]} // Înlocuiește cu culorile gradientului tău
         style={styles.gradient}
       >
         <View style={styles.headerContainer}>
           <Image
-            source={require("../images/tarotbyai1.png")}
+            source={require("../../assets/Onboarding2.png")}
             style={styles.headerImage}
             resizeMode="contain"
           />
-          <Text style={styles.headerText}>
+          <H6fontBoldPrimary style={styles.headerText}>
             {i18n.translate("selectLanguage")}
-          </Text>
+          </H6fontBoldPrimary>
         </View>
 
         <View
@@ -154,7 +156,9 @@ const LanguageSelectScreen = () => {
           style={styles.continueButton}
           onPress={() => navigation.navigate(screenName.SignInScreenClinic)}
         >
-          <Text style={styles.continueButtonText}>Continuă</Text>
+          <H6fontRegularWhite style={styles.continueButtonText}>
+            Continuă
+          </H6fontRegularWhite>
         </TouchableOpacity>
       </LinearGradient>
     </View>
@@ -166,7 +170,7 @@ const LanguageButton = ({ language, flagSource, onSelect, isSelected }) => (
     style={[styles.button, isSelected ? styles.selectedButton : null]}
     onPress={onSelect}
   >
-    <Text style={styles.buttonText}>{language}</Text>
+    <H6fontBoldPrimary style={styles.buttonText}>{language}</H6fontBoldPrimary>
     <Image style={styles.image} source={flagSource} />
   </TouchableOpacity>
 );
@@ -194,8 +198,6 @@ const styles = StyleSheet.create({
     height: 230,
   },
   headerText: {
-    color: colors.primary2,
-    fontSize: 24,
     marginBottom: 30,
   },
   buttonContainer: {
@@ -206,9 +208,10 @@ const styles = StyleSheet.create({
     paddingVertical: "25%",
   },
   button: {
-    backgroundColor: colors.darkSelect,
+    backgroundColor: colors.primary3,
     paddingHorizontal: 10,
     marginVertical: 10,
+    paddingBottom: "1%",
 
     width: "100%",
     minHeight: "6%",
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   selectedButton: {
-    backgroundColor: colors.lightSelect,
+    backgroundColor: colors.primary1,
   },
   buttonText: {
     color: "white",
@@ -233,7 +236,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     marginTop: "10%",
-    backgroundColor: colors.primary2,
+    backgroundColor: colors.primary3,
     padding: 20,
     width: 250,
     borderRadius: 10,
@@ -241,7 +244,6 @@ const styles = StyleSheet.create({
     height: "auto",
   },
   continueButtonText: {
-    color: "black",
     fontSize: 18,
   },
 });

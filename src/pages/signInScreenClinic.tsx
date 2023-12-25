@@ -30,6 +30,7 @@ import {
   H6fontBoldWhite,
   H6fontRegularBlack,
   H7fontMediumWhite,
+  H8fontBoldPrimary,
   H8fontMediumPrimary,
   H8fontMediumWhite,
   H8fontRegularPrimary,
@@ -239,7 +240,6 @@ const SignInScreenClinic: React.FC<Props> = ({
               colors.gradientLogin1,
               colors.gradientLogin2,
               colors.gradientLogin2,
-              colors.gradientLogin3,
             ]} // Înlocuiește cu culorile gradientului tău
             style={styles.gradient}
           >
@@ -253,120 +253,127 @@ const SignInScreenClinic: React.FC<Props> = ({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    position: "relative",
+                    bottom: "8%",
                   }}
                 >
-                  <H6fontBoldPrimary>
-                    {i18n.translate("login")}
-                  </H6fontBoldPrimary>
-
                   <Image
                     source={require("../../assets/headerIcon.png")}
-                    style={{ width: 300, height: 200 }}
+                    style={{ width: 300, height: 100, marginBottom: "5%" }}
                     resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
                   />
+                  <H6fontBoldWhite>{i18n.translate("login")}</H6fontBoldWhite>
                 </View>
 
                 <View>
-                  <Controller
-                    name={formKeys.email}
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <InputFields
-                        errorMessage={errors[
-                          formKeys.email
-                        ]?.message.toString()}
-                        value={value}
-                        onChangeText={onChange}
-                        placeholder={i18n.translate("email")}
-                        image={"email"}
-                        setIsWhite1={setIsWhite1}
-                      />
+                  <View>
+                    <Controller
+                      name={formKeys.email}
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <InputFields
+                          errorMessage={errors[
+                            formKeys.email
+                          ]?.message.toString()}
+                          value={value}
+                          onChangeText={onChange}
+                          placeholder={i18n.translate("email")}
+                          image={"email"}
+                          setIsWhite1={setIsWhite1}
+                        />
+                      )}
+                      rules={{
+                        required: requiredValidation(i18n.translate("email")),
+                        validate: emailValidation,
+                      }}
+                    />
+
+                    <Controller
+                      name={formKeys.password}
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <InputFields
+                          isPassword={true}
+                          value={value}
+                          isSecure={true}
+                          onChangeText={onChange}
+                          placeholder={i18n.translate("password")}
+                          errorMessage={errors[
+                            formKeys.password
+                          ]?.message.toString()}
+                          image={"lock-outline"}
+                          setIsWhite2={setIsWhite2}
+                        />
+                      )}
+                      rules={{
+                        required: requiredValidation(
+                          i18n.translate("password")
+                        ),
+                        minLength: minLengthValidation(
+                          validationSchema.password.minLength
+                        ),
+                      }}
+                    />
+                  </View>
+
+                  <RowView style={[mt10, alignSelfRight]}>
+                    {loginType === "email" && (
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate(
+                            screenName.ForgotPasswordClinic as any
+                          )
+                        }
+                      >
+                        <H8fontMediumPrimary>
+                          {i18n.translate("forgotPassword")}
+                        </H8fontMediumPrimary>
+                      </TouchableOpacity>
                     )}
-                    rules={{
-                      required: requiredValidation(i18n.translate("email")),
-                      validate: emailValidation,
-                    }}
+                  </RowView>
+
+                  <Button
+                    disabled={false}
+                    funCallback={handleLoginAsGuest}
+                    borderWidth={0.2}
+                    bgColor={"transparent"}
+                    txtColor={colors.primary2}
+                    label={i18n.translate("loginNowNoAccount")}
+                    borderColor={colors.white}
+                    success={true}
                   />
 
-                  <Controller
-                    name={formKeys.password}
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <InputFields
-                        isPassword={true}
-                        value={value}
-                        isSecure={true}
-                        onChangeText={onChange}
-                        placeholder={i18n.translate("password")}
-                        errorMessage={errors[
-                          formKeys.password
-                        ]?.message.toString()}
-                        image={"lock-outline"}
-                        setIsWhite2={setIsWhite2}
-                      />
-                    )}
-                    rules={{
-                      required: requiredValidation(i18n.translate("password")),
-                      minLength: minLengthValidation(
-                        validationSchema.password.minLength
-                      ),
-                    }}
+                  <Button
+                    disabled={false}
+                    funCallback={handleSubmit(onsubmit)}
+                    borderWidth={2}
+                    bgColor={colors.primary3}
+                    label={i18n.translate("loginNow")}
+                    borderColor={colors.primary3}
+                    success={true}
+                    txtColor={colors.white}
                   />
-                </View>
 
-                <RowView style={[mt10, alignSelfRight]}>
-                  {loginType === "email" && (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate(
-                          screenName.ForgotPasswordClinic as any
-                        )
-                      }
-                    >
+                  <View>
+                    <View style={styles.infoTextViewStyle}>
                       <H8fontMediumPrimary>
-                        {i18n.translate("forgotPassword")}
+                        {i18n.translate("dntHaveAccount")}{" "}
                       </H8fontMediumPrimary>
-                    </TouchableOpacity>
-                  )}
-                </RowView>
-
-                <Button
-                  disabled={false}
-                  funCallback={handleSubmit(onsubmit)}
-                  borderWidth={0.2}
-                  bgColor={colors.primary2}
-                  label={i18n.translate("loginNow")}
-                  borderColor={colors.white}
-                  success={true}
-                />
-                <Button
-                  disabled={false}
-                  funCallback={handleLoginAsGuest}
-                  borderWidth={0.2}
-                  bgColor={"transparent"}
-                  txtColor={colors.primary2}
-                  label={i18n.translate("loginNowNoAccount")}
-                  borderColor={colors.white}
-                  success={true}
-                />
-
-                <View>
-                  <View style={styles.infoTextViewStyle}>
-                    <H8fontMediumWhite>
-                      {i18n.translate("dntHaveAccount")}{" "}
-                    </H8fontMediumWhite>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate(
-                          screenName.SignUpScreenClinic as any,
-                          { item: loginType }
-                        )
-                      }
-                    >
-                      <H8fontRegularPrimary>
-                        {i18n.translate("signUp")}
-                      </H8fontRegularPrimary>
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate(
+                            screenName.SignUpScreenClinic as any,
+                            { item: loginType }
+                          )
+                        }
+                      >
+                        <H8fontBoldPrimary
+                          style={{ textDecorationLine: "underline" }}
+                        >
+                          {i18n.translate("signUp")}
+                        </H8fontBoldPrimary>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -398,7 +405,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    paddingBottom: 100,
+    // paddingBottom: 100,
     // Alte stiluri necesare pentru a pozitiona gradientul după cum este necesar
   },
   infoTextViewStyle: {

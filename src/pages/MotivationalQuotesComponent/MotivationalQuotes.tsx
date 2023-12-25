@@ -56,7 +56,14 @@ const MotivationalQuotes = () => {
   return (
     <TouchableWithoutFeedback onPress={onPressHandler}>
       <MainContainer>
-        <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
+        <LinearGradient
+          colors={[
+            colors.gradientLogin1,
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+          ]}
+          style={styles.gradient}
+        >
           <ImageBackground
             source={require("../../../assets/shadowBg.png")}
             resizeMode="cover"
@@ -69,9 +76,6 @@ const MotivationalQuotes = () => {
           >
             <GreetingBar isGoBack={true} />
             <View style={styles.overlay}>
-              <H6fontBoldPrimary style={{ alignSelf: "center" }}>
-                {i18n.translate("motivationalQuoteOfTheDay")}
-              </H6fontBoldPrimary>
               <View style={styles.secondImageContainer}>
                 <Image
                   source={require("../../../assets/headerIcon.png")}
@@ -79,22 +83,28 @@ const MotivationalQuotes = () => {
                   resizeMode="contain"
                 />
               </View>
+              <H6fontBoldPrimary
+                style={{ alignSelf: "center", textAlign: "center" }}
+              >
+                {i18n.translate("motivationalQuoteOfTheDay")}
+              </H6fontBoldPrimary>
+
               <View
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
                   height: "23%",
-                  bottom: "10%",
+                  // bottom: "10%",
                 }}
               >
                 {zilnicCitateMotivationale.info ? (
-                  <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                  <H7fontMediumPrimary style={{ textAlign: "justify" }}>
                     {language === "hi"
                       ? zilnicCitateMotivationale.info.hu.descriere
                       : language === "id"
                         ? zilnicCitateMotivationale.info.ru.descriere
                         : zilnicCitateMotivationale.info[language].descriere}
-                  </H8fontMediumWhite>
+                  </H7fontMediumPrimary>
                 ) : null}
               </View>
             </View>
@@ -131,7 +141,7 @@ const styles = StyleSheet.create({
   },
   secondImage: {
     width: 250,
-    height: 150,
+    height: 100,
   },
 
   gradient: {
@@ -151,7 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent", // Adaugă un overlay pentru a spori lizibilitatea textului
     borderRadius: 10, // Rotunjirea colțurilor
     padding: 20, // Spațiu în interiorul containerului
-    paddingTop: "35%",
+    paddingTop: "15%",
   },
   title: {
     color: "white",

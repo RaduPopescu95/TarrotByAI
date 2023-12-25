@@ -131,7 +131,7 @@ const NavBarBottom = () => {
         }),
       },
     ],
-    backgroundColor: selected === index ? colors.primary2 : "transparent",
+    backgroundColor: selected === index ? colors.primary3 : "transparent",
     borderRadius: 20,
     marginBottom: 10,
   });
@@ -171,7 +171,7 @@ const NavBarBottom = () => {
           styles.navbar,
           {
             backgroundColor:
-              selected === 1 ? colors.secondary2rgba : "transparent",
+              selected === 1 ? "rgba(252, 246, 198, 0.8)" : "transparent",
           },
         ]}
       >
@@ -196,7 +196,9 @@ const NavBarBottom = () => {
                 <MaterialCommunityIcons
                   name={"cards-outline"}
                   size={selected === index ? 34 : 24}
-                  color={selected === index ? "#434343" : colors.primary2}
+                  color={
+                    selected === index ? colors.gradientLogin2 : colors.primary3
+                  }
                 />
               ) : (
                 <Ionicons
@@ -206,7 +208,7 @@ const NavBarBottom = () => {
                   }
                   size={selected === index ? 34 : 24}
                   color={
-                    selected === index ? colors.secondary2 : colors.primary2
+                    selected === index ? colors.gradientLogin2 : colors.primary3
                   }
                 />
               )}

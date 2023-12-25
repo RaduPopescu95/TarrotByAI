@@ -20,6 +20,7 @@ import {
   H7fontBoldPrimary,
   H7fontBoldWhite,
   H7fontMediumPrimary,
+  H8fontBoldPrimary,
   H8fontMediumPrimary,
   H8fontMediumWhite,
 } from "../../components/commonText";
@@ -56,7 +57,14 @@ const LuckyColor = () => {
   return (
     <TouchableWithoutFeedback onPress={onPressHandler}>
       <MainContainer>
-        <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
+        <LinearGradient
+          colors={[
+            colors.gradientLogin1,
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+          ]}
+          style={styles.gradient}
+        >
           <ImageBackground
             source={require("../../../assets/shadowBg.png")}
             resizeMode="cover"
@@ -79,41 +87,54 @@ const LuckyColor = () => {
                   }}
                 />
               </View>
-              <View style={styles.secondImageContainer}>
+              {/* <View style={styles.secondImageContainer}>
                 <Image
                   source={require("../../../assets/headerIcon.png")}
                   style={styles.secondImage}
                   resizeMode="contain"
                 />
-              </View>
+              </View> */}
               <View
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
-                  height: "23%",
-                  bottom: "10%",
+                  height: "auto",
                 }}
               >
-                <H7fontBoldWhite style={{ alignSelf: "center" }}>
+                <H6fontBoldPrimary
+                  style={{
+                    alignSelf: "center",
+                    marginTop: "5%",
+                    textAlign: "center",
+                  }}
+                >
                   {i18n.translate("luckyColorOfTheDay")}
-                </H7fontBoldWhite>
+                </H6fontBoldPrimary>
                 {zilnicCuloriNorocoase.info ? (
                   <>
-                    <H8fontMediumPrimary style={{ alignSelf: "center" }}>
+                    <H8fontBoldPrimary
+                      style={{
+                        alignSelf: "center",
+                        marginTop: "5%",
+                        textAlign: "center",
+                      }}
+                    >
                       {language === "hi"
                         ? zilnicCuloriNorocoase.info.hu.nume
                         : language === "id"
                           ? zilnicCuloriNorocoase.info.ru.nume
                           : zilnicCuloriNorocoase.info[language].nume}
-                    </H8fontMediumPrimary>
+                    </H8fontBoldPrimary>
 
-                    <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                    <H7fontMediumPrimary
+                      style={{ textAlign: "justify", marginTop: "5%" }}
+                    >
                       {language === "hi"
                         ? zilnicCuloriNorocoase.info.hu.descriere
                         : language === "id"
                           ? zilnicCuloriNorocoase.info.ru.descriere
                           : zilnicCuloriNorocoase.info[language].descriere}
-                    </H8fontMediumWhite>
+                    </H7fontMediumPrimary>
                   </>
                 ) : null}
               </View>

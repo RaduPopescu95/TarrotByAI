@@ -22,6 +22,8 @@ import {
   H6fontRegularBlack,
   H7fontBoldPrimary,
   H8fontMediumBlack,
+  H8fontMediumPrimary,
+  H8fontMediumWhite,
 } from "../../components/commonText";
 import { useLanguage } from "../../context/LanguageContext";
 
@@ -194,7 +196,7 @@ const PersonalReadingDashboard = () => {
           <Animated.View
             style={{
               opacity: opacityAnim, // Aplică animația de opacitate
-              backgroundColor: colors.primary2,
+              backgroundColor: colors.primary3,
               borderRadius: 5,
               display: "flex",
               width: "auto",
@@ -203,9 +205,9 @@ const PersonalReadingDashboard = () => {
               padding: 5,
             }}
           >
-            <H8fontMediumBlack>
+            <H8fontMediumWhite>
               {getCategoryName(category, language)}
-            </H8fontMediumBlack>
+            </H8fontMediumWhite>
           </Animated.View>
         )}
       </View>
@@ -217,10 +219,10 @@ const PersonalReadingDashboard = () => {
       <MainContainer>
         <LinearGradient
           colors={[
-            colors.gradientLogin2,
-            colors.gradientLogin2,
             colors.gradientLogin1,
-          ]}
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+          ]} // Înlocuiește cu culorile gradientului tău
           style={{
             flex: 1,
             paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
@@ -237,7 +239,7 @@ const PersonalReadingDashboard = () => {
           />
           {/* <GreetingBar isGoBack={true} /> */}
           {loading ? (
-            <CustomSpinner size={74} color={colors.primary2} />
+            <CustomSpinner size={74} color={colors.primary3} />
           ) : (
             <ScrollView
               contentContainerStyle={{
@@ -249,7 +251,10 @@ const PersonalReadingDashboard = () => {
                 minHeight: Dimensions.get("window").height,
               }}
             >
-              <CardLayout title={i18n.translate("personalReading")}>
+              <CardLayout
+                shuffledCartiPersonalizate={shuffledCartiPersonalizate}
+                title={i18n.translate("personalReading")}
+              >
                 {categoriiPersonalizate &&
                   categoriiPersonalizate.map((category, index) =>
                     renderFlipCard(category, index)

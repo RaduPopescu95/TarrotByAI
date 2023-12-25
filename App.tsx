@@ -44,6 +44,7 @@ import { NavigationProvider } from "./src/context/NavigationContext";
 import { LanguageProvider } from "./src/context/LanguageContext";
 import { ApiDataProvider } from "./src/context/ApiContext";
 import store from "./Store";
+import * as Font from "expo-font";
 
 // Start BugSnag first...
 Bugsnag.start();
@@ -134,6 +135,8 @@ const App = () => {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const [languageLoaded, setLanguageLoaded] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -248,7 +251,17 @@ const App = () => {
     });
   };
 
+  async function loadFonts() {
+    await Font.loadAsync({
+      Entypo: require("./assets/fonts/Entypo.ttf"),
+      Lora: require("./assets/fonts/Lora/Lora-SemiBold.ttf"), // Asigură-te că calea este corectă
+      LoraBold: require("./assets/fonts/Lora/Lora-Bold.ttf"), // Asigură-te că calea este corectă
+      // adaugă aici alte fonturi după necesitate
+    });
+    setFontsLoaded(true); // Actualizează starea după încărcarea fonturilor
+  }
   useEffect(() => {
+    loadFonts();
     handleTestAnalytics();
     Analytics.logEvent("your_event", {
       param1: "value1",
@@ -308,7 +321,7 @@ const App = () => {
 
   const Stack = createNativeStackNavigator();
 
-  if (!languageLoaded) {
+  if (!languageLoaded || !fontsLoaded) {
     return (
       // Render a loading screen or spinner
       <ActivityIndicator />

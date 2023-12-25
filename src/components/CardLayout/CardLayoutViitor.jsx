@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { H6fontRegularBlack } from "../commonText";
+import { H6fontBoldPrimary, H6fontRegularBlack } from "../commonText";
 import { colors } from "../../utils/colors";
 
-const CardLayoutViitor = ({ title, children }) => {
+const CardLayoutViitor = ({ shuffledCartiViitor, title, children }) => {
   const childArray = React.Children.toArray(children);
 
   // Distribuim cartonașele pe rânduri
@@ -41,7 +41,11 @@ const CardLayoutViitor = ({ title, children }) => {
           hasRows ? styles.titleTop : styles.titleCenter,
         ]}
       >
-        <Text style={styles.title}>{title}</Text>
+        <H6fontBoldPrimary
+          style={{ color: shuffledCartiViitor.length > 0 && "white" }}
+        >
+          {title}
+        </H6fontBoldPrimary>
       </View>
       {rows.map((row, rowIndex) => (
         <View
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "white",
+    color: colors.primary3,
     textAlign: "center",
     marginBottom: 1, // Poți ajusta această valoare după preferințe
   },

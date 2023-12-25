@@ -49,7 +49,14 @@ const PersonalizedReading = ({ route }) => {
   return (
     <View style={{ flex: 1 }}>
       <MainContainer style={{ flex: 1 }}>
-        <LinearGradient colors={["#000000", "#434343"]} style={styles.gradient}>
+        <LinearGradient
+          colors={[
+            colors.gradientLogin1,
+            colors.gradientLogin2,
+            colors.gradientLogin2,
+          ]} // Înlocuiește cu culorile gradientului tău
+          style={styles.gradient}
+        >
           <ImageBackground
             source={require("../../../assets/shadowBg.png")}
             resizeMode="cover"
@@ -119,13 +126,13 @@ const PersonalizedReading = ({ route }) => {
                       : item.carte.info[language].nume}
                 </H6fontBoldPrimary>
 
-                <H8fontMediumWhite style={{ textAlign: "justify" }}>
+                <H7fontBoldPrimary style={{ textAlign: "justify" }}>
                   {language === "hi"
                     ? item.info.hu.descriere
                     : language === "id"
                       ? item.info.ru.descriere
                       : item.info[language].descriere}
-                </H8fontMediumWhite>
+                </H7fontBoldPrimary>
               </View>
             </ScrollView>
           </ImageBackground>

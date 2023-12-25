@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     color: colors.lightGray,
   },
   primary2: {
-    color: colors.primary2,
+    color: colors.primary3,
   },
   yellow: {
     color: colors.yellow,
@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
   h2: {
-    fontSize: 36,
+    fontSize: 40,
   },
   h3: {
-    fontSize: 24,
+    fontSize: 28,
   },
   h4: {
     fontSize: 21,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   h6: {
-    fontSize: 18,
+    fontSize: 28,
   },
   h7: {
     fontSize: 16,
@@ -125,9 +125,9 @@ const styles = StyleSheet.create({
   h22: {
     fontSize: 22,
   },
-  fontBold: { fontWeight: "bold" },
-  fontRegular: {},
-  fontMedium: {},
+  fontBold: { fontFamily: "LoraBold" },
+  fontRegular: { fontFamily: "Lora" },
+  fontMedium: { fontFamily: "Lora" },
 });
 
 const {
@@ -243,6 +243,17 @@ export const H8fontRegularSecondaryBlack = styled(Text)`
 
 export const H8fontRegularWhite = styled(Text)`
   ${h8};
+  ${fontRegular};
+  ${white};
+`;
+
+export const H6fontRegularPrimary = styled(Text)`
+  ${h6};
+  ${fontRegular};
+  ${primary2};
+`;
+export const H6fontBoldWhite = styled(Text)`
+  ${h6};
   ${fontRegular};
   ${white};
 `;

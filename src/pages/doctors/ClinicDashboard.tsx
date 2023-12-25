@@ -128,8 +128,6 @@ const ClinicDashboard = () => {
             colors.gradientLogin1,
             colors.gradientLogin2,
             colors.gradientLogin2,
-            colors.gradientLogin1,
-            colors.gradientLogin3,
           ]} // Înlocuiește cu culorile gradientului tău
           style={{
             flex: 1,
