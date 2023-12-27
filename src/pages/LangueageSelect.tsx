@@ -157,7 +157,7 @@ const LanguageSelectScreen = () => {
           onPress={() => navigation.navigate(screenName.SignInScreenClinic)}
         >
           <H6fontRegularWhite style={styles.continueButtonText}>
-            Continuă
+            {i18n.translate("clinicLoginRedirect")}
           </H6fontRegularWhite>
         </TouchableOpacity>
       </LinearGradient>

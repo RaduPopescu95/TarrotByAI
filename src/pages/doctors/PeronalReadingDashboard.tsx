@@ -26,9 +26,15 @@ import {
   H8fontMediumWhite,
 } from "../../components/commonText";
 import { useLanguage } from "../../context/LanguageContext";
+import { authentication } from "../../../firebase";
+import { useNumberContext } from "../../context/NumberContext";
 
-const PersonalReadingDashboard = () => {
+const PersonalReadingDashboard = ({ route }) => {
+  const isFirstEntry = useRef(true);
+
   const [cardAnimations, setCardAnimations] = useState([]);
+
+  const [renderedCards, setRenderedCards] = useState([]);
 
   const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0));
 
@@ -56,10 +62,24 @@ const PersonalReadingDashboard = () => {
     shuffleCartiViitor,
     shuffledCartiViitor,
     setShuffledCartiViitor,
+    setLoading,
   } = useApiData();
   const { language, changeLanguage } = useLanguage();
 
   const [shouldFlip, setShouldFlip] = useState(false);
+  const { currentNumber, updateNumber } = useNumberContext();
+
+  useEffect(() => {
+    console.log("personal reading...current number...", currentNumber);
+    if (isFirstEntry.current) {
+      setLoading(true);
+      shuffleCartiPersonalizate();
+      console.log("Executat doar la prima intrare în acest ecran");
+
+      // Setează flag-ul pe false, astfel încât logica să nu se mai execute la următoarele intrări
+      isFirstEntry.current = false;
+    }
+  }, []); // Array gol de dependențe pentru a rula doar la montare
 
   // Initialize card animations and animate cards on mount and categoriiPersonalizate change
   useEffect(() => {
@@ -102,7 +122,7 @@ const PersonalReadingDashboard = () => {
           delay: index * 100,
         }).start(() => {
           if (index === cardAnimations.length - 1) {
-            fetchData();
+            // shuffleCartiPersonalizate();
             // resetExitAnimation(); COMENTAT PENTRU CA AVEA ERORI
             setShouldFlip(false); // Resetați aici
           }
@@ -191,7 +211,10 @@ const PersonalReadingDashboard = () => {
           triggerExitAnimation={triggerExitAnimation}
           varianteCarti={varianteCarti}
           conditieCategorie={category.info.ro.nume}
+          number={index}
+          currentNumber={currentNumber}
         />
+
         {shouldFlip && (
           <Animated.View
             style={{

@@ -82,6 +82,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     height: "100%",
+    paddingBottom: "20%",
+    marginLeft: "4%",
   },
   titleContainer: {
     width: "100%",

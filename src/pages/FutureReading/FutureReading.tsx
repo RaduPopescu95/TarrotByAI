@@ -37,7 +37,6 @@ const FutureReading = ({ route }) => {
   const { setIsNavBarVisible } = useNavBarVisibility();
 
   React.useEffect(() => {
-    console.log("Test...", item.image.finalUri);
     setIsNavBarVisible(false);
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);

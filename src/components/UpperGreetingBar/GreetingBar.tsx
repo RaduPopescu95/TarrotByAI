@@ -17,6 +17,7 @@ import { useAuth } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
+import { useNumberContext } from "../../context/NumberContext";
 
 const languages = [
   {
@@ -92,12 +93,13 @@ const languages = [
   // Adăugați aici alte limbi și steaguri, dacă este necesar
 ];
 
-const GreetingBar = ({ isGoBack }) => {
+const GreetingBar = ({ isGoBack, isPersonalGoBack }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState("Romanian");
   const { currentUser, userData, isGuestUser, setUserData } = useAuth();
   const { language, changeLanguage } = useLanguage();
+  const { currentNumber, updateNumber } = useNumberContext();
 
   useEffect(() => {
     const loadLanguage = async () => {
@@ -136,7 +138,9 @@ const GreetingBar = ({ isGoBack }) => {
     <View style={styles.navbar}>
       {isGoBack ? (
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.goBack(), updateNumber(0);
+          }}
           style={{ zIndex: 10 }}
         >
           <Octicons

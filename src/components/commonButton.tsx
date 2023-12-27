@@ -41,6 +41,7 @@ type ButtonProps = {
   borderColor?: string;
   borderWidth?: any;
   transparent?: boolean;
+  txtStyle?: any;
 };
 export const ButtonFull: React.FC<ButtonProps> = ({
   style,
@@ -97,6 +98,7 @@ export const Button: React.FC<ButtonProps> = ({
   borderWidth,
   borderColor,
   transparent,
+  txtStyle,
 }) => {
   return (
     <CommonButton
@@ -114,13 +116,15 @@ export const Button: React.FC<ButtonProps> = ({
                   : colors.blue,
             }
           : null,
-        { borderWidth: 1.5, borderColor: colors.primary3 },
+        { borderWidth: borderWidth, borderColor: colors.primary3 },
       ]}
       onPress={() => {
         funCallback();
       }}
     >
-      <H7fontBoldWhite style={{ color: txtColor ? txtColor : colors.primary3 }}>
+      <H7fontBoldWhite
+        style={[{ color: txtColor ? txtColor : colors.primary3 }, txtStyle]}
+      >
         {label}
       </H7fontBoldWhite>
     </CommonButton>

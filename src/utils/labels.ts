@@ -1,5 +1,8 @@
 export const langObj = {
   en: {
+    createAccountCTA: "Explore more with your own account",
+    createAccountCTAMessage:
+      "Create an account to save and view your tarot reading history",
     history: "History",
     selectLanguage: "Select Language",
     firebaseErrorInvalidCredentials:
@@ -75,6 +78,9 @@ export const langObj = {
     clinicLoginRedirect: "Continue",
   },
   ro: {
+    createAccountCTA: "Explorează mai multe cu propriul tău cont",
+    createAccountCTAMessage:
+      "Creează-ți un cont pentru a salva și vizualiza istoricul citirilor tale de tarot",
     history: "Istoric",
     selectLanguage: "Alege limba",
     firebaseErrorInvalidCredentials:
@@ -156,6 +162,9 @@ export const langObj = {
     clinicLoginRedirect: "Continuă",
   },
   es: {
+    createAccountCTA: "Explora más con tu propia cuenta",
+    createAccountCTAMessage:
+      "Crea una cuenta para guardar y ver tu historial de lecturas de tarot",
     history: "Historial",
     selectLanguage: "Seleccionar idioma",
     firebaseErrorInvalidCredentials:
@@ -237,6 +246,9 @@ export const langObj = {
     clinicLoginRedirect: "Continuar",
   },
   it: {
+    createAccountCTA: "Esplora di più con il tuo account",
+    createAccountCTAMessage:
+      "Crea un account per salvare e visualizzare la tua cronologia di letture dei tarocchi",
     history: "Storia",
     selectLanguage: "Seleziona Lingua",
     firebaseErrorInvalidCredentials:
@@ -315,6 +327,9 @@ export const langObj = {
     clinicLoginRedirect: "Continua",
   },
   pl: {
+    createAccountCTA: "Odkrywaj więcej z własnym kontem",
+    createAccountCTAMessage:
+      "Utwórz konto, aby zapisać i przeglądać historię twoich czytań tarota",
     history: "Historia",
     selectLanguage: "Wybierz język",
     firebaseErrorInvalidCredentials:
@@ -393,6 +408,9 @@ export const langObj = {
     clinicLoginRedirect: "Kontynuuj",
   },
   bg: {
+    createAccountCTA: "Разгледайте повече със собствената си сметка",
+    createAccountCTAMessage:
+      "Създайте акаунт, за да запазите и прегледате историята на вашите таро четения",
     history: "История",
     selectLanguage: "Изберете език",
     firebaseErrorInvalidCredentials:
@@ -469,6 +487,9 @@ export const langObj = {
     clinicLoginRedirect: "Продължете",
   },
   cs: {
+    createAccountCTA: "Prozkoumejte více se svým vlastním účtem",
+    createAccountCTAMessage:
+      "Vytvořte si účet pro ukládání a prohlížení historie vašich věštění z tarotu",
     history: "Historie",
     selectLanguage: "Vybrat jazyk",
     firebaseErrorInvalidCredentials:
@@ -546,6 +567,9 @@ export const langObj = {
     clinicLoginRedirect: "Pokračovat",
   },
   de: {
+    createAccountCTA: "Entdecke mehr mit deinem eigenen Konto",
+    createAccountCTAMessage:
+      "Erstelle ein Konto, um deine Tarot-Lesungshistorie zu speichern und anzusehen",
     history: "Geschichte",
     selectLanguage: "Sprache auswählen",
     firebaseErrorInvalidCredentials:
@@ -625,6 +649,9 @@ export const langObj = {
     clinicLoginRedirect: "Fortfahren",
   },
   el: {
+    createAccountCTA: "Εξερεύνησε περισσότερα με το δικό σου λογαριασμό",
+    createAccountCTAMessage:
+      "Δημιούργησε ένα λογαριασμό για να αποθηκεύσεις και να δεις το ιστορικό των αναγνώσεων ταρώ σου",
     history: "Ιστορία",
     selectLanguage: "Επιλογή Γλώσσας",
     firebaseErrorInvalidCredentials:
@@ -704,6 +731,9 @@ export const langObj = {
     clinicLoginRedirect: "Συνέχεια",
   },
   fr: {
+    createAccountCTA: "Explorez plus avec votre propre compte",
+    createAccountCTAMessage:
+      "Créez un compte pour sauvegarder et visualiser votre historique de lectures de tarot",
     history: "Histoire",
     selectLanguage: "Sélectionner la langue",
     firebaseErrorInvalidCredentials:
@@ -782,6 +812,9 @@ export const langObj = {
     clinicLoginRedirect: "Continuer",
   },
   hr: {
+    createAccountCTA: "Istraži više sa svojim vlastitim računom",
+    createAccountCTAMessage:
+      "Kreiraj račun kako bi spremio i pregledao povijest svojih tarot čitanja",
     history: "Povijest",
     selectLanguage: "Odaberite jezik",
     firebaseErrorInvalidCredentials:
@@ -857,6 +890,9 @@ export const langObj = {
     clinicLoginRedirect: "Nastavi",
   },
   hi: {
+    createAccountCTA: "अपने खाते के साथ और अधिक तलाश करें",
+    createAccountCTAMessage:
+      "अपनी टैरो रीडिंग के इतिहास को सहेजने और देखने के लिए एक खाता बनाएं",
     history: "इतिहास",
     selectLanguage: "भाषा चुनें",
     firebaseErrorInvalidCredentials:
@@ -933,6 +969,9 @@ export const langObj = {
     clinicLoginRedirect: "जारी रखें",
   },
   id: {
+    createAccountCTA: "Jelajahi lebih banyak dengan akunmu sendiri",
+    createAccountCTAMessage:
+      "Buat akun untuk menyimpan dan melihat riwayat bacaan tarot Anda",
     history: "Sejarah",
     selectLanguage: "Pilih Bahasa",
     firebaseErrorInvalidCredentials:
@@ -1010,6 +1049,9 @@ export const langObj = {
     clinicLoginRedirect: "Lanjutkan",
   },
   sk: {
+    createAccountCTA: "Preskúmaj viac so svojím vlastným účtom",
+    createAccountCTAMessage:
+      "Vytvorte si účet na uloženie a zobrazenie histórie vašich čítaní tarotu",
     history: "História",
     selectLanguage: "Vybrať jazyk",
     firebaseErrorInvalidCredentials:

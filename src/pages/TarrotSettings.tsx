@@ -15,6 +15,7 @@ import { labels } from "../utils/labels";
 import { screenName } from "../utils/screenName";
 import {
   H6fontBoldPrimary,
+  H6fontBoldWhite,
   H7fontMediumPrimary,
 } from "../components/commonText";
 import {
@@ -300,14 +301,13 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                           }}
                         >
                           <H6fontBoldPrimary style={{ textAlign: "center" }}>
-                            Explorează mai multe cu propriul tău cont
+                            {i18n.translate("createAccountCTA")}
                           </H6fontBoldPrimary>
 
                           <H7fontMediumPrimary
                             style={{ textAlign: "center", marginTop: "10%" }}
                           >
-                            Creează-ți un cont pentru a salva și vizualiza
-                            istoricul citirilor tale de tarot
+                            {i18n.translate("createAccountCTAMessage")}
                           </H7fontMediumPrimary>
                           <Button
                             disabled={false}
@@ -342,9 +342,9 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                           height: "30%",
                         }}
                       >
-                        <H6fontBoldPrimary>
+                        <H6fontBoldWhite>
                           {i18n.translate("myAccount")}
-                        </H6fontBoldPrimary>
+                        </H6fontBoldWhite>
 
                         <Image
                           source={require("../../assets/headerIcon.png")}
@@ -529,9 +529,10 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                           funCallback={handleSubmit(onsubmit)}
                           label={i18n.translate("saveChanges")}
                           success={true}
-                          bgColor={colors.primary2}
+                          bgColor={colors.primary3}
                           borderColor={colors.white}
                           borderWidth={0.2}
+                          txtColor={colors.white}
                         />
 
                         <View>

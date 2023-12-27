@@ -9,12 +9,14 @@ import {
   View,
 } from "react-native";
 import i18n from "../../../i18n";
-import { useNavigation } from "@react-navigation/native"; // Importă hook-ul pentru navigare
+import { useFocusEffect, useNavigation } from "@react-navigation/native"; // Importă hook-ul pentru navigare
 import { screenName } from "../../utils/screenName";
 import { useLanguage } from "../../context/LanguageContext";
 import { colors } from "../../utils/colors";
 import { Image } from "react-native";
 import { normalizeString } from "../../utils/stringUtils";
+import { useNumberContext } from "../../context/NumberContext";
+import { handleQueryFirestore } from "../../utils/firestoreUtils";
 
 const FlipCard = ({
   item,
@@ -25,12 +27,72 @@ const FlipCard = ({
   triggerExitAnimation,
   varianteCarti,
   conditieCategorie,
+  number,
 }) => {
   const flipAnim = useRef(new Animated.Value(0)).current;
 
   const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0));
   const navigation = useNavigation(); // Obține obiectul de navigare
   const { language, changeLanguage } = useLanguage();
+  const { currentNumber, updateNumber } = useNumberContext();
+
+  // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
+  const navigateToPersonalizedReading = async () => {
+    try {
+      // console.log(item.image.finalUri);
+      if (isFuture) {
+        navigation.navigate(screenName.FutureReading, {
+          item,
+        });
+      } else {
+        // const cardName = item.info.ro.nume.trim().toLowerCase();
+        // const categoryNameNormalized = conditieCategorie.trim().toLowerCase();
+        // console.log(cardName);
+        // console.log(categoryNameNormalized);
+
+        // Filtrare cu verificare pentru undefined și normalizare pentru litere mari/mici și spații
+        const cardNameNormalized = normalizeString(item.info.ro.nume);
+        const categoryNameNormalized = normalizeString(conditieCategorie);
+        // const filteredVariante = varianteCarti.filter((carte) => {
+        //   const cardNameNormalized = normalizeString(item.info.ro.nume);
+        //   const categoryNameNormalized = normalizeString(conditieCategorie);
+        //   const carteNumeNormalized = normalizeString(
+        //     carte.carte?.info.ro?.nume || ""
+        //   );
+        //   const categorieNumeNormalized = normalizeString(
+        //     carte.categorie?.info.ro?.nume || ""
+        //   );
+
+        //   return (
+        //     cardNameNormalized === carteNumeNormalized &&
+        //     categoryNameNormalized === categorieNumeNormalized
+        //   );
+        // });
+        const filteredVariante = await handleQueryFirestore(
+          "VarianteCarti",
+          cardNameNormalized,
+          categoryNameNormalized
+        );
+        // Verificare dacă există elemente în array-ul filtrat
+        if (filteredVariante.length > 0) {
+          // Selectare aleatorie a unui element
+          const randomIndex = Math.floor(
+            Math.random() * filteredVariante.length
+          );
+          const selectedCard = filteredVariante[randomIndex];
+
+          // Navigație cu cartea selectată
+          navigation.navigate("PersonalizedReading", { item: selectedCard });
+        } else {
+          console.log(
+            "Nicio carte nu a fost găsită pentru criteriile specificate."
+          );
+        }
+      }
+    } catch (err) {
+      console.log("Error at navigateToPersonalizedReading...", err);
+    }
+  };
 
   const flipCard = () => {
     Animated.spring(flipAnim, {
@@ -40,6 +102,33 @@ const FlipCard = ({
       useNativeDriver: true,
     }).start();
   };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log("focus on filp card...");
+  //     if (number === currentNumber) {
+  //       console.log("is equal to current number", currentNumber);
+  //       console.log("number", number);
+  //     }
+  //     return () => {
+  //       console.log("Unfocus on filp card...");
+  //     };
+  //   }, [])
+  // );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("currentNumber in FlipCard:", currentNumber);
+      if (number === currentNumber && number !== 0) {
+        console.log("is equal to current number.........", currentNumber);
+        console.log("number", number);
+        if (number === 8) {
+          updateNumber(0);
+        }
+        navigateToPersonalizedReading();
+      }
+    }, [currentNumber])
+  );
 
   useEffect(() => {
     if (shouldFlip) {
@@ -56,7 +145,13 @@ const FlipCard = ({
         toValue: 1,
         duration: 500,
         useNativeDriver: true,
-      }).start();
+      }).start(() =>
+        setTimeout(() => {
+          if (number === 0) {
+            navigateToPersonalizedReading();
+          }
+        }, 500)
+      );
     } else {
       // Inițiați animația de fade out
       Animated.timing(opacityAnim, {
@@ -99,57 +194,6 @@ const FlipCard = ({
         }),
       },
     ],
-  };
-
-  // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
-  const navigateToPersonalizedReading = () => {
-    try {
-      // console.log(item.image.finalUri);
-      if (isFuture) {
-        navigation.navigate(screenName.FutureReading, {
-          item,
-        });
-      } else {
-        const cardName = item.info.ro.nume.trim().toLowerCase();
-        const categoryNameNormalized = conditieCategorie.trim().toLowerCase();
-        // console.log(cardName);
-        // console.log(categoryNameNormalized);
-
-        // Filtrare cu verificare pentru undefined și normalizare pentru litere mari/mici și spații
-        const filteredVariante = varianteCarti.filter((carte) => {
-          const cardNameNormalized = normalizeString(item.info.ro.nume);
-          const categoryNameNormalized = normalizeString(conditieCategorie);
-          const carteNumeNormalized = normalizeString(
-            carte.carte?.info.ro?.nume || ""
-          );
-          const categorieNumeNormalized = normalizeString(
-            carte.categorie?.info.ro?.nume || ""
-          );
-
-          return (
-            cardNameNormalized === carteNumeNormalized &&
-            categoryNameNormalized === categorieNumeNormalized
-          );
-        });
-        // Verificare dacă există elemente în array-ul filtrat
-        if (filteredVariante.length > 0) {
-          // Selectare aleatorie a unui element
-          const randomIndex = Math.floor(
-            Math.random() * filteredVariante.length
-          );
-          const selectedCard = filteredVariante[randomIndex];
-
-          // Navigație cu cartea selectată
-          navigation.navigate("PersonalizedReading", { item: selectedCard });
-        } else {
-          console.log(
-            "Nicio carte nu a fost găsită pentru criteriile specificate."
-          );
-        }
-      }
-    } catch (err) {
-      console.log("Error at navigateToPersonalizedReading...", err);
-    }
   };
 
   return (

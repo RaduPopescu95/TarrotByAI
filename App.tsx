@@ -45,6 +45,7 @@ import { LanguageProvider } from "./src/context/LanguageContext";
 import { ApiDataProvider } from "./src/context/ApiContext";
 import store from "./Store";
 import * as Font from "expo-font";
+import { NumberProvider } from "./src/context/NumberContext";
 
 // Start BugSnag first...
 Bugsnag.start();
@@ -329,24 +330,26 @@ const App = () => {
   }
   return (
     <>
-      <ApiDataProvider>
-        <LanguageProvider>
-          <NavigationProvider>
-            <NavBarVisibilityProvider>
-              <AuthProvider>
-                <NavigationContainer>
-                  <StatusBar style="light" />
-                  <Provider store={store}>
-                    <MenuProvider>
-                      <RootNavigation />
-                    </MenuProvider>
-                  </Provider>
-                </NavigationContainer>
-              </AuthProvider>
-            </NavBarVisibilityProvider>
-          </NavigationProvider>
-        </LanguageProvider>
-      </ApiDataProvider>
+      <NumberProvider>
+        <ApiDataProvider>
+          <LanguageProvider>
+            <NavigationProvider>
+              <NavBarVisibilityProvider>
+                <AuthProvider>
+                  <NavigationContainer>
+                    <StatusBar style="light" />
+                    <Provider store={store}>
+                      <MenuProvider>
+                        <RootNavigation />
+                      </MenuProvider>
+                    </Provider>
+                  </NavigationContainer>
+                </AuthProvider>
+              </NavBarVisibilityProvider>
+            </NavigationProvider>
+          </LanguageProvider>
+        </ApiDataProvider>
+      </NumberProvider>
     </>
   );
 };

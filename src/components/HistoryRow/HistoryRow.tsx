@@ -1,9 +1,42 @@
-import React from "react";
-import { View, Image, StyleSheet, FlatList } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Image,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { H7fontMediumWhite } from "../commonText";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../utils/screenName";
 
 // Props ar putea include un array de imagini și orice altceva ai nevoie
-const ImageRow = ({ images }) => {
+const ImageRow = ({ data, date, id, historyType }) => {
+  useEffect(() => {
+    console.log("data..", data.length);
+  }, []);
+
+  const navigation = useNavigation();
+
+  // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
+  const navigateToPersonalizedReading = (item) => {
+    try {
+      console.log(item.image.finalUri);
+      console.log(item);
+
+      // Navigație cu cartea selectată
+      if (historyType === "FutureReading") {
+        navigation.navigate(screenName.FutureReading, { item });
+      } else {
+        navigation.navigate("PersonalizedReading", { item });
+      }
+    } catch (err) {
+      console.log(
+        "Error at navigate to reading dashboard from history error...",
+        err
+      );
+    }
+  };
   return (
     <View style={{ backgroundColor: "#21202E", margin: 10 }}>
       <View
@@ -15,23 +48,22 @@ const ImageRow = ({ images }) => {
           paddingTop: 5,
         }}
       >
-        <H7fontMediumWhite>#1231231</H7fontMediumWhite>
-        <H7fontMediumWhite>05.11.2023</H7fontMediumWhite>
+        <H7fontMediumWhite>{id}</H7fontMediumWhite>
+        <H7fontMediumWhite>{date}</H7fontMediumWhite>
       </View>
-      {/* <FlatList
+      <FlatList
         horizontal
-        data={images}
+        data={data}
         renderItem={({ item }) => (
           //   <Image source={{ uri: item.uri }} style={styles.image} />
-          <Image
-            source={require("../../images/dashboardPrint.png")}
-            style={styles.image}
-          />
+          <TouchableOpacity onPress={() => navigateToPersonalizedReading(item)}>
+            <Image source={{ uri: item.image.finalUri }} style={styles.image} />
+          </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         style={styles.row}
-      /> */}
+      />
     </View>
   );
 };

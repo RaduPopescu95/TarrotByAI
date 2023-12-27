@@ -29,6 +29,7 @@ import {
   H6fontBoldPrimary,
   H6fontBoldWhite,
   H6fontRegularBlack,
+  H7fontBoldPrimary,
   H7fontMediumWhite,
   H8fontBoldPrimary,
   H8fontMediumPrimary,
@@ -325,9 +326,9 @@ const SignInScreenClinic: React.FC<Props> = ({
                           )
                         }
                       >
-                        <H8fontMediumPrimary>
+                        <H7fontBoldPrimary>
                           {i18n.translate("forgotPassword")}
-                        </H8fontMediumPrimary>
+                        </H7fontBoldPrimary>
                       </TouchableOpacity>
                     )}
                   </RowView>
@@ -335,12 +336,14 @@ const SignInScreenClinic: React.FC<Props> = ({
                   <Button
                     disabled={false}
                     funCallback={handleLoginAsGuest}
-                    borderWidth={0.2}
+                    borderWidth={3}
                     bgColor={"transparent"}
-                    txtColor={colors.primary2}
+                    txtColor={colors.primary3}
                     label={i18n.translate("loginNowNoAccount")}
                     borderColor={colors.white}
                     success={true}
+                    style={{ height: "15%" }}
+                    txtStyle={{ fontSize: 20 }}
                   />
 
                   <Button
@@ -356,9 +359,9 @@ const SignInScreenClinic: React.FC<Props> = ({
 
                   <View>
                     <View style={styles.infoTextViewStyle}>
-                      <H8fontMediumPrimary>
+                      <H7fontBoldPrimary>
                         {i18n.translate("dntHaveAccount")}{" "}
-                      </H8fontMediumPrimary>
+                      </H7fontBoldPrimary>
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate(
@@ -367,11 +370,13 @@ const SignInScreenClinic: React.FC<Props> = ({
                           )
                         }
                       >
-                        <H8fontBoldPrimary
-                          style={{ textDecorationLine: "underline" }}
+                        <H7fontBoldPrimary
+                          style={{
+                            textDecorationLine: "underline",
+                          }}
                         >
                           {i18n.translate("signUp")}
-                        </H8fontBoldPrimary>
+                        </H7fontBoldPrimary>
                       </TouchableOpacity>
                     </View>
                   </View>

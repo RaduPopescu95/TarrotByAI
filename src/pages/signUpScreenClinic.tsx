@@ -17,7 +17,9 @@ import {
   FormErrorMessage,
   H10fontRegularWhite,
   H6fontBoldPrimary,
+  H6fontBoldWhite,
   H6fontRegularBlack,
+  H7fontMediumPrimary,
   H7fontMediumWhite,
   H8fontMediumPrimary,
   H8fontMediumWhite,
@@ -173,9 +175,7 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
                     alignItems: "center",
                   }}
                 >
-                  <H6fontBoldPrimary>
-                    {i18n.translate("signUp")}
-                  </H6fontBoldPrimary>
+                  <H6fontBoldWhite>{i18n.translate("signUp")}</H6fontBoldWhite>
 
                   <Image
                     source={require("../../assets/headerIcon.png")}
@@ -312,16 +312,17 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
                   funCallback={handleSubmit(onSubmit)}
                   label={i18n.translate("register")}
                   success={true}
-                  bgColor={colors.primary2}
+                  bgColor={colors.primary3}
                   borderColor={colors.white}
                   borderWidth={0.2}
+                  txtColor={colors.white}
                 />
 
                 <View>
                   <View style={styles.infoTextViewStyle}>
-                    <H8fontMediumWhite>
+                    <H7fontMediumPrimary>
                       {i18n.translate("alreadyAccount")}{" "}
-                    </H8fontMediumWhite>
+                    </H7fontMediumPrimary>
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate(
@@ -329,9 +330,11 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
                         )
                       }
                     >
-                      <H8fontMediumPrimary>
+                      <H7fontMediumPrimary
+                        style={{ textDecorationLine: "underline" }}
+                      >
                         {i18n.translate("registerLogin")}
-                      </H8fontMediumPrimary>
+                      </H7fontMediumPrimary>
                     </TouchableOpacity>
                   </View>
                   {/* <View style={styles.borderLineStyle}>

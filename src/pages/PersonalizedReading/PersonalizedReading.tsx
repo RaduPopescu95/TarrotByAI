@@ -30,9 +30,18 @@ import { useNavBarVisibility } from "../../context/NavbarVisibilityContext";
 import { useLanguage } from "../../context/LanguageContext";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../utils/screenName";
+import { useApiData } from "../../context/ApiContext";
+import { useNumberContext } from "../../context/NumberContext";
+import { Button } from "../../components/commonButton";
 
 const PersonalizedReading = ({ route }) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const [videoEnded, setVideoEnded] = useState(false);
+  const navigation = useNavigation();
+  const { currentNumber, updateNumber } = useNumberContext();
+
   const { language, changeLanguage } = useLanguage();
   const { item } = route.params;
   const onPressHandler = () => {
@@ -42,9 +51,32 @@ const PersonalizedReading = ({ route }) => {
   const { setIsNavBarVisible } = useNavBarVisibility();
 
   React.useEffect(() => {
+    console.log("currentNumber...", currentNumber);
+
     setIsNavBarVisible(false);
+
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);
+
+  const handleVideoEnd = () => {
+    console.log("Videoclipul s-a terminat!");
+    console.log("currentNumber...", currentNumber);
+    const newNumber = currentNumber + 1;
+    updateNumber(newNumber);
+    setVideoEnded(true);
+
+    setTimeout(() => {
+      navigation.navigate(screenName.PersonalReadingDashboard);
+    }, 500);
+
+    // Aici puteți adăuga orice logică suplimentară dorită după terminarea videoclipului
+  };
+
+  const onPlaybackStatusUpdate = (playbackStatus) => {
+    if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
+      handleVideoEnd();
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -67,7 +99,7 @@ const PersonalizedReading = ({ route }) => {
               // alignItems: 'flex-end',
             }}
           >
-            <GreetingBar isGoBack={true} />
+            <GreetingBar isGoBack={true} isPersonalGoBack={true} />
 
             <View style={styles.imageContainer}>
               <Image
@@ -103,6 +135,7 @@ const PersonalizedReading = ({ route }) => {
                 useNativeControls
                 onLoadStart={() => setIsVideoLoading(true)} // Începe afișarea spinner-ului
                 onLoad={() => setIsVideoLoading(false)} // Ascunde spinner-ul când videoclipul este încărcat
+                onPlaybackStatusUpdate={onPlaybackStatusUpdate}
               />
             </View>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -135,6 +168,22 @@ const PersonalizedReading = ({ route }) => {
                 </H7fontBoldPrimary>
               </View>
             </ScrollView>
+            {/* {videoEnded && (
+              <Button
+                disabled={false}
+                funCallback={
+                  () => navigation.navigate(screenName.PersonalReadingDashboard)
+                  // console.log(currentNumber)
+                }
+                borderWidth={2}
+                bgColor={colors.primary3}
+                label={"next"}
+                borderColor={colors.primary3}
+                success={true}
+                txtColor={colors.white}
+                style={{ width: "70%", alignSelf: "center" }}
+              />
+            )} */}
           </ImageBackground>
         </LinearGradient>
       </MainContainer>

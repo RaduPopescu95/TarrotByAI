@@ -56,10 +56,24 @@ const FutureReadingDashboard = () => {
     shuffleCartiViitor,
     shuffledCartiViitor,
     setShuffledCartiViitor,
+    setLoading,
   } = useApiData();
   const { language, changeLanguage } = useLanguage();
 
   const [shouldFlip, setShouldFlip] = useState(false);
+
+  const isFirstEntry = useRef(true);
+
+  useEffect(() => {
+    if (isFirstEntry.current) {
+      setLoading(true);
+      shuffleCartiViitor();
+      console.log("Executat doar la prima intrare în acest ecran");
+
+      // Setează flag-ul pe false, astfel încât logica să nu se mai execute la următoarele intrări
+      isFirstEntry.current = false;
+    }
+  }, []); // Array gol de dependențe pentru a rula doar la montare
 
   // Initialize card animations and animate cards on mount and categoriiViitor change
   useEffect(() => {
@@ -197,7 +211,7 @@ const FutureReadingDashboard = () => {
               padding: 5,
             }}
           >
-            <H8fontMediumWhite>
+            <H8fontMediumWhite style={{ width: 80 }}>
               {getCategoryName(category, language)}
             </H8fontMediumWhite>
           </Animated.View>

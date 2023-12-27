@@ -12,12 +12,14 @@ import {
 import { useNavigationState } from "../context/NavigationContext";
 import i18n from "../../i18n";
 import { useApiData } from "../context/ApiContext";
+import { useNumberContext } from "../context/NumberContext";
 
 const NavBarBottom = () => {
   const navigation = useNavigation();
   const [selected, setSelected] = useState(0);
   const { setCurrentScreen, currentScreen } = useNavigationState();
   const [firstVisit, setFirstVisit] = useState(true);
+  const { currentNumber, updateNumber } = useNumberContext();
 
   const {
     oreNorocoase,
@@ -96,16 +98,20 @@ const NavBarBottom = () => {
           shuffledCartiPersonalizate.length === 0
         ) {
           setLoading(true);
+          updateNumber(0);
         }
         if (currentScreen === "PersonalReadingDashboard") {
           shuffleCartiPersonalizate();
+          updateNumber(0);
         } else if (currentScreen === "FutureReadingDashboard") {
           shuffleCartiViitor();
+          updateNumber(0);
         }
         // startExitAnimation();
         setCurrentScreen(screen);
         setFirstVisit(false); // Adăugat aici
       } else {
+        updateNumber(0);
         setSelected(index);
         navigation.navigate(screen);
         setCurrentScreen(screen);
@@ -152,6 +158,7 @@ const NavBarBottom = () => {
       {selected === 1 &&
         shuffledCartiViitor.length === 0 &&
         firstVisit &&
+        !loading &&
         shuffledCartiPersonalizate.length === 0 && (
           <View style={styles.shuffleTextContainer}>
             <H7fontBoldPrimary>
