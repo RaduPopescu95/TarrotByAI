@@ -47,6 +47,7 @@ export const handleUploadFirestore = async (data, location) => {
 
 //ADD A DOCUMENT IN THE SUBCOLLECTION
 export const handleUploadFirestoreSubcollection = async (data, location) => {
+  console.log("create subcollection history...", data);
   try {
     const currentDate = new Date();
     const formattedDate =

@@ -126,7 +126,6 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
             first_name: detaila.firstName,
             last_name: detaila.lastName,
             email: detaila.email,
-            password: detaila.password,
             // Adaugă orice alte câmpuri necesare
           };
           setUserData({ ...value });

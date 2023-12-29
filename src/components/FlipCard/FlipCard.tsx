@@ -16,7 +16,11 @@ import { colors } from "../../utils/colors";
 import { Image } from "react-native";
 import { normalizeString } from "../../utils/stringUtils";
 import { useNumberContext } from "../../context/NumberContext";
-import { handleQueryFirestore } from "../../utils/firestoreUtils";
+import {
+  handleQueryFirestore,
+  handleUploadFirestoreSubcollection,
+} from "../../utils/firestoreUtils";
+import { authentication } from "../../../firebase";
 
 const FlipCard = ({
   item,
@@ -34,7 +38,8 @@ const FlipCard = ({
   const [opacityAnim, setOpacityAnim] = useState(new Animated.Value(0));
   const navigation = useNavigation(); // Obține obiectul de navigare
   const { language, changeLanguage } = useLanguage();
-  const { currentNumber, updateNumber } = useNumberContext();
+  const { currentNumber, updateNumber, sendToHistory, setSendToHistory } =
+    useNumberContext();
 
   // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
   const navigateToPersonalizedReading = async () => {
@@ -81,6 +86,30 @@ const FlipCard = ({
           );
           const selectedCard = filteredVariante[randomIndex];
 
+          // ---- START HISTORY ----
+          if (currentNumber < 8) {
+            console.log("sendToHistory...currentnr < 8", sendToHistory);
+            let arr = [...sendToHistory];
+            arr.push(selectedCard);
+            setSendToHistory([...arr]);
+          } else if (currentNumber === 8) {
+            console.log("sendToHistory...currentnr === 8", sendToHistory);
+            let arr = [...sendToHistory];
+            arr.push(selectedCard);
+            const auth = authentication;
+            if (auth.currentUser) {
+              console.log("Is user...saving personal reading...");
+              const userLocation = `Users/${
+                auth.currentUser ? auth.currentUser.uid : ""
+              }/PersonalReading`;
+              if (arr.length > 0) {
+                handleUploadFirestoreSubcollection(arr, userLocation);
+              }
+            }
+            updateNumber(0);
+            setSendToHistory([]);
+          }
+
           // Navigație cu cartea selectată
           navigation.navigate("PersonalizedReading", { item: selectedCard });
         } else {
@@ -122,9 +151,10 @@ const FlipCard = ({
       if (number === currentNumber && number !== 0) {
         console.log("is equal to current number.........", currentNumber);
         console.log("number", number);
-        if (number === 8) {
-          updateNumber(0);
-        }
+        // if (number === 8) {
+        //   updateNumber(0);
+        // }
+
         navigateToPersonalizedReading();
       }
     }, [currentNumber])

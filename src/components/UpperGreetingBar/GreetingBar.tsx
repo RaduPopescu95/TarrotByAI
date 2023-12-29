@@ -18,6 +18,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
 import { useNumberContext } from "../../context/NumberContext";
+import { handleUploadFirestoreSubcollection } from "../../utils/firestoreUtils";
+import { authentication } from "../../../firebase";
+import { useApiData } from "../../context/ApiContext";
 
 const languages = [
   {
@@ -99,7 +102,13 @@ const GreetingBar = ({ isGoBack, isPersonalGoBack }) => {
   const [currentLanguage, setCurrentLanguage] = useState("Romanian");
   const { currentUser, userData, isGuestUser, setUserData } = useAuth();
   const { language, changeLanguage } = useLanguage();
-  const { currentNumber, updateNumber } = useNumberContext();
+  const { currentNumber, updateNumber, sendToHistory, setSendToHistory } =
+    useNumberContext();
+  const {
+    loading,
+
+    setLoading,
+  } = useApiData();
 
   useEffect(() => {
     const loadLanguage = async () => {
@@ -139,7 +148,21 @@ const GreetingBar = ({ isGoBack, isPersonalGoBack }) => {
       {isGoBack ? (
         <TouchableOpacity
           onPress={() => {
-            navigation.goBack(), updateNumber(0);
+            console.log("loading...", loading);
+            let arr = [...sendToHistory];
+            const auth = authentication;
+            if (auth.currentUser) {
+              console.log("Is user...saving personal reading...");
+              const userLocation = `Users/${
+                auth.currentUser ? auth.currentUser.uid : ""
+              }/PersonalReading`;
+              if (arr.length > 0) {
+                handleUploadFirestoreSubcollection(arr, userLocation);
+              }
+            }
+            updateNumber(0);
+            setSendToHistory([]);
+            navigation.goBack();
           }}
           style={{ zIndex: 10 }}
         >

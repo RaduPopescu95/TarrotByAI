@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -29,7 +29,6 @@ import { useLanguage } from "../../context/LanguageContext";
 
 const LuckyNumber = () => {
   const {
-    zilnicNumereNorocoase,
     zilnicCitateMotivationale,
     zilnicCuloriNorocoase,
     zilnicCategoriiViitor,
@@ -40,6 +39,7 @@ const LuckyNumber = () => {
     oreNorocoase,
   } = useApiData();
   const { language, changeLanguage } = useLanguage();
+  const [zilnicNumereNorocoase, setZilnicNumereNorocoase] = useState({});
   const onPressHandler = () => {
     console.log("Pressed");
   };
@@ -47,7 +47,16 @@ const LuckyNumber = () => {
   const { setIsNavBarVisible } = useNavBarVisibility();
 
   React.useEffect(() => {
-    console.log(zilnicNumereNorocoase);
+    if (numereNorocoase && numereNorocoase.length > 0) {
+      const randomIndex = Math.floor(Math.random() * numereNorocoase.length);
+      setZilnicNumereNorocoase(numereNorocoase[randomIndex]);
+    }
+  }, [numereNorocoase]);
+
+  // Restul codului tău rămâne neschimbat
+
+  React.useEffect(() => {
+    console.log(numereNorocoase);
     setIsNavBarVisible(false);
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);

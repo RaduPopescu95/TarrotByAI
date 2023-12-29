@@ -29,12 +29,13 @@ import axios from "axios";
 import { useApiData } from "../../context/ApiContext";
 import { useLanguage } from "../../context/LanguageContext";
 import i18n from "../../../i18n";
+import { ActivityIndicator } from "react-native-paper";
 
 const LuckyColor = () => {
   const {
-    zilnicNumereNorocoase,
+    zinicNumereNorocoase,
     zilnicCitateMotivationale,
-    zilnicCuloriNorocoase,
+
     zilnicCategoriiViitor,
     numereNorocoase,
     citateMotivationale,
@@ -49,6 +50,15 @@ const LuckyColor = () => {
 
   const { setIsNavBarVisible } = useNavBarVisibility();
   const [luck, setLuck] = React.useState(null);
+  const [zilnicCuloriNorocoase, setZilnicCuloriNorocoase] = React.useState({});
+  const [isImageLoading, setIsImageLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    if (culoriNorocoase && culoriNorocoase.length > 0) {
+      const randomIndex = Math.floor(Math.random() * culoriNorocoase.length);
+      setZilnicCuloriNorocoase(culoriNorocoase[randomIndex]);
+    }
+  }, [culoriNorocoase]);
 
   React.useEffect(() => {
     setIsNavBarVisible(false);
@@ -78,6 +88,13 @@ const LuckyColor = () => {
             <GreetingBar isGoBack={true} />
             <View style={styles.overlay}>
               <View style={styles.imageContainer}>
+                {isImageLoading && (
+                  <ActivityIndicator
+                    size="large"
+                    color={colors.primary3}
+                    style={{ position: "relative", top: 150 }}
+                  />
+                )}
                 <Image
                   style={styles.image}
                   source={{
@@ -85,6 +102,8 @@ const LuckyColor = () => {
                       ? zilnicCuloriNorocoase.image.finalUri
                       : "",
                   }}
+                  onLoad={() => setIsImageLoading(false)} // Ascunde spinner-ul după încărcare
+                  onError={() => setIsImageLoading(false)} // Ascunde spinner-ul în caz de eroare
                 />
               </View>
               {/* <View style={styles.secondImageContainer}>

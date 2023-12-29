@@ -13,7 +13,7 @@ import { screenName } from "../../utils/screenName";
 // Props ar putea include un array de imagini și orice altceva ai nevoie
 const ImageRow = ({ data, date, id, historyType }) => {
   useEffect(() => {
-    console.log("data..", data.length);
+    // console.log("data..", data[0].carte.image.finalUri);
   }, []);
 
   const navigation = useNavigation();
@@ -21,9 +21,6 @@ const ImageRow = ({ data, date, id, historyType }) => {
   // Funcție pentru a naviga către ecranul PersonalizedReading cu parametrul item
   const navigateToPersonalizedReading = (item) => {
     try {
-      console.log(item.image.finalUri);
-      console.log(item);
-
       // Navigație cu cartea selectată
       if (historyType === "FutureReading") {
         navigation.navigate(screenName.FutureReading, { item });
@@ -57,7 +54,15 @@ const ImageRow = ({ data, date, id, historyType }) => {
         renderItem={({ item }) => (
           //   <Image source={{ uri: item.uri }} style={styles.image} />
           <TouchableOpacity onPress={() => navigateToPersonalizedReading(item)}>
-            <Image source={{ uri: item.image.finalUri }} style={styles.image} />
+            <Image
+              source={{
+                uri:
+                  historyType === "FutureReading"
+                    ? item.image.finalUri
+                    : item.carte.image.finalUri,
+              }}
+              style={styles.image}
+            />
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}

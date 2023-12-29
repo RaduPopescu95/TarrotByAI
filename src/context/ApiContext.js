@@ -58,9 +58,13 @@ export const ApiDataProvider = ({ children }) => {
       // Inițiază animația de ieșire
       startExitAnimation();
 
+      setTimeout(() => {
+        setLoading(true);
+      }, 1000);
+
       // Așteaptă finalizarea animației de ieșire înainte de a amesteca cărțile
       setTimeout(() => {
-        console.log("Inside Timeout");
+        console.log("shuffleCartiPersonalizate Inside Timeout");
         setLoading(true);
 
         // Funcție ajutătoare pentru amestecarea unui array
@@ -91,14 +95,14 @@ export const ApiDataProvider = ({ children }) => {
           shuffledArray = shuffledArray.slice(0, 8);
         }
 
-        const auth = authentication;
-        if (auth.currentUser) {
-          console.log("Is user...saving personal reading...");
-          const userLocation = `Users/${
-            auth.currentUser ? auth.currentUser.uid : ""
-          }/PersonalReading`;
-          handleUploadFirestoreSubcollection(shuffledArray, userLocation);
-        }
+        // const auth = authentication;
+        // if (auth.currentUser) {
+        //   console.log("Is user...saving personal reading...");
+        //   const userLocation = `Users/${
+        //     auth.currentUser ? auth.currentUser.uid : ""
+        //   }/PersonalReading`;
+        //   handleUploadFirestoreSubcollection(shuffledArray, userLocation);
+        // }
 
         // Actualizează state-ul cu noile cărți amestecate
         setShuffledCartiPersonalizate(shuffledArray);

@@ -32,7 +32,6 @@ import i18n from "../../../i18n";
 const MotivationalQuotes = () => {
   const {
     zilnicNumereNorocoase,
-    zilnicCitateMotivationale,
     zilnicCuloriNorocoase,
     zilnicCategoriiViitor,
     numereNorocoase,
@@ -48,6 +47,18 @@ const MotivationalQuotes = () => {
 
   const { setIsNavBarVisible } = useNavBarVisibility();
   const [luck, setLuck] = React.useState(null);
+
+  const [zilnicCitateMotivationale, setZilnicCitateMotivationale] =
+    React.useState({});
+
+  React.useEffect(() => {
+    if (citateMotivationale && citateMotivationale.length > 0) {
+      const randomIndex = Math.floor(
+        Math.random() * citateMotivationale.length
+      );
+      setZilnicCitateMotivationale(citateMotivationale[randomIndex]);
+    }
+  }, [citateMotivationale]);
 
   React.useEffect(() => {
     setIsNavBarVisible(false);

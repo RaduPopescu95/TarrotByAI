@@ -151,40 +151,46 @@ export default function HistoryTarrot() {
                 {historyType}
               </H7fontMediumWhite>
             </View>
-            {images.map((imageData, index) => (
-              <ImageRow
-                key={index}
-                data={imageData.data}
-                date={imageData.date}
-                id={imageData.id}
-                historyType={location}
-              />
-            ))}
-            <View style={styles.paginationContainer}>
-              <TouchableOpacity
-                onPress={goToPreviousPage}
-                disabled={currentPage === 1}
-              >
-                <Ionicons
-                  name="chevron-back"
-                  size={34}
-                  color={currentPage === 1 ? "grey" : "blue"}
-                />
-              </TouchableOpacity>
-              <H7fontBoldPrimary style={{ marginLeft: 10, marginRight: 10 }}>
-                {currentPage}
-              </H7fontBoldPrimary>
-              <TouchableOpacity
-                onPress={goToNextPage}
-                disabled={currentPage === totalPages}
-              >
-                <Ionicons
-                  name="chevron-forward"
-                  size={34}
-                  color={currentPage === totalPages ? "grey" : "blue"}
-                />
-              </TouchableOpacity>
-            </View>
+            {images.map((imageData, index) => {
+              if (imageData.data.length > 0) {
+                return (
+                  <ImageRow
+                    key={index}
+                    data={imageData.data}
+                    date={imageData.date}
+                    id={imageData.id}
+                    historyType={location}
+                  />
+                );
+              }
+            })}
+            {images.length > 0 && (
+              <View style={styles.paginationContainer}>
+                <TouchableOpacity
+                  onPress={goToPreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  <Ionicons
+                    name="chevron-back"
+                    size={34}
+                    color={currentPage === 1 ? "grey" : "blue"}
+                  />
+                </TouchableOpacity>
+                <H7fontBoldPrimary style={{ marginLeft: 10, marginRight: 10 }}>
+                  {currentPage}
+                </H7fontBoldPrimary>
+                <TouchableOpacity
+                  onPress={goToNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <Ionicons
+                    name="chevron-forward"
+                    size={34}
+                    color={currentPage === totalPages ? "grey" : "blue"}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           </LinearGradient>
         </MainContainer>
       </Fragment>

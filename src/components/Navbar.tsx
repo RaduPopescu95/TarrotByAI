@@ -19,7 +19,7 @@ const NavBarBottom = () => {
   const [selected, setSelected] = useState(0);
   const { setCurrentScreen, currentScreen } = useNavigationState();
   const [firstVisit, setFirstVisit] = useState(true);
-  const { currentNumber, updateNumber } = useNumberContext();
+  const { currentNumber, updateNumber, setSendToHistory } = useNumberContext();
 
   const {
     oreNorocoase,
@@ -99,19 +99,23 @@ const NavBarBottom = () => {
         ) {
           setLoading(true);
           updateNumber(0);
+          setSendToHistory([]);
         }
         if (currentScreen === "PersonalReadingDashboard") {
           shuffleCartiPersonalizate();
           updateNumber(0);
+          setSendToHistory([]);
         } else if (currentScreen === "FutureReadingDashboard") {
           shuffleCartiViitor();
           updateNumber(0);
+          setSendToHistory([]);
         }
         // startExitAnimation();
         setCurrentScreen(screen);
         setFirstVisit(false); // Adăugat aici
       } else {
         updateNumber(0);
+        setSendToHistory([]);
         setSelected(index);
         navigation.navigate(screen);
         setCurrentScreen(screen);

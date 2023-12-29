@@ -29,11 +29,9 @@ import { useLanguage } from "../../context/LanguageContext";
 
 const LuckyHour = () => {
   const {
-    zilnicNumereNorocoase,
     zilnicCitateMotivationale,
     zilnicCuloriNorocoase,
-    zilnicOreNorocoase,
-    numereNorocoase,
+
     citateMotivationale,
     culoriNorocoase,
 
@@ -43,8 +41,16 @@ const LuckyHour = () => {
   const onPressHandler = () => {
     console.log("Pressed");
   };
+  const [zilnicOreNorocoase, setZilnicOreNorocoase] = React.useState({});
 
   const { setIsNavBarVisible } = useNavBarVisibility();
+
+  React.useEffect(() => {
+    if (oreNorocoase && oreNorocoase.length > 0) {
+      const randomIndex = Math.floor(Math.random() * oreNorocoase.length);
+      setZilnicOreNorocoase(oreNorocoase[randomIndex]);
+    }
+  }, [oreNorocoase]);
 
   React.useEffect(() => {
     console.log(zilnicOreNorocoase);
