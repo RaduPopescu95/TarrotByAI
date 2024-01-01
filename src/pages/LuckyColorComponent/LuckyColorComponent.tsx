@@ -7,6 +7,7 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MainContainer } from "../../components/commonViews";
@@ -65,8 +66,8 @@ const LuckyColor = () => {
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);
   return (
-    <TouchableWithoutFeedback onPress={onPressHandler}>
-      <MainContainer>
+    <View style={{ flex: 1 }}>
+      <MainContainer style={{ flex: 1 }}>
         <LinearGradient
           colors={[
             colors.gradientLogin1,
@@ -106,29 +107,34 @@ const LuckyColor = () => {
                   onError={() => setIsImageLoading(false)} // Ascunde spinner-ul în caz de eroare
                 />
               </View>
-              {/* <View style={styles.secondImageContainer}>
+            </View>
+            {/* <View style={styles.secondImageContainer}>
                 <Image
                   source={require("../../../assets/headerIcon.png")}
                   style={styles.secondImage}
                   resizeMode="contain"
                 />
               </View> */}
-              <View
+
+            <View
+              style={{
+                height: "54%",
+
+                paddingBottom: 10,
+                paddingLeft: 10,
+                paddingRight: 10,
+              }}
+            >
+              <H6fontBoldPrimary
                 style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  height: "auto",
+                  alignSelf: "center",
+                  marginTop: "5%",
+                  textAlign: "center",
                 }}
               >
-                <H6fontBoldPrimary
-                  style={{
-                    alignSelf: "center",
-                    marginTop: "5%",
-                    textAlign: "center",
-                  }}
-                >
-                  {i18n.translate("luckyColorOfTheDay")}
-                </H6fontBoldPrimary>
+                {i18n.translate("luckyColorOfTheDay")}
+              </H6fontBoldPrimary>
+              <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 {zilnicCuloriNorocoase.info ? (
                   <>
                     <H8fontBoldPrimary
@@ -156,16 +162,26 @@ const LuckyColor = () => {
                     </H7fontMediumPrimary>
                   </>
                 ) : null}
-              </View>
+              </ScrollView>
             </View>
           </ImageBackground>
         </LinearGradient>
       </MainContainer>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContainer: {
+    // flexGrow: 1, // Asigură că ScrollView se extinde pe tot spațiul disponibil
+    justifyContent: "flex-start",
+    alignItems: "center",
+    // backgroundColor: "red",
+
+    padding: 10,
+
+    // paddingBottom: 20, // Ajustați această valoare după cum este necesar
+  },
   imageContainer: {
     alignSelf: "center",
     marginTop: 20,
@@ -210,7 +226,7 @@ const styles = StyleSheet.create({
   overlay: {
     backgroundColor: "transparent", // Adaugă un overlay pentru a spori lizibilitatea textului
     borderRadius: 10, // Rotunjirea colțurilor
-    padding: 20, // Spațiu în interiorul containerului
+    paddingTop: 10, // Spațiu în interiorul containerului
   },
   title: {
     color: "white",

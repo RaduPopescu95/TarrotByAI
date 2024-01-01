@@ -61,8 +61,33 @@ const PersonalizedReading = ({ route }) => {
   const handleVideoEnd = () => {
     console.log("Videoclipul s-a terminat!");
     console.log("currentNumber...", currentNumber);
-    const newNumber = currentNumber + 1;
-    updateNumber(newNumber);
+    switch (currentNumber) {
+      case 1:
+        updateNumber(0);
+        break;
+      case 0:
+        updateNumber(2);
+        break;
+      case 2:
+        updateNumber(4);
+        break;
+      case 4:
+        updateNumber(3);
+        break;
+      case 3:
+        updateNumber(5);
+        break;
+      case 5:
+        updateNumber(6);
+        break;
+      case 6:
+        updateNumber(7);
+        break;
+      case 7:
+        updateNumber(8);
+        break;
+    }
+
     setVideoEnded(true);
 
     setTimeout(() => {

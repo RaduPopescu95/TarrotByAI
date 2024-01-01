@@ -7,6 +7,7 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MainContainer } from "../../components/commonViews";
@@ -65,8 +66,8 @@ const MotivationalQuotes = () => {
     return () => setIsNavBarVisible(true); // Restabilește vizibilitatea la ieșirea din componentă
   }, []);
   return (
-    <TouchableWithoutFeedback onPress={onPressHandler}>
-      <MainContainer>
+    <View style={{ flex: 1 }}>
+      <MainContainer style={{ flex: 1 }}>
         <LinearGradient
           colors={[
             colors.gradientLogin1,
@@ -100,33 +101,38 @@ const MotivationalQuotes = () => {
                 {i18n.translate("motivationalQuoteOfTheDay")}
               </H6fontBoldPrimary>
 
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  height: "23%",
-                  // bottom: "10%",
-                }}
-              >
-                {zilnicCitateMotivationale.info ? (
-                  <H7fontMediumPrimary style={{ textAlign: "justify" }}>
-                    {language === "hi"
-                      ? zilnicCitateMotivationale.info.hu.descriere
-                      : language === "id"
-                        ? zilnicCitateMotivationale.info.ru.descriere
-                        : zilnicCitateMotivationale.info[language].descriere}
-                  </H7fontMediumPrimary>
-                ) : null}
+              <View style={{ height: "auto" }}>
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                  {zilnicCitateMotivationale.info ? (
+                    <H7fontMediumPrimary style={{ textAlign: "justify" }}>
+                      {language === "hi"
+                        ? zilnicCitateMotivationale.info.hu.descriere
+                        : language === "id"
+                          ? zilnicCitateMotivationale.info.ru.descriere
+                          : zilnicCitateMotivationale.info[language].descriere}
+                    </H7fontMediumPrimary>
+                  ) : null}
+                </ScrollView>
               </View>
             </View>
           </ImageBackground>
         </LinearGradient>
       </MainContainer>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContainer: {
+    // flexGrow: 1, // Asigură că ScrollView se extinde pe tot spațiul disponibil
+    justifyContent: "flex-start",
+    alignItems: "center",
+    // backgroundColor: "red",
+
+    padding: 10,
+
+    // paddingBottom: 20, // Ajustați această valoare după cum este necesar
+  },
   imageContainer: {
     alignSelf: "center",
     marginTop: 20,

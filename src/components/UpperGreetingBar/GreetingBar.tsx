@@ -160,7 +160,7 @@ const GreetingBar = ({ isGoBack, isPersonalGoBack }) => {
                 handleUploadFirestoreSubcollection(arr, userLocation);
               }
             }
-            updateNumber(0);
+            updateNumber(1);
             setSendToHistory([]);
             navigation.goBack();
           }}

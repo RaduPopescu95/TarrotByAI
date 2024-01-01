@@ -7,6 +7,7 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MainContainer } from "../../components/commonViews";
@@ -62,8 +63,8 @@ const LuckyNumber = () => {
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={onPressHandler}>
-      <MainContainer>
+    <View style={{ flex: 1 }}>
+      <MainContainer style={{ flex: 1 }}>
         <LinearGradient
           colors={[
             colors.gradientLogin1,
@@ -90,7 +91,6 @@ const LuckyNumber = () => {
                     ? zilnicNumereNorocoase.number
                     : ""}
                 </Text>
-                {/* Aici pune numărul dorit */}
               </View>
               <View style={styles.secondImageContainer}>
                 <Image
@@ -99,14 +99,9 @@ const LuckyNumber = () => {
                   resizeMode="contain"
                 />
               </View>
-              <View
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  height: "auto",
-                  bottom: "10%",
-                }}
-              >
+            </View>
+            <View style={{ height: "auto", padding: 10 }}>
+              <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 {/* <H7fontBoldWhite style={{ alignSelf: "center" }}>
                 {zilnicNumereNorocoase.info[language].nume}
               </H7fontBoldWhite> */}
@@ -119,16 +114,26 @@ const LuckyNumber = () => {
                         : zilnicNumereNorocoase.info[language].descriere}
                   </H7fontMediumPrimary>
                 ) : null}
-              </View>
+              </ScrollView>
             </View>
           </ImageBackground>
         </LinearGradient>
       </MainContainer>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContainer: {
+    // flexGrow: 1, // Asigură că ScrollView se extinde pe tot spațiul disponibil
+    justifyContent: "flex-start",
+    alignItems: "center",
+    // backgroundColor: "red",
+
+    padding: 10,
+
+    // paddingBottom: 20, // Ajustați această valoare după cum este necesar
+  },
   numberContainer: {
     alignSelf: "center",
     marginTop: 20,
@@ -193,9 +198,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   overlay: {
-    backgroundColor: "transparent", // Adaugă un overlay pentru a spori lizibilitatea textului
     borderRadius: 10, // Rotunjirea colțurilor
     padding: 20, // Spațiu în interiorul containerului
+    height: "35%",
   },
   title: {
     color: "white",

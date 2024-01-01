@@ -7,7 +7,7 @@ const NumberContext = createContext();
 export const useNumberContext = () => useContext(NumberContext);
 
 export const NumberProvider = ({ children }) => {
-  const [currentNumber, setNumber] = useState(0);
+  const [currentNumber, setNumber] = useState(1);
   const [sendToHistory, setSendToHistory] = useState([]);
 
   // Funcție pentru actualizarea numărului

@@ -7,6 +7,7 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MainContainer } from "../../components/commonViews";
@@ -59,8 +60,8 @@ const LuckyHour = () => {
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={onPressHandler}>
-      <MainContainer>
+    <View style={{ flex: 1 }}>
+      <MainContainer style={{ flex: 1 }}>
         <LinearGradient
           colors={[
             colors.gradientLogin1,
@@ -80,61 +81,72 @@ const LuckyHour = () => {
             }}
           >
             <GreetingBar isGoBack={true} />
-            <View style={styles.overlay}>
-              <View style={styles.numberContainer}>
-                <Text style={styles.number}>
-                  {" "}
-                  {zilnicOreNorocoase.ora ? zilnicOreNorocoase.ora : ""}
-                </Text>
-              </View>
-              <View style={styles.secondImageContainer}>
-                <Image
-                  source={require("../../../assets/headerIcon.png")}
-                  style={styles.secondImage}
-                  resizeMode="contain"
-                />
+            <View>
+              <View style={styles.overlay}>
+                <View>
+                  <View style={styles.numberContainer}>
+                    <Text style={styles.number}>
+                      {" "}
+                      {zilnicOreNorocoase.ora ? zilnicOreNorocoase.ora : ""}
+                    </Text>
+                  </View>
+                  <View style={styles.secondImageContainer}>
+                    <Image
+                      source={require("../../../assets/headerIcon.png")}
+                      style={styles.secondImage}
+                      resizeMode="contain"
+                    />
+                  </View>
+                </View>
               </View>
               <View
                 style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  height: "auto",
-                  bottom: "10%",
+                  height: "75%",
+
+                  padding: 10,
                 }}
               >
                 {/* <H7fontBoldWhite style={{ alignSelf: "center" }}>
                 {zilnicOreNorocoase.info[language].nume}
               </H7fontBoldWhite> */}
-                {zilnicOreNorocoase.info ? (
-                  <H7fontMediumPrimary style={{ textAlign: "justify" }}>
-                    {language === "hi"
-                      ? zilnicOreNorocoase.info.hu.descriere
-                      : language === "id"
-                        ? zilnicOreNorocoase.info.ru.descriere
-                        : zilnicOreNorocoase.info[language].descriere}
-                  </H7fontMediumPrimary>
-                ) : null}
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                  {zilnicOreNorocoase.info ? (
+                    <H7fontMediumPrimary style={{ textAlign: "justify" }}>
+                      {language === "hi"
+                        ? zilnicOreNorocoase.info.hu.descriere
+                        : language === "id"
+                          ? zilnicOreNorocoase.info.ru.descriere
+                          : zilnicOreNorocoase.info[language].descriere}
+                    </H7fontMediumPrimary>
+                  ) : null}
+                </ScrollView>
               </View>
             </View>
           </ImageBackground>
         </LinearGradient>
       </MainContainer>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingTop: "5%",
+    paddingBottom: "20%",
+  },
   numberContainer: {
     alignSelf: "center",
     marginTop: 20,
     marginBottom: 20,
-    width: 130, // Dimensiunea containerului
-    height: 130, // Dimensiunea containerului
-    borderRadius: 65, // Jumătate din width/height pentru a face cerc perfect
-    backgroundColor: colors.primary3, // Culoarea de fundal
-    justifyContent: "center", // Centrează conținutul vertical
-    alignItems: "center", // Centrează conținutul orizontal
-    // Stiluri pentru efect 3D
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    backgroundColor: colors.primary3,
+    justifyContent: "center",
+    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -142,10 +154,9 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   number: {
-    fontSize: 40, // Mărimea fontului pentru număr
-    color: "white", // Culoarea textului
+    fontSize: 40,
+    color: "white",
     textAlign: "center",
-    // Adaugă alte stiluri pentru text dacă este necesar
   },
   imageContainer: {
     alignSelf: "center",
@@ -164,24 +175,23 @@ const styles = StyleSheet.create({
   },
   secondImageContainer: {
     alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 20,
 
     position: "relative",
-    bottom: "12%",
-    height: "auto",
-    width: "auto",
+    bottom: "20%",
   },
   secondImage: {
     width: 250,
     height: 150,
+    resizeMode: "contain",
   },
 
   gradient: {
     flex: 1,
     width: "100%",
     height: "100%",
-    paddingBottom: 100,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    // Alte stiluri necesare pentru a pozitiona gradientul după cum este necesar
   },
   container: {
     flex: 1,
@@ -189,9 +199,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   overlay: {
-    backgroundColor: "transparent", // Adaugă un overlay pentru a spori lizibilitatea textului
-    borderRadius: 10, // Rotunjirea colțurilor
-    padding: 20, // Spațiu în interiorul containerului
+    borderRadius: 10,
+    padding: 20,
+
+    height: "30%",
   },
   title: {
     color: "white",

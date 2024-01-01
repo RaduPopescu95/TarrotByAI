@@ -98,23 +98,23 @@ const NavBarBottom = () => {
           shuffledCartiPersonalizate.length === 0
         ) {
           setLoading(true);
-          updateNumber(0);
+          updateNumber(1);
           setSendToHistory([]);
         }
         if (currentScreen === "PersonalReadingDashboard") {
           shuffleCartiPersonalizate();
-          updateNumber(0);
+          updateNumber(1);
           setSendToHistory([]);
         } else if (currentScreen === "FutureReadingDashboard") {
           shuffleCartiViitor();
-          updateNumber(0);
+          updateNumber(1);
           setSendToHistory([]);
         }
         // startExitAnimation();
         setCurrentScreen(screen);
         setFirstVisit(false); // Adăugat aici
       } else {
-        updateNumber(0);
+        updateNumber(1);
         setSendToHistory([]);
         setSelected(index);
         navigation.navigate(screen);
