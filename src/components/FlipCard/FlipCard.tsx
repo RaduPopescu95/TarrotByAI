@@ -87,15 +87,15 @@ const FlipCard = ({
           const selectedCard = filteredVariante[randomIndex];
 
           // ---- START HISTORY ----
-          if (currentNumber < 8) {
+          if (currentNumber < 7) {
             console.log("sendToHistory...currentnr < 8", sendToHistory);
             let arr = [...sendToHistory];
             arr.push(selectedCard);
             setSendToHistory([...arr]);
-          } else if (currentNumber === 8) {
+          } else if (currentNumber === 7) {
             console.log("sendToHistory...currentnr === 8", sendToHistory);
             let arr = [...sendToHistory];
-            // arr.push(selectedCard);
+            arr.push(selectedCard);
             const auth = authentication;
             if (auth.currentUser) {
               console.log("Is user...saving personal reading...");
@@ -106,7 +106,7 @@ const FlipCard = ({
                 handleUploadFirestoreSubcollection(arr, userLocation);
               }
             }
-            updateNumber(1);
+            updateNumber(8);
             setSendToHistory([]);
           }
 
@@ -148,7 +148,7 @@ const FlipCard = ({
   useFocusEffect(
     React.useCallback(() => {
       console.log("currentNumber in FlipCard:", currentNumber);
-      if (number === currentNumber && number !== 1) {
+      if (number === currentNumber && number !== 1 && currentNumber !== 1) {
         console.log("is equal to current number.........", currentNumber);
         console.log("number", number);
         // if (number === 8) {
@@ -177,7 +177,7 @@ const FlipCard = ({
         useNativeDriver: true,
       }).start(() =>
         setTimeout(() => {
-          if (number === 1) {
+          if (number === 1 && currentNumber !== 8) {
             navigateToPersonalizedReading();
           }
         }, 500)

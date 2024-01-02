@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import {
@@ -32,15 +33,13 @@ import {
 } from "firebase/firestore";
 import { authentication, db } from "../../firebase";
 import { Ionicons } from "@expo/vector-icons";
+import { parseDate } from "../utils/commonUtils";
 
 const ITEMS_PER_PAGE = 4;
 
 export default function HistoryTarrot() {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
-  const [lastDocOfEachPage, setLastDocOfEachPage] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
 
   const route = useRoute();
   const { historyType } = route.params;
@@ -50,36 +49,22 @@ export default function HistoryTarrot() {
       ? "FutureReading"
       : "PersonalReading";
 
-  const loadImages = async (page) => {
+  const loadImages = async () => {
     setIsLoading(true);
-
+    console.log(location);
     try {
-      let queryConstraints = [
-        query(
-          collection(db, "Users", authentication.currentUser.uid, location),
-          orderBy("date"),
-          limit(ITEMS_PER_PAGE)
-        ),
-      ];
-
-      if (page > 1) {
-        const startAfterDoc = lastDocOfEachPage[page - 1];
-        if (startAfterDoc) {
-          queryConstraints.push(startAfter(startAfterDoc));
-        }
-      }
-
-      const newQuery = query(...queryConstraints);
+      const newQuery = query(
+        collection(db, "Users", authentication.currentUser.uid, location),
+        orderBy("date"),
+        limit(20)
+      );
       const querySnapshot = await getDocs(newQuery);
 
       if (!querySnapshot.empty) {
         const newImages = querySnapshot.docs.map((doc) => doc.data());
-        console.log("new images...", newImages[0].data.length);
-        setImages(newImages);
+        newImages.sort((a, b) => parseDate(b.date) - parseDate(a.date));
 
-        const lastVisibleDoc =
-          querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastDocOfEachPage({ ...lastDocOfEachPage, [page]: lastVisibleDoc });
+        setImages(newImages);
       }
     } catch (error) {
       console.error("Error fetching images: ", error);
@@ -88,53 +73,15 @@ export default function HistoryTarrot() {
     setIsLoading(false);
   };
 
-  const fetchTotalPages = async () => {
-    const totalDocs = await getDocs(
-      collection(db, "Users", authentication.currentUser.uid, location)
-    );
-    setTotalPages(Math.ceil(totalDocs.size / ITEMS_PER_PAGE));
-  };
-
   useEffect(() => {
-    fetchTotalPages();
+    console.log(historyType);
+    loadImages();
   }, []);
 
-  useEffect(() => {
-    loadImages(currentPage);
-  }, [currentPage]);
-
-  const renderPageNumbers = () => {
-    let pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(
-        <Text
-          key={i}
-          onPress={() => setCurrentPage(i)}
-          style={currentPage === i ? styles.activePage : styles.pageNumber}
-        >
-          {i}
-        </Text>
-      );
-    }
-    return pageNumbers;
-  };
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={() => console.log("Pressed")}>
+    <View style={{ flex: 1 }}>
       <Fragment>
-        <MainContainer>
+        <MainContainer style={{ flex: 1 }}>
           <CustomLoader isLoading={isLoading} />
           <LinearGradient
             colors={[
@@ -151,50 +98,27 @@ export default function HistoryTarrot() {
                 {historyType}
               </H7fontMediumWhite>
             </View>
-            {images.map((imageData, index) => {
-              if (imageData.data.length > 0) {
-                return (
-                  <ImageRow
-                    key={index}
-                    data={imageData.data}
-                    date={imageData.date}
-                    id={imageData.id}
-                    historyType={location}
-                  />
-                );
-              }
-            })}
-            {images.length > 0 && (
-              <View style={styles.paginationContainer}>
-                <TouchableOpacity
-                  onPress={goToPreviousPage}
-                  disabled={currentPage === 1}
-                >
-                  <Ionicons
-                    name="chevron-back"
-                    size={34}
-                    color={currentPage === 1 ? "grey" : "blue"}
-                  />
-                </TouchableOpacity>
-                <H7fontBoldPrimary style={{ marginLeft: 10, marginRight: 10 }}>
-                  {currentPage}
-                </H7fontBoldPrimary>
-                <TouchableOpacity
-                  onPress={goToNextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  <Ionicons
-                    name="chevron-forward"
-                    size={34}
-                    color={currentPage === totalPages ? "grey" : "blue"}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+            <View style={{ height: "72%" }}>
+              <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+                {images.map((imageData, index) => {
+                  if (imageData.data.length > 0) {
+                    return (
+                      <ImageRow
+                        key={index}
+                        data={imageData.data}
+                        date={imageData.date}
+                        id={imageData.id}
+                        historyType={location}
+                      />
+                    );
+                  }
+                })}
+              </ScrollView>
+            </View>
           </LinearGradient>
         </MainContainer>
       </Fragment>
-    </TouchableWithoutFeedback>
+    </View>
   );
 }
 
