@@ -49,6 +49,8 @@ export const handleUploadFirestore = async (data, location) => {
 export const handleUploadFirestoreSubcollection = async (data, location) => {
   console.log("create subcollection history...", data);
   try {
+    const createdAt = Date.now();
+
     const currentDate = new Date();
     const formattedDate =
       currentDate.getDate().toString().padStart(2, "0") +
@@ -69,7 +71,12 @@ export const handleUploadFirestoreSubcollection = async (data, location) => {
     const uniqueId = `${timestamp}${randomComponent}`.slice(0, 7);
 
     console.log("ID unic:", uniqueId);
-    let dataObj = { data, id: uniqueId, date: formattedDate };
+    let dataObj = {
+      data,
+      id: uniqueId,
+      date: formattedDate,
+      createdAt,
+    };
 
     await addDoc(collection(db, location), dataObj);
     // console.log(location);

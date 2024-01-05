@@ -87,12 +87,12 @@ const FlipCard = ({
           const selectedCard = filteredVariante[randomIndex];
 
           // ---- START HISTORY ----
-          if (currentNumber < 7) {
+          if (currentNumber !== 0) {
             console.log("sendToHistory...currentnr < 8", sendToHistory);
             let arr = [...sendToHistory];
             arr.push(selectedCard);
             setSendToHistory([...arr]);
-          } else if (currentNumber === 7) {
+          } else if (currentNumber === 0) {
             console.log("sendToHistory...currentnr === 8", sendToHistory);
             let arr = [...sendToHistory];
             arr.push(selectedCard);

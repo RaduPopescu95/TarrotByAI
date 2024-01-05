@@ -9,7 +9,7 @@ export const langObj = {
       "Invalid Credentials, email or password not good. If you think the e-mail is good try reseting the password",
     loginNowNoAccount: "Login without account",
     motivationalQuoteOfTheDay: "Motivational quote of the day",
-    luckyColorOfTheDay: "Culoarea norocoasă a zilei",
+    luckyColorOfTheDay: "The lucky color of the day",
     luckyHours: "Lucky Hours",
     motivationalQuotes: "Motivational Quotes",
     //AUTH

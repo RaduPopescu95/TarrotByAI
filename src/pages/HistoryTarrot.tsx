@@ -62,7 +62,7 @@ export default function HistoryTarrot() {
 
       if (!querySnapshot.empty) {
         const newImages = querySnapshot.docs.map((doc) => doc.data());
-        newImages.sort((a, b) => parseDate(b.date) - parseDate(a.date));
+        newImages.sort((a, b) => b.createdAt - a.createdAt);
 
         setImages(newImages);
       }
