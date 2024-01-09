@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     height: "100%",
     paddingBottom: "20%",
-    marginLeft: "4%",
+    marginLeft: "2%",
   },
   titleContainer: {
     width: "100%",

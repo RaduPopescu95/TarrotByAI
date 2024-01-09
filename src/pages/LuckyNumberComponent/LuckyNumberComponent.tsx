@@ -121,7 +121,7 @@ const LuckyNumber = () => {
                 />
               </View>
             </View>
-            <View style={{ height: "auto", padding: 10 }}>
+            <View style={{ height: "auto", padding: 10, paddingTop: "10%" }}>
               <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 {/* <H7fontBoldWhite style={{ alignSelf: "center" }}>
                 {zilnicNumereNorocoase.info[language].nume}
@@ -131,8 +131,8 @@ const LuckyNumber = () => {
                     {language === "hi"
                       ? zilnicNumereNorocoase.info.hu.descriere
                       : language === "id"
-                        ? zilnicNumereNorocoase.info.ru.descriere
-                        : zilnicNumereNorocoase.info[language].descriere}
+                      ? zilnicNumereNorocoase.info.ru.descriere
+                      : zilnicNumereNorocoase.info[language].descriere}
                   </H7fontMediumPrimary>
                 ) : null}
               </ScrollView>

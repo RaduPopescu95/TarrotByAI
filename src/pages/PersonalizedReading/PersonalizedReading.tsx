@@ -148,13 +148,13 @@ const PersonalizedReading = ({ route }) => {
                     language === "hi"
                       ? item.info.hu.url
                       : language === "id"
-                        ? item.info.ru.url
-                        : item.info[language].url,
+                      ? item.info.ru.url
+                      : item.info[language].url,
                 }}
                 resizeMode="cover"
                 style={[
                   styles.secondImage,
-                  { height: isVideoLoading ? 0 : 250 },
+                  { height: isVideoLoading ? 0 : 210 },
                 ]}
                 shouldPlay={true}
                 useNativeControls
@@ -168,6 +168,8 @@ const PersonalizedReading = ({ route }) => {
                 style={{
                   display: "flex",
                   justifyContent: "space-around",
+                  alignItems: "flex-start",
+
                   height: "auto",
                   // marginTop: "10%",
                   paddingHorizontal: "5%",
@@ -180,16 +182,16 @@ const PersonalizedReading = ({ route }) => {
                   {language === "hi"
                     ? item.carte.info.hu.nume
                     : language === "id"
-                      ? item.carte.info.ru.nume
-                      : item.carte.info[language].nume}
+                    ? item.carte.info.ru.nume
+                    : item.carte.info[language].nume}
                 </H6fontBoldPrimary>
 
                 <H7fontBoldPrimary style={{ textAlign: "justify" }}>
                   {language === "hi"
                     ? item.info.hu.descriere
                     : language === "id"
-                      ? item.info.ru.descriere
-                      : item.info[language].descriere}
+                    ? item.info.ru.descriere
+                    : item.info[language].descriere}
                 </H7fontBoldPrimary>
               </View>
             </ScrollView>
@@ -229,13 +231,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     // backgroundColor: "red",
-    paddingTop: "5%",
+    paddingTop: "0%",
     paddingBottom: "5%",
     // paddingBottom: 20, // Ajustați această valoare după cum este necesar
   },
   image: {
-    width: 125,
-    height: 170,
+    width: 85,
+    height: 130,
     // resizeMode: "contain",
     // borderWidth: 3,
     // borderColor: colors.primary2,
@@ -246,7 +248,7 @@ const styles = StyleSheet.create({
 
     position: "relative",
 
-    height: 250,
+    height: 220,
     width: "auto",
   },
   secondImage: {

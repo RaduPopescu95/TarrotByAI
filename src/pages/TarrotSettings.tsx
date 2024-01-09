@@ -287,7 +287,12 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                           />
                           <Image
                             source={require("../../assets/headerIcon.png")}
-                            style={{ width: 300, height: 150, bottom: "20%" }}
+                            style={{
+                              width: 300,
+                              height: 100,
+                              bottom: "20%",
+                              marginTop: "5%",
+                            }}
                             resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
                           />
                         </View>
@@ -298,6 +303,7 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
                             display: "flex",
                             alignItems: "center",
                             width: "100%",
+                            marginTop: "5%",
                           }}
                         >
                           <H6fontBoldPrimary style={{ textAlign: "center" }}>

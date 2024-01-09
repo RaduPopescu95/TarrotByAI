@@ -63,12 +63,12 @@ const slides = [
 
 const Slide = ({ item }) => {
   return (
-    <View style={{ alignItems: "center", position: "relative", top: "12%" }}>
+    <View style={{ alignItems: "center", position: "relative", top: "5%" }}>
       {/* Condiție pentru a verifica tipul fișierului și a alege între LottieView și Image */}
 
       <Image
         source={require("../../assets/headerIcon.png")}
-        style={{ width: 300, height: 200 }}
+        style={{ width: 300, height: 100 }}
         resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
       />
       <Image
@@ -77,7 +77,7 @@ const Slide = ({ item }) => {
           height: 350,
           width: 350,
           position: "relative",
-          bottom: "10%",
+          bottom: "6%",
           resizeMode: "contain",
         }}
       />

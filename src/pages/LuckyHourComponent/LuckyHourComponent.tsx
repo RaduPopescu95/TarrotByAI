@@ -102,7 +102,7 @@ const LuckyHour = () => {
               <View
                 style={{
                   height: "75%",
-
+                  paddingTop: "10%",
                   padding: 10,
                 }}
               >
@@ -115,8 +115,8 @@ const LuckyHour = () => {
                       {language === "hi"
                         ? zilnicOreNorocoase.info.hu.descriere
                         : language === "id"
-                          ? zilnicOreNorocoase.info.ru.descriere
-                          : zilnicOreNorocoase.info[language].descriere}
+                        ? zilnicOreNorocoase.info.ru.descriere
+                        : zilnicOreNorocoase.info[language].descriere}
                     </H7fontMediumPrimary>
                   ) : null}
                 </ScrollView>

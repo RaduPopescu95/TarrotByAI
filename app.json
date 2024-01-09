@@ -2,11 +2,7 @@
   "expo": {
     "name": "Cristina Zurba",
     "slug": "TarotByAi",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.4",
     "orientation": "portrait",
     "plugins": [
@@ -27,9 +23,7 @@
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.cristina.zurba.tarot",
       "versionCode": 27,
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "config": {
@@ -43,17 +37,19 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cristina.zurba.tarot"
+      "bundleIdentifier": "com.cristina.zurba.tarotai",
+      "buildNumber": "2",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "This app does not use or access health data."
+      }
     },
     "description": "Get personalized readings",
     "extra": {
       "eas": {
-        "projectId": "569184e7-2d5d-4e56-b49e-642bc8dc02c3"
+        "projectId": "8a1a3d1c-744e-4f1a-86eb-04ed3a15a020"
       }
     }
   }

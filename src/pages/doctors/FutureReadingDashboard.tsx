@@ -198,7 +198,7 @@ const FutureReadingDashboard = () => {
           varianteCarti={varianteCarti}
           conditieCategorie={category.info.ro.nume}
         />
-        {shouldFlip && (
+        {/* {shouldFlip && (
           <Animated.View
             style={{
               opacity: opacityAnim, // Aplică animația de opacitate
@@ -215,7 +215,7 @@ const FutureReadingDashboard = () => {
               {getCategoryName(category, language)}
             </H8fontMediumWhite>
           </Animated.View>
-        )}
+        )} */}
       </View>
     );
   };

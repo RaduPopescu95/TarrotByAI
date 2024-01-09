@@ -263,7 +263,9 @@ const SignInScreenClinic: React.FC<Props> = ({
                     style={{ width: 300, height: 100, marginBottom: "5%" }}
                     resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
                   />
-                  <H6fontBoldWhite>{i18n.translate("login")}</H6fontBoldWhite>
+                  <H6fontBoldWhite style={{ top: "5%" }}>
+                    {i18n.translate("login")}
+                  </H6fontBoldWhite>
                 </View>
 
                 <View>

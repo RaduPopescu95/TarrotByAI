@@ -203,7 +203,7 @@ const ClinicDashboard = () => {
             <GreetingBar />
             <View
               style={{
-                paddingTop: "23%",
+                paddingTop: "3%",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",

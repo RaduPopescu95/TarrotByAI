@@ -215,8 +215,8 @@ const RootNavigation = () => {
   const screen = isGuestUser
     ? screenName.ClinicDashBoard
     : currentUser
-      ? screenName.SignInScreenClinic
-      : screenName.OnboardingScreen;
+    ? screenName.SignInScreenClinic
+    : screenName.OnboardingScreen;
 
   return <HomeNavigation initialRouteName={screen} />;
 };
