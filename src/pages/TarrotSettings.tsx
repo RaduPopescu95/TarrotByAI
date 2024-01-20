@@ -195,9 +195,6 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
     }
 
     if (firstNameValue) {
-      // const newData = {
-      //   first_name: firstNameValue,
-      // };
       copyUserData.first_name = firstNameValue;
 
       const userLocation = `Users/${
@@ -214,12 +211,8 @@ const TarrotSettings: React.FC<Props> = ({ navigation }): JSX.Element => {
           console.error("Error updating document: ", error);
         });
     }
-    if (lastNameValue) {
-      // const newData = {
-      //   ...userData,
-      //   last_name: lastNameValue,
-      // };
 
+    if (lastNameValue) {
       copyUserData.last_name = lastNameValue;
 
       const userLocation = `Users/${

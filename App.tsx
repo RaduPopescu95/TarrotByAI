@@ -17,7 +17,6 @@ import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 
-
 import Bugsnag from "@bugsnag/expo";
 
 import i18n from "./i18n";
@@ -34,21 +33,22 @@ import store from "./Store";
 import * as Font from "expo-font";
 import { NumberProvider } from "./src/context/NumberContext";
 
-// import mobileAds from "react-native-google-mobile-ads";
-// import {
-//   AppOpenAd,
-//   InterstitialAd,
-//   RewardedAd,
-//   BannerAd,
-//   TestIds,
-// } from "react-native-google-mobile-ads";
+import mobileAds from "react-native-google-mobile-ads";
+import {
+  AppOpenAd,
+  InterstitialAd,
+  RewardedAd,
+  BannerAd,
+  TestIds,
+} from "react-native-google-mobile-ads";
+// import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
 
-// mobileAds()
-//   .initialize()
-//   .then((adapterStatuses) => {
-//     console.log("Initialization of adds complete!");
-//     // Initialization complete!
-//   });
+mobileAds()
+  .initialize()
+  .then((adapterStatuses) => {
+    console.log("Initialization of adds complete!");
+    // Initialization complete!
+  });
 
 // AppOpenAd.createForAdRequest(TestIds.APP_OPEN);
 
@@ -87,7 +87,17 @@ const App = () => {
     });
     setFontsLoaded(true); // Actualizează starea după încărcarea fonturilor
   }
+
+  // const checkTransparencyPermission = async () => {
+  //   const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+  //   if (result === RESULTS.DENIED) {
+  //     // The permission has not been requested, so request it.
+  //     await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+  //   }
+  // };
+
   useEffect(() => {
+    // checkTransparencyPermission();
     loadFonts();
 
     const loadLanguage = async () => {

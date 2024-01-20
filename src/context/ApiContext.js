@@ -8,6 +8,7 @@ import {
   handleUploadFirestoreSubcollection,
 } from "../utils/firestoreUtils";
 import { authentication } from "../../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ApiDataContext = createContext();
 
@@ -192,18 +193,71 @@ export const ApiDataProvider = ({ children }) => {
     try {
       setLoading(true);
 
+      // Actualizează sau obține contorul de accesări
+      const updateAccessCount = async () => {
+        try {
+          const value = await AsyncStorage.getItem("accessCount");
+          let accessCount = parseInt(value);
+
+          if (isNaN(accessCount)) {
+            accessCount = 0;
+          }
+
+          accessCount += 1;
+          await AsyncStorage.setItem("accessCount", accessCount.toString());
+
+          return accessCount;
+        } catch (error) {
+          console.error("Error accessing AsyncStorage", error);
+          return 0;
+        }
+      };
+
+      const shouldUpdateData = async () => {
+        const accessCount = await updateAccessCount();
+        console.log("accessCount....", accessCount);
+        return accessCount % 25 === 0;
+      };
+
+      const shouldRefreshData = await shouldUpdateData();
+
+      const getDataOrFetch = async (category, key) => {
+        console.log(
+          "Start fetch from firebase real time or AsyncStorage",
+          category
+        );
+        const storageKey = `${category}-${key}`;
+        const cachedData = await AsyncStorage.getItem(storageKey);
+
+        // console.log(`cached data...${category}`, cachedData);
+
+        if (cachedData && !shouldRefreshData) {
+          console.log("Fetching from --------AsyncStorage----------");
+          return JSON.parse(cachedData); // Datele sunt în AsyncStorage
+        } else {
+          console.log("Fetching from !!!!!!!Firebase!!!!!!!!!!");
+          const data = await getData(category, key); // Datele sunt preluate de la Firebase
+          await AsyncStorage.setItem(storageKey, JSON.stringify(data));
+          return data;
+        }
+      };
+
       // Preia datele din fiecare categorie si le salveaza in state
-      setCartiPersonalizate(await getData("Citire-Personalizata", "Carti"));
-      setCategoriiPersonalizate(
-        await getData("Citire-Personalizata", "Categorii")
+      setCartiPersonalizate(
+        await getDataOrFetch("Citire-Personalizata", "Carti")
       );
-      // setVarianteCarti(await handleGetFirestore("VarianteCarti"));
-      setCartiViitor(await getData("Citire-Viitor", "Carti"));
-      setCategoriiViitor(await getData("Citire-Viitor", "Categorii"));
-      setCitateMotivationale(await getData("Others", "Citate-Motivationale"));
-      setCuloriNorocoase(await getData("Others", "Culori-Norocoase"));
-      setNumereNorocoase(await getData("Others", "Numere-Norocoase"));
-      setOreNorocoase(await getData("Others", "Ore-Norocoase"));
+      setCategoriiPersonalizate(
+        await getDataOrFetch("Citire-Personalizata", "Categorii")
+      );
+
+      setCartiViitor(await getDataOrFetch("Citire-Viitor", "Carti"));
+      setCategoriiViitor(await getDataOrFetch("Citire-Viitor", "Categorii"));
+      setCitateMotivationale(
+        await getDataOrFetch("Others", "Citate-Motivationale")
+      );
+      setCuloriNorocoase(await getDataOrFetch("Others", "Culori-Norocoase"));
+      setNumereNorocoase(await getDataOrFetch("Others", "Numere-Norocoase"));
+      setOreNorocoase(await getDataOrFetch("Others", "Ore-Norocoase"));
 
       setLoading(false);
     } catch (err) {

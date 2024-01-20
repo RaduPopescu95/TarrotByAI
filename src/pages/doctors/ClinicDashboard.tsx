@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import NavBarBottom from "../../components/Navbar";
 import FlipCard from "../../components/FlipCard/FlipCard";
@@ -28,28 +28,30 @@ import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
 import { useApiData } from "../../context/ApiContext";
 import { colors } from "../../utils/colors";
-// import {
-//   InterstitialAd,
-//   TestIds,
-//   AdEventType,
-// } from "react-native-google-mobile-ads";
+import {
+  InterstitialAd,
+  TestIds,
+  AdEventType,
+} from "react-native-google-mobile-ads";
 
 // const adUnitId = __DEV__
 //   ? TestIds.INTERSTITIAL
-//   : "ca-app-pub-9577714849380446/7080054250";
-// // const adUnitId = "ca-app-pub-9577714849380446/7080054250";
+//   : "ca-app-pub-9577714849380446/5660268593";
+const adUnitId = "ca-app-pub-9577714849380446/5660268593";
 
-// const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-//   keywords: ["spiritualitate", "bunăstare"],
-// });
+const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+  keywords: ["spiritualitate", "bunăstare"],
+});
 
-const interstitial = "";
+// const interstitial = "";
 
 const ClinicDashboard = () => {
   const [loaded, setLoaded] = useState(false);
   const [cardAnimations, setCardAnimations] = useState([]);
   const initialAnimations = useRef(Array(4).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
   const { language, changeLanguage } = useLanguage();
+  const { currentScreen } = useNavigationState();
+  const navigation = useNavigation();
 
   const {
     oreNorocoase,
@@ -141,37 +143,38 @@ const ClinicDashboard = () => {
 
   const screenHeight = Dimensions.get("window").height;
 
-  // useEffect(() => {
-  //   const loadListener = interstitial.addAdEventListener(
-  //     AdEventType.LOADED,
-  //     () => {
-  //       setLoaded(true);
-  //     }
-  //   );
-  //   const closeListener = interstitial.addAdEventListener(
-  //     AdEventType.CLOSED,
-  //     () => {
-  //       setLoaded(false);
-  //       interstitial.load(); // Reîncarcă reclama pentru o utilizare ulterioară
-  //     }
-  //   );
-  //   const errorListener = interstitial.addAdEventListener(
-  //     AdEventType.ERROR,
-  //     (error) => {
-  //       console.error(error);
-  //     }
-  //   );
+  useEffect(() => {
+    const loadListener = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        setLoaded(true);
+      }
+    );
+    const closeListener = interstitial.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        console.log("Test...here...closed");
+        setLoaded(false);
+        interstitial.load(); // Reîncarcă reclama pentru o utilizare ulterioară
+      }
+    );
+    const errorListener = interstitial.addAdEventListener(
+      AdEventType.ERROR,
+      (error) => {
+        console.error(error);
+      }
+    );
 
-  //   interstitial.load(); // Începe încărcarea anunțului
+    interstitial.load(); // Începe încărcarea anunțului
 
-  //   return () => {
-  //     loadListener();
-  //     closeListener();
-  //     errorListener();
-  //   };
-  // }, []);
+    return () => {
+      loadListener();
+      closeListener();
+      errorListener();
+    };
+  }, []);
 
-  // // No advert ready to show yet
+  // No advert ready to show yet
   // if (!loaded) {
   //   return null;
   // }

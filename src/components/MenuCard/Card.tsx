@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   TouchableWithoutFeedback,
   ImageBackground,
@@ -11,21 +11,39 @@ import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../utils/colors";
 import { useNavigationState } from "../../context/NavigationContext";
 import { H7fontBoldPrimary, H8fontBoldPrimary } from "../commonText";
+import {
+  InterstitialAd,
+  TestIds,
+  AdEventType,
+} from "react-native-google-mobile-ads";
 
 // Adaugă 'text', 'screen', și 'image' ca props-uri ale componentei Card
 const Card = ({ text, screen, image, interstitialAdLoaded, interstitial }) => {
-  const navigation = useNavigation(); // folosește useNavigation pentru a naviga la screen-ul specific când card-ul este apăsat
+  const navigation = useNavigation();
+  const shouldNavigateRef = useRef(false);
   const { setCurrentScreen } = useNavigationState();
 
+  useEffect(() => {
+    const closeListener = () => {
+      if (shouldNavigateRef.current) {
+        navigation.navigate(screen);
+        shouldNavigateRef.current = false;
+      }
+    };
+
+    interstitial.addAdEventListener(AdEventType.CLOSED, closeListener);
+  }, [interstitial, screen, navigation]);
+
   const onCardPress = async () => {
+    shouldNavigateRef.current = true;
     if (interstitialAdLoaded) {
       try {
+        console.log("show...");
         await interstitial.show();
-        navigation.navigate(screen);
         setCurrentScreen(screen);
       } catch (error) {
         console.error("InterstitialAd.show() error:", error);
-        navigation.navigate(screen);
+        shouldNavigateRef.current = false;
         setCurrentScreen(screen);
       }
     } else {

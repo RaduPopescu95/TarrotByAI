@@ -57,6 +57,7 @@ const LuckyColor = () => {
   React.useEffect(() => {
     if (culoriNorocoase && culoriNorocoase.length > 0) {
       const randomIndex = Math.floor(Math.random() * culoriNorocoase.length);
+
       setZilnicCuloriNorocoase(culoriNorocoase[randomIndex]);
     }
   }, [culoriNorocoase]);
@@ -147,8 +148,8 @@ const LuckyColor = () => {
                       {language === "hi"
                         ? zilnicCuloriNorocoase.info.hu.nume
                         : language === "id"
-                          ? zilnicCuloriNorocoase.info.ru.nume
-                          : zilnicCuloriNorocoase.info[language].nume}
+                        ? zilnicCuloriNorocoase.info.ru.nume
+                        : zilnicCuloriNorocoase.info[language].nume}
                     </H8fontBoldPrimary>
 
                     <H7fontMediumPrimary
@@ -157,8 +158,8 @@ const LuckyColor = () => {
                       {language === "hi"
                         ? zilnicCuloriNorocoase.info.hu.descriere
                         : language === "id"
-                          ? zilnicCuloriNorocoase.info.ru.descriere
-                          : zilnicCuloriNorocoase.info[language].descriere}
+                        ? zilnicCuloriNorocoase.info.ru.descriere
+                        : zilnicCuloriNorocoase.info[language].descriere}
                     </H7fontMediumPrimary>
                   </>
                 ) : null}
