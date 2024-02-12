@@ -19,7 +19,7 @@ import * as Device from "expo-device";
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-
+import * as Analytics from "expo-firebase-analytics";
 import { langObj } from "./src/utils/labels";
 import { getGuestLoginDetails } from "./src/actions/patientActions";
 
@@ -34,7 +34,7 @@ import {
   NavigationContext,
   useNavigation,
 } from "@react-navigation/native";
-import * as Analytics from "expo-firebase-analytics";
+
 import { ErrorView } from "./src/components/ErrorView";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HourClockProvider } from "./src/context/HourClockContext";
@@ -47,14 +47,14 @@ import store from "./Store";
 import * as Font from "expo-font";
 import { NumberProvider } from "./src/context/NumberContext";
 
-// import mobileAds from "react-native-google-mobile-ads";
+import mobileAds from "react-native-google-mobile-ads";
 
-// mobileAds()
-//   .initialize()
-//   .then((adapterStatuses) => {
-//     console.log("Initialization of adds complete!");
-//     // Initialization complete!
-//   });
+mobileAds()
+  .initialize()
+  .then((adapterStatuses) => {
+    console.log("Initialization of adds complete!");
+    // Initialization complete!
+  });
 
 // AppOpenAd.createForAdRequest(TestIds.APP_OPEN);
 
@@ -246,27 +246,6 @@ const App = () => {
     }
   };
 
-  const handleTestAnalytics = async () => {
-    await Analytics.logEvent("add_to_cart", {
-      currency: "USD",
-      value: 29.98,
-      items: [
-        {
-          id: "P12345",
-          name: "Expo Warhol T-Shirt",
-          brand: "Expo",
-          category: "Apparel/T-Shirts",
-          coupon: "SUMMER_DISCOUNT",
-          list_name: "Search Results",
-          list_position: 1,
-          price: 14.99,
-          quantity: 2,
-          variant: "Blue",
-        },
-      ],
-    });
-  };
-
   async function loadFonts() {
     await Font.loadAsync({
       Entypo: require("./assets/fonts/Entypo.ttf"),
@@ -278,11 +257,7 @@ const App = () => {
   }
   useEffect(() => {
     loadFonts();
-    handleTestAnalytics();
-    Analytics.logEvent("your_event", {
-      param1: "value1",
-      param2: "value2",
-    });
+
     // setupRevenueCat();
     // fetchDataRevenueCat();
     // Bugsnag.notify(new Error("Test error"));
@@ -334,6 +309,19 @@ const App = () => {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
+  useEffect(() => {
+    // Asigură-te că evenimentul este logat numai după ce atât fonturile, cât și limba au fost încărcate
+    if (languageLoaded && fontsLoaded) {
+      const logScreenView = async () => {
+        await Analytics.logEvent("screen_view", {
+          screen_name: "App enter",
+        });
+      };
+
+      logScreenView().catch((error) => console.error(error));
+    }
+  }, [languageLoaded, fontsLoaded]); // Dependențele efectului
 
   const Stack = createNativeStackNavigator();
 

@@ -395,13 +395,15 @@ const SignUpScreenClinic: React.FC<Props> = ({ navigation }): JSX.Element => {
                 </View> */}
               </View>
             </KeyboardAvoidingView>
-            <SnackBar
-              showSnackBar={showSnackback}
-              setShowSnackback={setShowSnackback}
-              message={message}
-              bottom={2}
-              screen={screenName.SignInScreenClinic}
-            />
+            {showSnackback ? (
+              <SnackBar
+                showSnackBar={showSnackback}
+                setShowSnackback={setShowSnackback}
+                message={message}
+                bottom={2}
+                screen={screenName.SignInScreenClinic}
+              />
+            ) : null}
           </LinearGradient>
         </MainContainer>
       </Fragment>

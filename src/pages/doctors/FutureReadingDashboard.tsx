@@ -18,6 +18,7 @@ import { useApiData } from "../../context/ApiContext";
 import { MainContainer } from "../../components/commonViews";
 import i18n, { languageCode } from "../../../i18n";
 import CardLayoutViitor from "../../components/CardLayout/CardLayoutViitor";
+import * as Analytics from "expo-firebase-analytics";
 import {
   H6fontRegularBlack,
   H7fontBoldPrimary,
@@ -65,6 +66,14 @@ const FutureReadingDashboard = () => {
   const isFirstEntry = useRef(true);
 
   useEffect(() => {
+    const logScreenView = async () => {
+      await Analytics.logEvent("screen_view", {
+        screen_name: "Future Dashboard",
+      });
+    };
+
+    logScreenView().catch((error) => console.error(error));
+
     if (isFirstEntry.current) {
       setLoading(true);
       shuffleCartiViitor();
