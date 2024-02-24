@@ -115,17 +115,30 @@ export const handleDeleteFirestore = async (location, currentPassword) => {
   }
 };
 
+//get firestore docs from a collection
 export const handleGetFirestore = async (location) => {
   let arr = []; // Specificați tipul de obiecte pe care îl conține matricea
-  const querySnapshot = await getDocs(collection(db, location));
-  querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data().data);
-    arr.push(doc.data().data);
-  });
+  try {
+    const querySnapshot = await getDocs(collection(db, location));
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, ` ${location} => `, doc.data());
+      arr.push(doc.data()); // Presupunem că fiecare document conține un câmp "data"
+    });
+  } catch (error) {
+    console.error("Error fetching documents: ", error);
+    // Aici poți, de asemenea, să returnezi un mesaj de eroare sau să arunci o excepție, în funcție de cum preferi să gestionezi erorile
+    // throw error; // Pentru a arunca eroarea mai departe, dacă este necesar
+  }
+
   return arr;
 };
-export const handleQueryFirestore = async (location, carte, categorie) => {
+
+export const handleQueryFirestoreVarianteCarti = async (
+  location,
+  carte,
+  categorie
+) => {
   console.log("start query firestore...");
   let arr = []; // Specificați tipul de obiecte pe care îl conține matricea
   const q = query(
@@ -139,6 +152,39 @@ export const handleQueryFirestore = async (location, carte, categorie) => {
     // doc.data() is never undefined for query doc snapshots
     console.log(doc.id, " => ", doc.data());
     arr.push(doc.data().data);
+  });
+  return arr;
+};
+
+export const handleQueryFirestoreGeneral = async (
+  location,
+  queryParamOne,
+  elementOne = null,
+  queryParamTwo = null,
+  elementTwo = null
+) => {
+  console.log("start query firestore pentru elementOne...", elementOne);
+  console.log("start query firestore pentru elementTwo...", elementTwo);
+  let arr = []; // Specificați tipul de obiecte pe care îl conține matricea, de exemplu: let arr = [{}];
+  let conditions = [];
+
+  conditions.push(collection(db, location));
+
+  if (elementOne) {
+    conditions.push(where(queryParamOne, "==", elementOne));
+  }
+
+  if (elementTwo) {
+    conditions.push(where(queryParamTwo, "==", elementTwo));
+  }
+
+  const q = query(...conditions);
+
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, " => ", doc.data());
+    arr.push(doc.data()); // Dacă dorești să adaugi un anumit câmp, specifică, de exemplu: doc.data().numeCamp
   });
   return arr;
 };

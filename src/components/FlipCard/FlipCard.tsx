@@ -18,6 +18,7 @@ import { normalizeString } from "../../utils/stringUtils";
 import { useNumberContext } from "../../context/NumberContext";
 import {
   handleQueryFirestore,
+  handleQueryFirestoreVarianteCarti,
   handleUploadFirestoreSubcollection,
 } from "../../utils/firestoreUtils";
 import { authentication } from "../../../firebase";
@@ -50,11 +51,10 @@ const FlipCard = ({
           item,
         });
       } else {
-  
         const cardNameNormalized = normalizeString(item.info.ro.nume);
         const categoryNameNormalized = normalizeString(conditieCategorie);
-     
-        const filteredVariante = await handleQueryFirestore(
+
+        const filteredVariante = await handleQueryFirestoreVarianteCarti(
           "VarianteCarti",
           cardNameNormalized,
           categoryNameNormalized

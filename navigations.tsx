@@ -99,6 +99,7 @@ import FutureReading from "./src/pages/FutureReading/FutureReading";
 import LuckyHour from "./src/pages/LuckyHourComponent/LuckyHourComponent";
 import MotivationalQuotes from "./src/pages/MotivationalQuotesComponent/MotivationalQuotes";
 import LuckyNumber from "./src/pages/LuckyNumberComponent/LuckyNumberComponent";
+import News from "./src/pages/blog/News";
 
 const Stack = createNativeStackNavigator();
 
@@ -169,6 +170,7 @@ const HomeNavigation = (props: NavigationProps) => {
         <Stack.Screen name={screenName.luckyNumber} component={LuckyNumber} />
 
         <Stack.Screen name={"TarrotSettings"} component={TarrotSettings} />
+        <Stack.Screen name={"News"} component={News} />
 
         <Stack.Screen
           name={screenName.ForgotPasswordClinic}
