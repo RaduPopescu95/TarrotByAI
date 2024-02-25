@@ -16,8 +16,14 @@ export default StyleSheet.create({
   },
   crossContainer: {
     position: "absolute",
-    top: 60,
+    top: "5%",
     left: 30,
+    zIndex: 9,
+  },
+  bookmarkContainer: {
+    position: "absolute",
+    top: "5%",
+    right: "5%",
     zIndex: 9,
   },
   cross: {
@@ -57,6 +63,15 @@ export default StyleSheet.create({
     textDecorationColor: "#00beff",
   },
   backContainer: {
+    backgroundColor: colors.gradientLogin2,
+    borderRadius: 50,
+    width: 50,
+    height: 50,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backArrowContainer: {
     backgroundColor: colors.gradientLogin2,
     borderRadius: 50,
     width: 30,

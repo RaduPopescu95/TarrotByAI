@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Modal,
   Image,
@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import styles from "./styles";
 import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { colors } from "../../utils/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const NewsDetailsModal: React.FC<{
   visible: boolean;
@@ -21,18 +24,47 @@ export const NewsDetailsModal: React.FC<{
     publishedAt: string;
     url: string;
     content: string;
+    documentId: string;
   };
   articleIndex: number;
   onClose: () => void;
-}> = ({ visible, article, articleIndex, onClose }) => {
+  saveArticle: Function;
+}> = ({ visible, article, articleIndex, onClose, saveArticle }) => {
   const backgroundColor = useColorScheme() === "dark" ? "#000" : "#fff";
   const color = useColorScheme() === "dark" ? "#fff" : "#000";
   const contentColor = useColorScheme() === "dark" ? "#bbb" : "#444";
   const readMoreBgColor = useColorScheme() === "dark" ? "#222" : "#ddd";
+  const [isSaved, setIsSaved] = useState(false);
 
   //   const handleURLPress = useCallback(() => {
   //     Linking.openURL(article?.url);
   //   }, [article]);
+  useEffect(() => {
+    const checkIfArticleIsSaved = async () => {
+      try {
+        const savedArticlesJSON = await AsyncStorage.getItem("savedArticles");
+        const savedArticles = savedArticlesJSON
+          ? JSON.parse(savedArticlesJSON)
+          : [];
+        const isArticleSaved = savedArticles.some(
+          (a) => a.documentId === article.documentId
+        );
+        console.log("is saved...", isArticleSaved);
+        setIsSaved(isArticleSaved);
+      } catch (error) {
+        console.error("Failed to check if the article is saved", error);
+      }
+    };
+
+    if (visible) {
+      checkIfArticleIsSaved();
+    }
+  }, [article, visible]);
+
+  const handleSaveArticle = (article) => {
+    setIsSaved(!isSaved);
+    saveArticle(article);
+  };
 
   return (
     <Modal
@@ -42,8 +74,8 @@ export const NewsDetailsModal: React.FC<{
       onRequestClose={onClose}
     >
       <>
-        <TouchableOpacity style={styles.crossContainer} onPress={onClose}>
-          <View style={styles.backContainer}>
+        <TouchableOpacity style={[styles.crossContainer]} onPress={onClose}>
+          <View style={[styles.backArrowContainer]}>
             <Ionicons
               name="arrow-back"
               size={24}
@@ -52,6 +84,24 @@ export const NewsDetailsModal: React.FC<{
             />
           </View>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.bookmarkContainer}
+          onPress={() => handleSaveArticle(article)}
+        >
+          <View style={styles.backContainer}>
+            {isSaved ? (
+              <FontAwesome name="bookmark" size={33} color={colors.primary3} />
+            ) : (
+              <FontAwesome
+                name="bookmark-o"
+                size={33}
+                color={colors.primary3}
+              />
+            )}
+          </View>
+        </TouchableOpacity>
+
         <ScrollView
           bounces={false}
           showsVerticalScrollIndicator={false}
@@ -65,6 +115,7 @@ export const NewsDetailsModal: React.FC<{
             }}
             resizeMode={"cover"}
           />
+
           <Text style={[styles.title, { color }]}>
             {article?.info?.ro.nume}
           </Text>

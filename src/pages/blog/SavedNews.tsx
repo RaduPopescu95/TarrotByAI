@@ -28,7 +28,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const News: React.FC = () => {
+const SavedNews: React.FC = () => {
   const [newsFeed, setNewsFeed] = useState({});
   const [searchResults, SetSearchResults] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -37,19 +37,8 @@ const News: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const { language, changeLanguage } = useLanguage();
-  const navigation = useNavigation();
 
-  // const newsFeed = [
-  //   { id: "1", title: "Știrea 1", content: "asdasddsadasdadsadadadadsdas" },
-  //   { id: "2", title: "Știrea 2", content: "asdasddsadasdadsadadadadsdas" },
-  //   { id: "3", title: "Știrea 3", content: "asdasddsadasdadsadadadadsdas" },
-  //   {
-  //     id: "4",
-  //     title: "Știrea 4",
-  //     content:
-  //       "asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdasasdasddsadasdadsadadadadsdasasdasddsadasdadsadadadadsdasasdasddsadasdadsadadadadsdas",
-  //   },
-  // ];
+  const navigation = useNavigation();
 
   const openModalWithArticle = (article) => {
     console.log("open...modal...", article);
@@ -92,16 +81,16 @@ const News: React.FC = () => {
     }
   };
 
-  const handleGetData = async () => {
+  const handleGetSavedData = async () => {
     // Obținerea datelor articolelor din Firestore
-    const articlesData = await handleGetFirestore("BlogArticole");
+    const savedArticlesJSON = await AsyncStorage.getItem("savedArticles");
+    const articlesData = savedArticlesJSON ? JSON.parse(savedArticlesJSON) : [];
     console.log("articles data...", articlesData);
     let articles = {};
     if (articlesData.length > 0) {
       // Sortarea articolelor după data și ora lor
       const sortedArticles = articlesData.sort((a, b) => {
         // Combină data și ora într-un singur string și convertește-le în obiecte de tip Date
-
         const dateTimeA = new Date(`${a.firstUploadDate} ${a.firstUploadtime}`);
         const dateTimeB = new Date(`${b.firstUploadDate} ${b.firstUploadtime}`);
 
@@ -149,8 +138,8 @@ const News: React.FC = () => {
       // Sortarea articolelor după data și ora lor
       const sortedArticles = articlesData.sort((a, b) => {
         // Combină data și ora într-un singur string și convertește-le în obiecte de tip Date
-        const dateTimeA = new Date(`${a.firstUploadDate} ${a.firstUploadtime}`);
-        const dateTimeB = new Date(`${b.firstUploadDate} ${b.firstUploadtime}`);
+        const dateTimeA = new Date(`${a.date} ${a.time}`);
+        const dateTimeB = new Date(`${b.date} ${b.time}`);
 
         // Compară obiectele de tip Date
         return dateTimeB - dateTimeA;
@@ -184,22 +173,8 @@ const News: React.FC = () => {
   };
 
   useEffect(() => {
-    // function to query firestore by category
-    console.log("filter by category", selectedCategory);
-    if (selectedCategory === "All") {
-      handleGetData();
-    } else {
-      handleQueryData();
-    }
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    handleGetData();
+    handleGetSavedData();
   }, []);
-
-  const handleRefresh = useCallback(() => {
-    handleGetData();
-  }, []); //add a dependecy
 
   const backgroundColor = useColorScheme() === "dark" ? "#000" : "#fff";
 
@@ -231,6 +206,12 @@ const News: React.FC = () => {
             paddingHorizontal: 10,
           }}
         >
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ width: "10%", alignItems: "flex-end" }}
+          >
+            <FontAwesome name="chevron-left" size={24} color={colors.white} />
+          </TouchableOpacity>
           <View style={{ width: "90%" }}>
             <SearchInput
               searchText={searchText}
@@ -239,19 +220,13 @@ const News: React.FC = () => {
               handleSearchData={handleSearchData}
             />
           </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("SavedNews")}
-            style={{ width: "10%", alignItems: "flex-start" }}
-          >
-            <FontAwesome name="heart" size={24} color={colors.gradientLogin3} />
-          </TouchableOpacity>
         </View>
-        {!searchText?.trim() && (
+        {/* {!searchText?.trim() && (
           <NewsTags
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
           />
-        )}
+        )} */}
         <FlatList
           keyExtractor={(item) => item.id} // Utilizarea unui ID unic, dacă este disponibil
           showsVerticalScrollIndicator={false}
@@ -260,9 +235,6 @@ const News: React.FC = () => {
             <NewsCard post={item} onPress={openModalWithArticle} />
           )}
           style={styles.list}
-          refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
-          }
         />
         <NewsDetailsModal
           visible={modalVisible}
@@ -276,4 +248,4 @@ const News: React.FC = () => {
   );
 };
 
-export default News;
+export default SavedNews;

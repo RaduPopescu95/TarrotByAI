@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../utils/colors";
 export default StyleSheet.create({
   list: {
     maxHeight: 40,
@@ -10,14 +11,14 @@ export default StyleSheet.create({
   },
   container: {
     borderWidth: 1,
-    borderColor: "#FFA500",
+    borderColor: colors.gradientLogin3,
     borderRadius: 12,
     height: 28,
     paddingHorizontal: 14,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 24,
-    backgroundColor: "#FFA50066",
+    backgroundColor: colors.gradientLogin2,
   },
   text: {
     fontSize: 14,

@@ -100,6 +100,7 @@ import LuckyHour from "./src/pages/LuckyHourComponent/LuckyHourComponent";
 import MotivationalQuotes from "./src/pages/MotivationalQuotesComponent/MotivationalQuotes";
 import LuckyNumber from "./src/pages/LuckyNumberComponent/LuckyNumberComponent";
 import News from "./src/pages/blog/News";
+import SavedNews from "./src/pages/blog/SavedNews";
 
 const Stack = createNativeStackNavigator();
 
@@ -171,6 +172,7 @@ const HomeNavigation = (props: NavigationProps) => {
 
         <Stack.Screen name={"TarrotSettings"} component={TarrotSettings} />
         <Stack.Screen name={"News"} component={News} />
+        <Stack.Screen name={"SavedNews"} component={SavedNews} />
 
         <Stack.Screen
           name={screenName.ForgotPasswordClinic}

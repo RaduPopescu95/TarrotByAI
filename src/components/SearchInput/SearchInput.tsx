@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TextInput, useColorScheme } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -8,34 +8,12 @@ export const SearchInput: React.FC<{
   searchText: string;
   setSearchText: Function;
   setIsLoading: Function;
-}> = ({ searchText, setSearchText, setIsLoading }) => {
+  handleSearchData: Function;
+}> = ({ searchText, setSearchText, setIsLoading, handleSearchData }) => {
   const backgroundColor = useColorScheme() === "dark" ? "#333" : "#ddd";
   const placeholderColor = useColorScheme() === "dark" ? "#eee" : "#111";
   const color = useColorScheme() === "dark" ? "#fff" : "#000";
   const dispatch = useDispatch();
-
-  // Crearea unei funcții debounce personalizate
-  const debounce = (func, wait) => {
-    let timeout;
-    return (...args) => {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-
-  const searchForText = debounce((text) => {
-    if (text?.trim().length > 0) {
-      // Functie pentru setare search result
-      console.log("Searching for:", text); // Exemplu de implementare
-    } else {
-      // Functie pentru resetare search result
-      console.log("Reset search results"); // Exemplu de implementare
-    }
-  }, 1000);
 
   return (
     <TextInput
@@ -45,7 +23,15 @@ export const SearchInput: React.FC<{
       value={searchText}
       onChangeText={(text: string) => {
         setSearchText(text);
-        searchForText(text);
+        if (text?.trim().length > 0) {
+          // Functie pentru setare search result
+          handleSearchData(text);
+          console.log("Searching for:", text); // Exemplu de implementare
+        } else {
+          // Functie pentru resetare search result
+          handleSearchData(text);
+          console.log("Reset search results"); // Exemplu de implementare
+        }
       }}
       maxLength={40}
       returnKeyType={"search"}
