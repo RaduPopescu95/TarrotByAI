@@ -198,6 +198,7 @@ const News: React.FC = () => {
   }, []);
 
   const handleRefresh = useCallback(() => {
+    setSelectedCategory("All");
     handleGetData();
   }, []); //add a dependecy
 
@@ -253,12 +254,15 @@ const News: React.FC = () => {
           />
         )}
         <FlatList
-          keyExtractor={(item) => item.id} // Utilizarea unui ID unic, dacă este disponibil
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           data={searchText.length > 0 ? searchResults : newsFeed.articlesData}
           renderItem={({ item }) => (
             <NewsCard post={item} onPress={openModalWithArticle} />
           )}
+          contentContainerStyle={{
+            paddingBottom: "25%",
+          }} // Asigură-te că există spațiu la marginea inferioară
           style={styles.list}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />

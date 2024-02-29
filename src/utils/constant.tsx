@@ -661,6 +661,19 @@ export const termAndConditionTextClinic = [
   The app does use third-party services that may collect information used to identify you.
   
   Link to the privacy policy of third-party service providers used by the app
+
+  **Information Collected while Using the Application**
+  
+  "Cristina Zurba - Tarot" app collects, transmits, syncs, and stores images and related data to enhance the user experience and provide personalized tarot reading services. Here's how and why we handle this data:
+
+  Collection & Storage: "Cristina Zurba - Tarot" may ask for your permission to access your device's gallery or camera to allow you to upload an image for a personalized avatar or to use within the app's custom tarot reading features. These images are stored securely and are used to personalize your experience within the app.
+  
+  Transmission & Synchronization: Images or related data may be transmitted to our servers to enable cloud-based synchronization across devices. This ensures that your personalized settings and data are available to you on any device you choose to use.
+  
+  Usage Scenario: For example, if you opt to use a personal image as part of a custom tarot card reading, "Cristina Zurba - Tarot" processes this image to integrate it into your reading, enhancing the personal relevance of the reading.
+  
+  User Consent & Control: Before collecting any images or related data, "Cristina Zurba - Tarot" provides a clear, unambiguous request for your consent. You have the control to grant or deny these permissions and can modify them at any time in your device settings. No data is collected without your explicit approval.
+
   
 `,
   },

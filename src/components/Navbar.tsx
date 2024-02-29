@@ -183,7 +183,9 @@ const NavBarBottom = () => {
           styles.navbar,
           {
             backgroundColor:
-              selected === 1 ? "rgba(252, 246, 198, 0.8)" : "transparent",
+              selected === 1 || selected === 3
+                ? "rgba(252, 246, 198, 0.8)"
+                : "transparent",
           },
         ]}
       >
@@ -191,7 +193,7 @@ const NavBarBottom = () => {
           screenName.ClinicDashBoard,
           screenName.PersonalReadingDashboard,
           "TarrotSettings",
-          "News", // Ensure "News" is included in your navigation options array
+          // "News", // Ensure "News" is included in your navigation options array
         ].map((screen, index) => (
           <Animated.View
             key={screen}
