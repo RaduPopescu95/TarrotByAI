@@ -6,10 +6,10 @@ export default StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: 120,
+    paddingBottom: 80,
   },
   image: {
-    height: 500,
+    height: 300,
     width: "100%",
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
@@ -31,7 +31,7 @@ export default StyleSheet.create({
     width: 34,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "600",
     lineHeight: 30,
     paddingHorizontal: 24,

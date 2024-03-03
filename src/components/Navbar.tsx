@@ -193,7 +193,7 @@ const NavBarBottom = () => {
           screenName.ClinicDashBoard,
           screenName.PersonalReadingDashboard,
           "TarrotSettings",
-          // "News", // Ensure "News" is included in your navigation options array
+          "News", // Ensure "News" is included in your navigation options array
         ].map((screen, index) => (
           <Animated.View
             key={screen}

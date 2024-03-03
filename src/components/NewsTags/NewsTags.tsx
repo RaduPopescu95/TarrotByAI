@@ -4,6 +4,7 @@ import { FlatList } from "react-native";
 import styles from "./styles";
 import { NewsCategory } from "../../utils/constant";
 import { Tag } from "./Tag";
+import i18n from "../../../i18n";
 
 export const NewsTags: React.FC<{
   selectedCategory: String;
@@ -17,7 +18,8 @@ export const NewsTags: React.FC<{
       keyExtractor={(item: string) => item}
       renderItem={({ item }: any) => (
         <Tag
-          category={item}
+          category={i18n.translate(item)}
+          toSelectCat={item}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />

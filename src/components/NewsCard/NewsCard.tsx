@@ -3,6 +3,7 @@ import React from "react";
 import { Image, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
+import { useLanguage } from "../../context/LanguageContext";
 
 type Post = {
   id: string;
@@ -21,6 +22,7 @@ export const NewsCard: React.FC<{
   post: Post;
   onPress: any;
 }> = ({ post, onPress }) => {
+  const { language, changeLanguage } = useLanguage();
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -39,7 +41,13 @@ export const NewsCard: React.FC<{
         colors={["#0000", "#000A", "#000"]}
         style={styles.titleContainer}
       >
-        <Text style={styles.text}>{post?.info?.ro.nume}</Text>
+        <Text style={styles.text}>
+          {language === "hi"
+            ? post.info.hu.nume
+            : language === "id"
+              ? post.info.ru.nume
+              : post.info[language].nume}
+        </Text>
 
         <Text style={styles.timestamp}>{post?.firstUploadDate}</Text>
       </LinearGradient>

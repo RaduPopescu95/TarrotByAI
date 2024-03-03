@@ -14,6 +14,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { colors } from "../../utils/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import WebView from "react-native-webview";
+import { Video } from "expo-av";
+import { getYoutubeEmbedUrl } from "../../utils/youtubeLinkUtils";
+import { useLanguage } from "../../context/LanguageContext";
 
 export const NewsDetailsModal: React.FC<{
   visible: boolean;
@@ -25,6 +29,7 @@ export const NewsDetailsModal: React.FC<{
     url: string;
     content: string;
     documentId: string;
+    youtubeLinks: any;
   };
   articleIndex: number;
   onClose: () => void;
@@ -35,6 +40,61 @@ export const NewsDetailsModal: React.FC<{
   const contentColor = useColorScheme() === "dark" ? "#bbb" : "#444";
   const readMoreBgColor = useColorScheme() === "dark" ? "#222" : "#ddd";
   const [isSaved, setIsSaved] = useState(false);
+  const { language, changeLanguage } = useLanguage();
+
+  const customCSS = `
+  <style>
+      body {
+          font-size: 16px; /* Setează dimensiunea fontului pentru elementul body */
+          padding-left:30px;
+          padding-right:30px;
+          padding-bottom:30px
+      }
+      h1 {
+          font-size: 44px; /* Dimensiunea fontului pentru titluri */
+      }
+      h2 {
+          font-size: 40px; /* Dimensiunea fontului pentru titluri */
+      }
+      p {
+          font-size: 35px; /* Dimensiunea fontului pentru paragrafe */
+      }
+      /* Adaugă alte selecții și stiluri după cum este necesar */
+  </style>
+`;
+
+  const youtubeEmbedHTML = article?.youtubeLinks
+    ? article.youtubeLinks
+        .map((link) => {
+          const embedUrl = getYoutubeEmbedUrl(link);
+          return `<iframe style="margin-top: 10px;" width="100%" height="515" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        })
+        .join("") // Unește toate fragmentele HTML într-un singur șir
+    : "";
+
+  const youtubeVideoId = "caWBmvhRcII"; // ID-ul videoclipului YouTube
+
+  const fullHTMLContent = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+      ${customCSS}
+  
+  </head>
+  <body>
+      ${
+        language === "hi"
+          ? article?.info?.hu.content
+          : language === "id"
+            ? article?.info?.ru.content
+            : article?.info[language].content
+      }
+   
+
+      ${youtubeEmbedHTML}
+  </body>
+  </html>
+`;
 
   //   const handleURLPress = useCallback(() => {
   //     Linking.openURL(article?.url);
@@ -102,11 +162,15 @@ export const NewsDetailsModal: React.FC<{
           </View>
         </TouchableOpacity>
 
-        <ScrollView
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          style={[styles.container, { backgroundColor }]}
-          contentContainerStyle={styles.contentContainer}
+        <View
+          // bounces={false}
+          // showsVerticalScrollIndicator={false}
+          style={[
+            styles.container,
+            styles.contentContainer,
+            { backgroundColor },
+          ]}
+          // contentContainerStyle={styles.contentContainer}
         >
           <Image
             style={styles.image}
@@ -117,12 +181,23 @@ export const NewsDetailsModal: React.FC<{
           />
 
           <Text style={[styles.title, { color }]}>
-            {article?.info?.ro.nume}
+            {language === "hi"
+              ? article?.info?.hu.nume
+              : language === "id"
+                ? article?.info?.ru.nume
+                : article?.info[language].nume}
           </Text>
-          <Text style={[styles.content, { color: contentColor }]}>
+          {/* <Text style={[styles.content, { color: contentColor }]}>
             {article?.info?.ro.content}
-          </Text>
-        </ScrollView>
+          </Text> */}
+        </View>
+        <WebView
+          originWhitelist={["*"]}
+          source={{ html: fullHTMLContent }}
+
+          // Asigură-te că restul prop-urilor necesare sunt setate aici
+        />
+
         {/* <View
           style={[
             styles.readMoreContainer,

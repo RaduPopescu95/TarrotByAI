@@ -39,20 +39,7 @@ const News: React.FC = () => {
   const { language, changeLanguage } = useLanguage();
   const navigation = useNavigation();
 
-  // const newsFeed = [
-  //   { id: "1", title: "Știrea 1", content: "asdasddsadasdadsadadadadsdas" },
-  //   { id: "2", title: "Știrea 2", content: "asdasddsadasdadsadadadadsdas" },
-  //   { id: "3", title: "Știrea 3", content: "asdasddsadasdadsadadadadsdas" },
-  //   {
-  //     id: "4",
-  //     title: "Știrea 4",
-  //     content:
-  //       "asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdas asdasddsadasdadsadadadadsdasasdasddsadasdadsadadadadsdasasdasddsadasdadsadadadadsdasasdasddsadasdadsadadadadsdas",
-  //   },
-  // ];
-
   const openModalWithArticle = (article) => {
-    console.log("open...modal...", article);
     setSelectedArticle(article);
     setModalVisible(true);
   };
