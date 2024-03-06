@@ -47,17 +47,17 @@ import store from "./Store";
 import * as Font from "expo-font";
 import { NumberProvider } from "./src/context/NumberContext";
 
-// import mobileAds from "react-native-google-mobile-ads";
+import mobileAds from "react-native-google-mobile-ads";
 
-// mobileAds()
-//   .initialize()
-//   .then((adapterStatuses) => {
-//     console.log("Initialization of adds complete!");
-//     // Initialization complete!
-//   })
-//   .catch((err) => {
-//     console.log("Initialization of adds ERROR!", err);
-//   });
+mobileAds()
+  .initialize()
+  .then((adapterStatuses) => {
+    console.log("Initialization of adds complete!");
+    // Initialization complete!
+  })
+  .catch((err) => {
+    console.log("Initialization of adds ERROR!", err);
+  });
 
 // AppOpenAd.createForAdRequest(TestIds.APP_OPEN);
 

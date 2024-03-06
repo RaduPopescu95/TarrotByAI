@@ -45,19 +45,19 @@ export const NewsDetailsModal: React.FC<{
   const customCSS = `
   <style>
       body {
-          font-size: 16px; /* Setează dimensiunea fontului pentru elementul body */
+          font-size: 26px; /* Setează dimensiunea fontului pentru elementul body */
           padding-left:30px;
           padding-right:30px;
           padding-bottom:30px
       }
       h1 {
-          font-size: 44px; /* Dimensiunea fontului pentru titluri */
+          font-size: 54px; /* Dimensiunea fontului pentru titluri */
       }
       h2 {
-          font-size: 40px; /* Dimensiunea fontului pentru titluri */
+          font-size: 52px; /* Dimensiunea fontului pentru titluri */
       }
       p {
-          font-size: 35px; /* Dimensiunea fontului pentru paragrafe */
+          font-size: 50px; /* Dimensiunea fontului pentru paragrafe */
       }
       /* Adaugă alte selecții și stiluri după cum este necesar */
   </style>

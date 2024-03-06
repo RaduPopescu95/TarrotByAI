@@ -31,7 +31,7 @@ export default StyleSheet.create({
     width: 34,
   },
   title: {
-    fontSize: 18,
+    fontSize: 21,
     fontWeight: "600",
     lineHeight: 30,
     paddingHorizontal: 24,

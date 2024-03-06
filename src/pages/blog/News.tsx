@@ -27,6 +27,14 @@ import { handleSearch } from "../../utils/searchUtils";
 import { useLanguage } from "../../context/LanguageContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { filterArticlesBeforeCurrentTime } from "../../utils/commonUtils";
+import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+
+// Înlocuiți cu ID-ul real al unității de anunțuri pentru producție
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-9577714849380446/7080054250';
+const interstitialAd = InterstitialAd.createForAdRequest(adUnitId);
+
+
 
 const News: React.FC = () => {
   const [newsFeed, setNewsFeed] = useState({});
@@ -38,10 +46,14 @@ const News: React.FC = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const { language, changeLanguage } = useLanguage();
   const navigation = useNavigation();
+  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
-  const openModalWithArticle = (article) => {
-    setSelectedArticle(article);
+  const openModalWithArticle = async (article) => {
+    await interstitialAd.show().then(() => {
+      setSelectedArticle(article);
     setModalVisible(true);
+    })
+   
   };
   const handleCloseModal = () => {
     setModalVisible(!modalVisible);
@@ -81,7 +93,11 @@ const News: React.FC = () => {
 
   const handleGetData = async () => {
     // Obținerea datelor articolelor din Firestore
-    const articlesData = await handleGetFirestore("BlogArticole");
+
+    const dataArt = await handleGetFirestore("BlogArticole");
+    console.log("Articole...aici..unu.", dataArt)
+    let articlesData  = filterArticlesBeforeCurrentTime(dataArt)
+    console.log("Articole...aici...", articlesData)
     console.log("articles data...", articlesData);
     let articles = {};
     if (articlesData.length > 0) {
@@ -124,12 +140,17 @@ const News: React.FC = () => {
   };
 
   const handleQueryData = async () => {
-    let articlesData = await handleQueryFirestoreGeneral(
+    let dataArt = await handleQueryFirestoreGeneral(
       "BlogArticole",
       "categorie",
       selectedCategory
     );
-    console.log("articles data...query...", articlesData);
+    console.log("articles data...query...", dataArt);
+
+
+    let articlesData  = filterArticlesBeforeCurrentTime(dataArt)
+    console.log("Articole...aici...", articlesData)
+
 
     let articles = {};
     if (articlesData.length > 0) {
@@ -199,6 +220,47 @@ const News: React.FC = () => {
     // console.log("Search reasults...length...", searchResults.length);
   };
 
+  useEffect(() => {
+    // Ascultător pentru evenimentul de încărcare a interstitialului
+    const loadListener = interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+      setInterstitialLoaded(true);
+    });
+
+    // Ascultător pentru evenimentul de închidere a interstitialului
+    const closeListener = interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+      // Navigația se face după închiderea interstitialului
+      // if (isFuture) {
+      //   navigation.navigate(screenName.FutureReading, {
+      //     item,
+      //   });
+      // }
+      // Reîncărcați interstitialul pentru utilizări ulterioare
+      setInterstitialLoaded(false);
+      interstitialAd.load();
+    });
+
+    const errorListener = interstitialAd.addAdEventListener(
+      AdEventType.ERROR,
+      (error) => {
+        console.error(error);
+      }
+    );
+
+
+
+
+    // Încărcați interstitialul
+    interstitialAd.load();
+
+    return () => {
+      // Curățare la demontare
+      loadListener();
+      closeListener();
+      errorListener();
+    };
+  }, []);
+
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <LinearGradient
@@ -240,6 +302,11 @@ const News: React.FC = () => {
             setSelectedCategory={setSelectedCategory}
           />
         )}
+          {newsFeed?.articlesData?.length === 0 &&
+        <Text style={{color:"white", padding:5}}>
+        We're brewing some fresh content! Check back soon to read our latest articles. In the meantime, explore our existing resources.
+        </Text>
+        }
         <FlatList
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
@@ -255,6 +322,7 @@ const News: React.FC = () => {
             <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
           }
         />
+      
         <NewsDetailsModal
           visible={modalVisible}
           article={selectedArticle}

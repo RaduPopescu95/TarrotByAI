@@ -12,3 +12,18 @@ export const toUrlSlug = (string) => {
     .replace(/[^\w\-]+/g, "") // Remove all non-word chars
     .replace(/\-\-+/g, "-"); // Replace multiple - with single -
 };
+
+
+export const filterArticlesBeforeCurrentTime = (articlesData) => {
+  const currentTime = new Date(); // Obține timpul actual
+
+  return articlesData.filter(article => {
+    // Construiește un șir de data și ora în format acceptat de constructorul Date din JavaScript
+    const articleDateStr = `${article.firstUploadDate.split('-').reverse().join('-')}T${article.firstUploadtime}:00`;
+    // Convertiți șirul construit într-un obiect Date
+    const articleDateTime = new Date(articleDateStr);
+
+    // Verificați dacă data și ora articolului sunt înainte sau egale cu timpul actual
+    return articleDateTime <= currentTime;
+  });
+};

@@ -28,22 +28,23 @@ import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
 import { useApiData } from "../../context/ApiContext";
 import { colors } from "../../utils/colors";
-// import {
-//   InterstitialAd,
-//   TestIds,
-//   AdEventType,
-// } from "react-native-google-mobile-ads";
+  //---ADS---
+import {
+  InterstitialAd,
+  TestIds,
+  AdEventType,
+} from "react-native-google-mobile-ads";
 
-// const adUnitId = __DEV__
-//   ? TestIds.INTERSTITIAL
-//   : "ca-app-pub-9577714849380446/7080054250";
-// // const adUnitId = "ca-app-pub-9577714849380446/7080054250";
+const adUnitId = __DEV__
+  ? TestIds.INTERSTITIAL
+  : "ca-app-pub-9577714849380446/7080054250";
+// const adUnitId = "ca-app-pub-9577714849380446/7080054250";
 
-// const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-//   keywords: ["spiritualitate", "bunăstare"],
-// });
+const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+  keywords: ["spiritualitate", "bunăstare"],
+});
 
-const interstitial = "";
+// const interstitial = "";
 
 const ClinicDashboard = () => {
   const [loaded, setLoaded] = useState(false);
@@ -146,36 +147,36 @@ const ClinicDashboard = () => {
   // Restul logicii și a codului specific aplicației...
 
   const screenHeight = Dimensions.get("window").height;
+  //---ADS---
+  useEffect(() => {
+    const loadListener = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        setLoaded(true);
+      }
+    );
+    const closeListener = interstitial.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        setLoaded(false);
+        interstitial.load(); // Reîncarcă reclama pentru o utilizare ulterioară
+      }
+    );
+    const errorListener = interstitial.addAdEventListener(
+      AdEventType.ERROR,
+      (error) => {
+        console.error(error);
+      }
+    );
 
-  // useEffect(() => {
-  //   const loadListener = interstitial.addAdEventListener(
-  //     AdEventType.LOADED,
-  //     () => {
-  //       setLoaded(true);
-  //     }
-  //   );
-  //   const closeListener = interstitial.addAdEventListener(
-  //     AdEventType.CLOSED,
-  //     () => {
-  //       setLoaded(false);
-  //       interstitial.load(); // Reîncarcă reclama pentru o utilizare ulterioară
-  //     }
-  //   );
-  //   const errorListener = interstitial.addAdEventListener(
-  //     AdEventType.ERROR,
-  //     (error) => {
-  //       console.error(error);
-  //     }
-  //   );
+    interstitial.load(); // Începe încărcarea anunțului
 
-  //   interstitial.load(); // Începe încărcarea anunțului
-
-  //   return () => {
-  //     loadListener();
-  //     closeListener();
-  //     errorListener();
-  //   };
-  // }, []);
+    return () => {
+      loadListener();
+      closeListener();
+      errorListener();
+    };
+  }, []);
 
   // // No advert ready to show yet
   // if (!loaded) {

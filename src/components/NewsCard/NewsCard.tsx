@@ -1,6 +1,6 @@
 import moment from "moment";
-import React from "react";
-import { Image, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./styles";
 import { useLanguage } from "../../context/LanguageContext";
@@ -22,7 +22,9 @@ export const NewsCard: React.FC<{
   post: Post;
   onPress: any;
 }> = ({ post, onPress }) => {
+
   const { language, changeLanguage } = useLanguage();
+
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -41,15 +43,17 @@ export const NewsCard: React.FC<{
         colors={["#0000", "#000A", "#000"]}
         style={styles.titleContainer}
       >
-        <Text style={styles.text}>
+        <Text style={[styles.text, {marginBottom:"2%"}]}>
           {language === "hi"
             ? post.info.hu.nume
             : language === "id"
               ? post.info.ru.nume
               : post.info[language].nume}
         </Text>
-
-        <Text style={styles.timestamp}>{post?.firstUploadDate}</Text>
+{/* <View style={{flex:1, flexDirection:"row", height:"2%", backgroundColor:"red"}}> */}
+        <Text style={[styles.timestamp, {marginRight:"6%"}]}>{post?.firstUploadDate}</Text>
+        <Text style={styles.timestamp}>{post?.firstUploadtime}</Text>
+        {/* </View> */}
       </LinearGradient>
     </TouchableOpacity>
   );
