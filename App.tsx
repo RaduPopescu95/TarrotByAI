@@ -26,7 +26,7 @@ import { langObj } from "./src/utils/labels";
 // import messaging from '@react-native-firebase/messaging';
 
 import Purchases, { PurchasesOffering } from "react-native-purchases";
-import Bugsnag from "@bugsnag/expo";
+// import Bugsnag from "@bugsnag/expo";
 import { Mode } from "react-hook-form";
 import i18n from "./i18n";
 import {
@@ -67,7 +67,7 @@ mobileAds()
 // RewardedAd.createForAdRequest(TestIds.REWARDED);
 
 // Start BugSnag first...
-Bugsnag.start();
+// Bugsnag.start();
 
 
 const App = () => {
@@ -116,7 +116,7 @@ const App = () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
     } catch (e) {
-      Bugsnag.notify("error on handleRequestLocationPermission....", e);
+      // Bugsnag.notify("error on handleRequestLocationPermission....", e);
       console.log("error on handleRequestLocationPermission....", e);
     }
   };

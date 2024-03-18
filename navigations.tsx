@@ -72,7 +72,7 @@ import PaywallScreen from "./src/pages/PaywallScreen/PawywallScreen";
 import PatientInformation from "./src/pages/PatientInformation";
 
 import { ErrorView } from "./src/components/ErrorView";
-import Bugsnag from "@bugsnag/expo";
+// import Bugsnag from "@bugsnag/expo";
 
 import GuestPhoneInputModal from "./src/components/GuestPhoneInputModal";
 import Dashboard2 from "./src/pages/doctors/Dashboard2";

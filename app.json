@@ -5,15 +5,15 @@
     "platforms": ["ios", "android", "web"],
     "version": "1.2.5",
     "orientation": "portrait",
-    "plugins": ["react-native-health", "expo-build-properties"],
+    "plugins": ["expo-build-properties"],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
       },
+      "googleServicesFile": "./google-services.json",
       "config": {},
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.cristina.zurba.tarot",
-      "googleServicesFile": "./google-services.json",
       "versionCode": 45,
       "permissions": ["android.permission.RECORD_AUDIO"]
       

@@ -6,7 +6,7 @@ import Purchases, {
   PurchasesOffering,
 } from "react-native-purchases";
 // import Logger from "../utils/Logger";
-import Bugsnag from "@bugsnag/expo";
+// import Bugsnag from "@bugsnag/expo";
 
 const APIKeys = {
   google: "goog_UHrsSHGQqgcuRaQShpRZulzKvbN",
