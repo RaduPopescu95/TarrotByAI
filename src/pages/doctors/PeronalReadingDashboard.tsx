@@ -28,7 +28,7 @@ import {
 import { useLanguage } from "../../context/LanguageContext";
 import { authentication } from "../../../firebase";
 import { useNumberContext } from "../../context/NumberContext";
-import * as Analytics from "expo-firebase-analytics";
+
 
 const PersonalReadingDashboard = ({ route }) => {
   const isFirstEntry = useRef(true);
@@ -71,13 +71,7 @@ const PersonalReadingDashboard = ({ route }) => {
   const { currentNumber, updateNumber } = useNumberContext();
 
   useEffect(() => {
-    const logScreenView = async () => {
-      await Analytics.logEvent("screen_view", {
-        screen_name: "Future Dashboard",
-      });
-    };
-
-    logScreenView().catch((error) => console.error(error));
+    
 
     if (isFirstEntry.current) {
       setLoading(true);

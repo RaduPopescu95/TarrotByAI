@@ -14,7 +14,7 @@ import {
 import { Provider as PaperProvider } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { useRoute } from "@react-navigation/native";
-import * as Analytics from "expo-firebase-analytics";
+
 import NavBarBottom from "../../components/Navbar";
 import FlipCard from "../../components/FlipCard/FlipCard";
 import { styles } from "./DashboardStyle";
@@ -34,6 +34,7 @@ import {
   TestIds,
   AdEventType,
 } from "react-native-google-mobile-ads";
+import { usePushNotifications } from "../../hooks/usePushNotifications";
 
 const adUnitId = __DEV__
   ? TestIds.INTERSTITIAL
@@ -51,6 +52,11 @@ const ClinicDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
   const initialAnimations = useRef(Array(4).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
   const { language, changeLanguage } = useLanguage();
+
+   
+  const {expoPushToken} = usePushNotifications()
+
+  console.log("expo push token...s", expoPushToken)
 
   const {
     oreNorocoase,
@@ -96,12 +102,7 @@ const ClinicDashboard = () => {
   ];
 
   useEffect(() => {
-    const logScreenView = async () => {
-      await Analytics.logEvent("screen_view", {
-        screen_name: "Main Dashboard",
-      });
-    };
-    logScreenView().catch((error) => console.error(error));
+  
     console.log("asdsa");
     console.log(zilnicCitateMotivationale);
     // console.log("asdsa");

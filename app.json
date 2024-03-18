@@ -13,8 +13,10 @@
       "config": {},
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.cristina.zurba.tarot",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 45,
       "permissions": ["android.permission.RECORD_AUDIO"]
+      
     },
     "web": {
       "config": {
