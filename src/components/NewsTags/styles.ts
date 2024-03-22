@@ -8,12 +8,13 @@ export default StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: "center",
     justifyContent: "center",
+
   },
   container: {
     borderWidth: 1,
     borderColor: colors.gradientLogin3,
     borderRadius: 12,
-    height: 28,
+    height: 30,
     paddingHorizontal: 14,
     justifyContent: "center",
     alignItems: "center",

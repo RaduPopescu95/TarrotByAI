@@ -4,11 +4,15 @@ import * as Notifications from "expo-notifications";
 
 import Constants from "expo-constants";
 
-import { Platform } from "react-native";
+import { Alert, Linking, Platform } from "react-native";
 
 export interface PushNotificationState {
   expoPushToken?: Notifications.ExpoPushToken;
+  setExpoPushToken?:any;
   notification?: Notifications.Notification;
+  registerForPushNotificationsAsync?:any;
+  isGranted?:Boolean;
+  openNotificationSettings?:any
 }
 
 export const usePushNotifications = (): PushNotificationState => {
@@ -28,8 +32,23 @@ export const usePushNotifications = (): PushNotificationState => {
     Notifications.Notification | undefined
   >();
 
+  const [isGranted, setIsGranted] = useState<any>(false)
+
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
+
+  const openNotificationSettings = () => {
+    if (Platform.OS === 'ios') {
+      // Pentru iOS, deschide setările aplicației
+      Linking.openURL('app-settings:');
+    } else {
+      // Pentru Android, deschide setările aplicației folosind openSettings()
+      // Această metodă este disponibilă în versiunile mai noi de React Native
+      Linking.openSettings().catch((err) => console.error('An error occurred', err));
+    }
+  };
+
+  
 
   async function registerForPushNotificationsAsync() {
     let token;
@@ -44,10 +63,18 @@ export const usePushNotifications = (): PushNotificationState => {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification");
+        Alert.alert('Notifications are stopped', 'Do you want to activate notifications?', [
+          {
+            text: 'No',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: 'Activate', onPress: () => openNotificationSettings()},
+        ]);
+        setIsGranted(false)
         return;
       }
-
+      setIsGranted(finalStatus == "granted")
       console.log("before token...")
       token = await Notifications.getExpoPushTokenAsync({
         projectId: Constants.expoConfig?.extra?.eas.projectId,
@@ -95,6 +122,10 @@ export const usePushNotifications = (): PushNotificationState => {
 
   return {
     expoPushToken,
+    setExpoPushToken,
     notification,
+    registerForPushNotificationsAsync,
+    isGranted,
+    openNotificationSettings
   };
 };

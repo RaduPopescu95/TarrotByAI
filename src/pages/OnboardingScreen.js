@@ -34,6 +34,7 @@ import {
   H7fontRegularLight,
 } from "../components/commonText";
 import { useAuth } from "../context/AuthContext";
+import ConsentModal from "../components/ImageConsentModal/ImageConsentModal";
 // import AppStackClinic from '../navigation/AppStackClinic';
 
 const { width, height } = Dimensions.get("window");
@@ -63,12 +64,12 @@ const slides = [
 
 const Slide = ({ item }) => {
   return (
-    <View style={{ alignItems: "center", position: "relative", top: "12%" }}>
+    <View style={{ alignItems: "center", position: "relative", top: "12%",zIndex:1 }}>
       {/* Condiție pentru a verifica tipul fișierului și a alege între LottieView și Image */}
 
       <Image
         source={require("../../assets/headerIcon.png")}
-        style={{ width: 300, height: 200 }}
+        style={{ width: 300, height: 200,zIndex:1 }}
         resizeMode="contain" // Aceasta va asigura că întreaga imagine se va încadra în spațiul disponibil, păstrând proporțiile.
       />
       <Image
@@ -79,6 +80,7 @@ const Slide = ({ item }) => {
           position: "relative",
           bottom: "10%",
           resizeMode: "contain",
+          zIndex:1
         }}
       />
       {/* Restul componentei rămâne neschimbat */}
@@ -143,6 +145,33 @@ const OnboardingScreen = ({ navigation }) => {
     ref?.current.scrollToOffset({ offset });
     setCurrentSlideIndex(lastSlideIndex);
   };
+
+  const [visible, setVisible] = React.useState(false);
+
+  const checkConsent = async () => {
+    try {
+      const hasConsented = await AsyncStorage.getItem('hasConsented');
+      if (hasConsented === null) {
+        // Dacă nu există nicio înregistrare a consimțământului, afișăm modalul
+        setVisible(true);
+      }
+    } catch (error) {
+      console.log('Error reading consent status', error);
+    }
+  };
+
+  const hideModalAndSetConsent = async () => {
+    try {
+      await AsyncStorage.setItem('hasConsented', 'true');
+      setVisible(false);
+    } catch (error) {
+      console.log('Error saving consent status', error);
+    }
+  };
+
+  React.useEffect(() => {
+    checkConsent();
+  }, []);
 
   const Footer = () => {
     return (
@@ -260,11 +289,18 @@ const OnboardingScreen = ({ navigation }) => {
         ]} // Înlocuiește cu culorile gradientului tău
         style={styles.gradient}
       >
+        
         {/* <StatusBar backgroundColor={COLORS.primary3 /> */}
+        {
+          visible
+          ?
+          <ConsentModal hideModalAndSetConsent={hideModalAndSetConsent} visible={visible}/>
+          :
+          <>
         <FlatList
           ref={ref}
           onMomentumScrollEnd={updateCurrentSlideIndex}
-          contentContainerStyle={{ height: "100%" }}
+          contentContainerStyle={{ height: "100%", zIndex:1 }}
           showsHorizontalScrollIndicator={false}
           horizontal
           data={slides}
@@ -272,6 +308,8 @@ const OnboardingScreen = ({ navigation }) => {
           renderItem={({ item }) => <Slide item={item} />}
         />
         <Footer />
+        </>
+        }
       </LinearGradient>
     </SafeAreaView>
   );

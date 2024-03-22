@@ -1,63 +1,176 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Text,
-  useColorScheme,
   View,
+  Text,
   FlatList,
   TouchableOpacity,
-} from "react-native";
-import styles from "./styles";
-import { RefreshControl } from "react-native";
-import { NewsCategory } from "../../utils/constant";
-import { NewsTags } from "../../components/NewsTags/NewsTags";
-import { LinearGradient } from "expo-linear-gradient";
-import { colors } from "../../utils/colors";
-import { Platform } from "react-native";
-import { StatusBar } from "react-native";
-import { SearchInput } from "../../components/SearchInput/SearchInput";
-import { NewsCard } from "../../components/NewsCard/NewsCard";
-import { NewsDetailsModal } from "../../components/NewsDetailsModal/NewsDetailsModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+  RefreshControl,
+  StatusBar,
+  useColorScheme,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '../../utils/colors';
+import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-import {
-  handleGetFirestore,
-  handleQueryFirestoreGeneral,
-} from "../../utils/firestoreUtils";
-import { handleSearch } from "../../utils/searchUtils";
-import { useLanguage } from "../../context/LanguageContext";
-import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { filterArticlesBeforeCurrentTime } from "../../utils/commonUtils";
-import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+import { collection, query, orderBy, startAfter, limit, getDocs, where } from 'firebase/firestore';
+import styles from './styles';
+import { NewsCard } from '../../components/NewsCard/NewsCard';
+import { NewsDetailsModal } from '../../components/NewsDetailsModal/NewsDetailsModal';
+import { SearchInput } from '../../components/SearchInput/SearchInput';
+import { NewsTags } from '../../components/NewsTags/NewsTags';
+import { db } from '../../../firebase';
+import { useLanguage } from '../../context/LanguageContext';
+import { handleQueryFirestoreGeneral } from '../../utils/firestoreUtils';
+import { filterArticlesBeforeCurrentTime } from '../../utils/commonUtils';
 
-// Înlocuiți cu ID-ul real al unității de anunțuri pentru producție
-const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-9577714849380446/7080054250';
-const interstitialAd = InterstitialAd.createForAdRequest(adUnitId);
+const PAGE_SIZE = 5; // Definește câte articole să fie încărcate odată
 
-
-
-const News: React.FC = () => {
-  const [newsFeed, setNewsFeed] = useState({});
-  const [searchResults, SetSearchResults] = useState([]);
-  const [searchText, setSearchText] = useState("");
+const News = () => {
+  const [articles, setArticles] = useState([]);
+  const [lastVisible, setLastVisible] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const { language, changeLanguage } = useLanguage();
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const navigation = useNavigation();
-  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
+  const colorScheme = useColorScheme();
+  const { language, changeLanguage } = useLanguage();
 
-  const openModalWithArticle = async (article) => {
-    await interstitialAd.show().then(() => {
-      setSelectedArticle(article);
+  const fetchArticles = async (refresh = false) => {
+    console.log("Start fetch...")
+    setIsLoading(true);
+    let articlesRef = collection(db, 'BlogArticole');
+    let q = query(articlesRef, orderBy('firstUploadDate', 'desc'), orderBy('firstUploadtime', 'desc'), limit(PAGE_SIZE));
+
+    if (!refresh && lastVisible) {
+      q = query(articlesRef, orderBy('firstUploadDate', 'desc'), orderBy('firstUploadtime', 'desc'), startAfter(lastVisible), limit(PAGE_SIZE));
+    }
+
+    const documentSnapshots = await getDocs(q);
+    const moreArticles = documentSnapshots.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setArticles(refresh ? moreArticles : [...articles, ...moreArticles]);
+    setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1]);
+    setIsLoading(false);
+  };
+
+  const handleQueryData = async () => {
+    console.log("query....")
+    let dataArt = await handleQueryFirestoreGeneral(
+      "BlogArticole",
+      "categorie",
+      selectedCategory
+      );
+      console.log("articles data...query...", dataArt);
+      console.log("query....2")
+
+
+    let articlesData  = filterArticlesBeforeCurrentTime(dataArt)
+    console.log("Articole...aici...", articlesData)
+
+
+    let articles = {};
+    if (articlesData.length > 0) {
+      // Sortarea articolelor după data și ora lor
+      const sortedArticles = articlesData.sort((a, b) => {
+        // Combină data și ora într-un singur string și convertește-le în obiecte de tip Date
+        const dateTimeA = new Date(`${a.firstUploadDate} ${a.firstUploadtime}`);
+        const dateTimeB = new Date(`${b.firstUploadDate} ${b.firstUploadtime}`);
+
+        // Compară obiectele de tip Date
+        return dateTimeB - dateTimeA;
+      });
+
+      // Selectarea celor mai noi două articole
+      const latestArticles = sortedArticles.slice(0, 2);
+
+      // Selectarea celor mai noi cinci articole
+      const latestFiveArticles = sortedArticles.slice(0, 5);
+
+      // Selectarea celui mai nou articol
+      const lastArticle = sortedArticles[0]; // Primul articol din lista sortată este cel mai recent
+
+      // Returnarea datelor către componenta Next.js
+      articles = articlesData
+    } else {
+      articles = articlesData
+    }
+    setArticles(articles);
+  };
+
+  useEffect(() => {
+    // function to query firestore by category
+    console.log("filter by category", selectedCategory);
+    if (selectedCategory === "All") {
+      fetchArticles(true);
+    } else {
+      handleQueryData();
+    }
+  }, [selectedCategory]);
+
+  // useEffect(() => {
+  //   fetchArticles(true);
+  // }, [selectedCategory]);
+
+  const handleRefresh = useCallback(() => {
+    fetchArticles(true);
+  }, [selectedCategory]);
+
+  const openModalWithArticle = (article) => {
+    setSelectedArticle(article);
     setModalVisible(true);
-    })
-   
   };
+
   const handleCloseModal = () => {
-    setModalVisible(!modalVisible);
+    setModalVisible(false);
   };
+
+  const handleSearch = async (text) => {
+    setSelectedCategory("All")
+    if (text.trim() === '') {
+      // Dacă caseta de căutare este goală, reîncarcă toate articolele
+      fetchArticles(true);
+      return;
+    }
+  
+    setIsLoading(true);
+    const searchTextLower = text.toLowerCase();
+  
+    let articles = []; // Inițializează un array gol pentru rezultatele căutării
+  
+    // Obține toate documentele din colecția BlogArticole
+    const querySnapshot = await getDocs(collection(db, 'BlogArticole'));
+  
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+  
+      // Determină câmpul specific în care să cauți bazat pe limbajul selectat și îl convertește la minuscule
+      let articleName = '';
+      switch (language) {
+        case 'hi':
+          articleName = data.info?.hu?.nume?.toLowerCase() || '';
+          break;
+        case 'id':
+          articleName = data.info?.ru?.nume?.toLowerCase() || '';
+          break;
+        default:
+          articleName = data.info?.[language]?.nume?.toLowerCase() || '';
+          break;
+      }
+  
+      // Verifică dacă textul de căutare convertit la minuscule este prezent în numele articolului
+      if (articleName.includes(searchTextLower)) {
+        articles.push({ id: doc.id, ...data });
+      }
+    });
+    console.log("Articles...legnth", articles.length)
+    // Actualizează starea cu rezultatele căutării
+    setArticles(articles);
+    setIsLoading(false);
+  };
+
   const saveArticle = async (article) => {
     try {
       // Obține lista curentă de articole salvate
@@ -90,179 +203,13 @@ const News: React.FC = () => {
       console.error("Failed to save or remove the article", error);
     }
   };
-
-  const handleGetData = async () => {
-    // Obținerea datelor articolelor din Firestore
-
-    const dataArt = await handleGetFirestore("BlogArticole");
-    console.log("Articole...aici..unu.", dataArt)
-    let articlesData  = filterArticlesBeforeCurrentTime(dataArt)
-    console.log("Articole...aici...", articlesData)
-    console.log("articles data...", articlesData);
-    let articles = {};
-    if (articlesData.length > 0) {
-      // Sortarea articolelor după data și ora lor
-      const sortedArticles = articlesData.sort((a, b) => {
-        // Combină data și ora într-un singur string și convertește-le în obiecte de tip Date
-
-        const dateTimeA = new Date(`${a.firstUploadDate} ${a.firstUploadtime}`);
-        const dateTimeB = new Date(`${b.firstUploadDate} ${b.firstUploadtime}`);
-
-        // Compară obiectele de tip Date
-        return dateTimeB - dateTimeA;
-      });
-
-      // Selectarea celor mai noi două articole
-      const latestArticles = sortedArticles.slice(0, 2);
-
-      // Selectarea celor mai noi cinci articole
-      const latestFiveArticles = sortedArticles.slice(0, 5);
-
-      // Selectarea celui mai nou articol
-      const lastArticle = sortedArticles[0]; // Primul articol din lista sortată este cel mai recent
-
-      // Returnarea datelor către componenta Next.js
-      articles = {
-        articlesData,
-        latestArticles,
-        lastArticle,
-        latestFiveArticles,
-      };
-    } else {
-      articles = {
-        articlesData: [],
-        latestArticles: [],
-        lastArticle: [],
-        latestFiveArticles: [],
-      };
-    }
-    setNewsFeed(articles);
-  };
-
-  const handleQueryData = async () => {
-    let dataArt = await handleQueryFirestoreGeneral(
-      "BlogArticole",
-      "categorie",
-      selectedCategory
-    );
-    console.log("articles data...query...", dataArt);
-
-
-    let articlesData  = filterArticlesBeforeCurrentTime(dataArt)
-    console.log("Articole...aici...", articlesData)
-
-
-    let articles = {};
-    if (articlesData.length > 0) {
-      // Sortarea articolelor după data și ora lor
-      const sortedArticles = articlesData.sort((a, b) => {
-        // Combină data și ora într-un singur string și convertește-le în obiecte de tip Date
-        const dateTimeA = new Date(`${a.firstUploadDate} ${a.firstUploadtime}`);
-        const dateTimeB = new Date(`${b.firstUploadDate} ${b.firstUploadtime}`);
-
-        // Compară obiectele de tip Date
-        return dateTimeB - dateTimeA;
-      });
-
-      // Selectarea celor mai noi două articole
-      const latestArticles = sortedArticles.slice(0, 2);
-
-      // Selectarea celor mai noi cinci articole
-      const latestFiveArticles = sortedArticles.slice(0, 5);
-
-      // Selectarea celui mai nou articol
-      const lastArticle = sortedArticles[0]; // Primul articol din lista sortată este cel mai recent
-
-      // Returnarea datelor către componenta Next.js
-      articles = {
-        articlesData,
-        latestArticles,
-        lastArticle,
-        latestFiveArticles,
-      };
-    } else {
-      articles = {
-        articlesData: [],
-        latestArticles: [],
-        lastArticle: [],
-        latestFiveArticles: [],
-      };
-    }
-    setNewsFeed(articles);
-  };
-
-  useEffect(() => {
-    // function to query firestore by category
-    console.log("filter by category", selectedCategory);
-    if (selectedCategory === "All") {
-      handleGetData();
-    } else {
-      handleQueryData();
-    }
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    handleGetData();
-  }, []);
-
-  const handleRefresh = useCallback(() => {
-    setSelectedCategory("All");
-    handleGetData();
-  }, []); //add a dependecy
-
-  const backgroundColor = useColorScheme() === "dark" ? "#000" : "#fff";
-
-  const handleSearchData = (text) => {
-    console.log("Start......");
-    const newData = handleSearch(newsFeed.articlesData, language, text);
-    // console.log("new data...", newData);
-    SetSearchResults(newData);
-    // console.log("Search reasults...length...", searchResults.length);
-  };
-
-  useEffect(() => {
-    // Ascultător pentru evenimentul de încărcare a interstitialului
-    const loadListener = interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-      setInterstitialLoaded(true);
-    });
-
-    // Ascultător pentru evenimentul de închidere a interstitialului
-    const closeListener = interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-      // Navigația se face după închiderea interstitialului
-      // if (isFuture) {
-      //   navigation.navigate(screenName.FutureReading, {
-      //     item,
-      //   });
-      // }
-      // Reîncărcați interstitialul pentru utilizări ulterioare
-      setInterstitialLoaded(false);
-      interstitialAd.load();
-    });
-
-    const errorListener = interstitialAd.addAdEventListener(
-      AdEventType.ERROR,
-      (error) => {
-        console.error(error);
-      }
-    );
-
-
-
-
-    // Încărcați interstitialul
-    interstitialAd.load();
-
-    return () => {
-      // Curățare la demontare
-      loadListener();
-      closeListener();
-      errorListener();
-    };
-  }, []);
-
+  
+  const renderArticle = ({ item }) => (
+    <NewsCard post={item} onPress={() => openModalWithArticle(item)} />
+  );
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
       <LinearGradient
         colors={[
           colors.gradientLogin1,
@@ -274,6 +221,7 @@ const News: React.FC = () => {
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}
       >
+        
         <View
           style={{
             flexDirection: "row",
@@ -286,7 +234,7 @@ const News: React.FC = () => {
               searchText={searchText}
               setSearchText={setSearchText}
               setIsLoading={setIsLoading}
-              handleSearchData={handleSearchData}
+              handleSearchData={handleSearch}
             />
           </View>
           <TouchableOpacity
@@ -302,36 +250,36 @@ const News: React.FC = () => {
             setSelectedCategory={setSelectedCategory}
           />
         )}
-          {newsFeed?.articlesData?.length === 0 &&
+              {articles?.length === 0 &&
         <Text style={{color:"white", padding:5}}>
         We're brewing some fresh content! Check back soon to read our latest articles. In the meantime, explore our existing resources.
         </Text>
         }
         <FlatList
+          data={articles}
+          renderItem={renderArticle}
           keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          data={searchText.length > 0 ? searchResults : newsFeed.articlesData}
-          renderItem={({ item }) => (
-            <NewsCard post={item} onPress={openModalWithArticle} />
-          )}
+          refreshControl={<RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />}
+          onEndReached={() => selectedCategory === "All" && searchText.length === 0 ? fetchArticles(false) : console.log("with category or search text length > 0")}
+          onEndReachedThreshold={0.5}
           contentContainerStyle={{
             paddingBottom: "25%",
+            paddingTop:"5%"
           }} // Asigură-te că există spațiu la marginea inferioară
-          style={styles.list}
-          refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
-          }
         />
-      
-        <NewsDetailsModal
-          visible={modalVisible}
-          article={selectedArticle}
-          articleIndex={0} // Ajustează în funcție de cazul de utilizare
-          onClose={handleCloseModal}
-          saveArticle={saveArticle}
-        />
+        
+        {modalVisible && (
+          <NewsDetailsModal
+            visible={modalVisible}
+            article={selectedArticle}
+            onClose={handleCloseModal}
+            saveArticle={saveArticle}
+          />
+        )}
       </LinearGradient>
     </View>
+
+    
   );
 };
 

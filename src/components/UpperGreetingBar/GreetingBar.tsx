@@ -18,9 +18,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "../../../i18n";
 import { useLanguage } from "../../context/LanguageContext";
 import { useNumberContext } from "../../context/NumberContext";
-import { handleUploadFirestoreSubcollection } from "../../utils/firestoreUtils";
+import { handleQueryToken, handleUploadFirestoreSubcollection } from "../../utils/firestoreUtils";
 import { authentication } from "../../../firebase";
 import { useApiData } from "../../context/ApiContext";
+import { usePushNotifications } from "../../hooks/usePushNotifications";
+import { collection, query, where, getDocs, updateDoc, getFirestore } from "firebase/firestore";  
+
 
 const languages = [
   {
@@ -104,6 +107,7 @@ const GreetingBar = ({ isGoBack, isPersonalGoBack }) => {
   const { language, changeLanguage } = useLanguage();
   const { currentNumber, updateNumber, sendToHistory, setSendToHistory } =
     useNumberContext();
+    const {expoPushToken} = usePushNotifications()
   const {
     loading,
 
@@ -131,14 +135,39 @@ const GreetingBar = ({ isGoBack, isPersonalGoBack }) => {
     const langCode = selectedLanguage ? selectedLanguage.code : "en";
     setCurrentLanguage(languageName);
     console.log(`${languageName} Selected`);
+
     // Așteaptă finalizarea schimbării limbii
     const newLangCode = await handleLanguagei18n(langCode);
 
-    // Apoi actualizează contextul
+    let expoToken = expoPushToken.data;
+
+    // Actualizează contextul
     changeLanguage(newLangCode);
     AsyncStorage.setItem("@userLanguage", langCode);
     setModalVisible(false);
-  };
+
+    // Firestore db instance
+    const db = getFirestore();
+
+    // Creează o interogare pentru a găsi documentul după token
+    if (expoToken) {
+        const q = query(collection(db, "userTokens"), where("token", "==", expoToken));
+
+        try {
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach(async (doc) => {
+                // Actualizează campul `language` pentru fiecare document găsit
+                await updateDoc(doc.ref, {
+                    language: langCode
+                });
+            });
+            console.log("Language updated in Firestore successfully");
+        } catch (error) {
+            console.error("Error updating language in Firestore:", error);
+        }
+    }
+};
+
 
   const flagImageSource = languages.find((l) => l.name === currentLanguage)
     ?.flag;

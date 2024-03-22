@@ -3,7 +3,7 @@
     "name": "Cristina Zurba",
     "slug": "TarotByAi",
     "platforms": ["ios", "android", "web"],
-    "version": "1.2.5",
+    "version": "1.2.6",
     "orientation": "portrait",
     "plugins": ["expo-build-properties"],
     "android": {
@@ -14,7 +14,7 @@
       "config": {},
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.cristina.zurba.tarot",
-      "versionCode": 45,
+      "versionCode": 46,
       "permissions": ["android.permission.RECORD_AUDIO"]
       
     },
@@ -32,7 +32,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
+    "supportsTablet": true,
       "bundleIdentifier": "com.cristina.zurba.tarot"
     },
     "description": "Get personalized readings",

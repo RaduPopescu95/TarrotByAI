@@ -45,6 +45,34 @@ export const handleUploadFirestore = async (data, location) => {
   }
 };
 
+export const handleUploadRating = async (data, location) => {
+  try {
+    console.log("test.infor in handle upload firestore...");
+    console.log(location);
+    console.log(data);
+
+    // Crează un nou document în colecție cu un ID generat automat
+    const docRef = doc(collection(db, location));
+
+    // preia length of location collection
+
+
+
+    // Adaugă ID-ul generat în obiectul data
+    const newData = {
+      rate:data
+    };
+
+    // Face upload cu noul obiect de date care include ID-ul documentului
+    await setDoc(docRef, newData);
+
+    console.log(`Documentul cu ID-ul ${docRef.id} a fost adăugat cu succes.`);
+    return newData;
+  } catch (err) {
+    console.log("Eroare la handleUploadFirestore...", err);
+  }
+};
+
 export const handleQueryRandom = async (location, id) => {
   console.log("start query firestore location...", location);
   console.log("start query firestore id...", id);
@@ -60,6 +88,22 @@ export const handleQueryRandom = async (location, id) => {
   });
   return obj;
 };
+export const handleQueryToken = async (location, token) => {
+  console.log("start query firestore location...", location);
+  console.log("start query firestore token...", token);
+
+  const q = query(collection(db, location), where("token", "==", token));
+  const querySnapshot = await getDocs(q);
+
+  // Dacă querySnapshot nu este gol, înseamnă că există documente care corespund interogării
+  const exists = !querySnapshot.empty;
+
+  // Loghează dacă tokenul a fost găsit sau nu
+  console.log(exists ? "Tokenul a fost găsit." : "Tokenul nu a fost găsit.");
+
+  return exists; // Returnează true dacă tokenul există, altfel false
+};
+
 
 //ADD A DOCUMENT IN THE SUBCOLLECTION
 export const handleUploadFirestoreSubcollection = async (data, location) => {

@@ -3,8 +3,7 @@ import firebase from "firebase/app";
 
 import { getData } from "../utils/realtimeUtils";
 import {
-  handleGetFirestore,
-  handleUploadFirestore,
+
   handleUploadFirestoreSubcollection,
 } from "../utils/firestoreUtils";
 import { authentication } from "../../firebase";

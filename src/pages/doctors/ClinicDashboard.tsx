@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   ScrollView,
@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 
 import NavBarBottom from "../../components/Navbar";
 import FlipCard from "../../components/FlipCard/FlipCard";
@@ -35,6 +35,10 @@ import {
   AdEventType,
 } from "react-native-google-mobile-ads";
 import { usePushNotifications } from "../../hooks/usePushNotifications";
+import { useAuth } from "../../context/AuthContext";
+import { handleQueryRandom, handleQueryToken, handleUploadFirestore } from "../../utils/firestoreUtils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import RattingDialog from "../../components/RattingDialog/RattingDialog";
 
 const adUnitId = __DEV__
   ? TestIds.INTERSTITIAL
@@ -52,11 +56,33 @@ const ClinicDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
   const initialAnimations = useRef(Array(4).fill(null)).current; // Utilizarea useRef pentru a păstra starea inițială
   const { language, changeLanguage } = useLanguage();
+  const { userData, currentUser, isGuestUser } = useAuth();
+  const [visible, setVisible] = useState(false);
 
-   
   const {expoPushToken} = usePushNotifications()
 
-  console.log("expo push token...s", expoPushToken)
+  useEffect(() => {
+    const handleUploadToken = async () => {
+      if (expoPushToken) {
+        console.log("Expo Push Token.........: ", expoPushToken.data);
+
+          const timestamp = Date.now().toString(36);
+          const randomPart = Math.random().toString(36).substring(2, 8);
+          let uniqueId = timestamp + randomPart;
+          let tokenExists = await handleQueryToken("userTokens", expoPushToken.data);
+          // Logica pentru utilizatori autentificați
+          if (!tokenExists) {
+  
+            await handleUploadFirestore({ token: expoPushToken.data, language }, `userTokens/${uniqueId}`);
+          }
+  
+      }
+    };
+if(expoPushToken){
+
+  handleUploadToken(); // Apelarea funcției
+}
+  }, [expoPushToken, isGuestUser, userData]);
 
   const {
     oreNorocoase,
@@ -118,9 +144,9 @@ const ClinicDashboard = () => {
 
       animateCard(0); // Începe animația pentru primul card
     }
+   
   }, []);
 
-  useEffect(() => {}, [language]);
 
   const animateCard = (index) => {
     if (index < initialAnimations.length) {
@@ -184,6 +210,28 @@ const ClinicDashboard = () => {
   //   return null;
   // }
 
+  useFocusEffect(
+    useCallback(() => {
+      const manageVisibility = async () => {
+        const userRating = await AsyncStorage.getItem('userRating');
+        console.log("useRating...", userRating)
+        const entryCount = parseInt(await AsyncStorage.getItem('entryCount') || '0', 10);
+        await AsyncStorage.setItem('entryCount', (entryCount + 1).toString());
+    
+        // if ((entryCount + 1) % 5 === 0 && userRating === null) {
+        if ((entryCount + 1) % 5 === 0 ) {
+          console.log("true....")
+          setVisible(true);
+        } else {
+          console.log("false....")
+          setVisible(false);
+        }
+      };
+    
+      manageVisibility();
+    }, [])
+  );
+
   return (
     <Fragment>
       <MainContainer>
@@ -225,6 +273,11 @@ const ClinicDashboard = () => {
               </View>
             </View>
           </ImageBackground>
+          {
+        visible
+        &&
+      <RattingDialog setVisible={setVisible} visible={visible}/>
+      }
         </LinearGradient>
       </MainContainer>
     </Fragment>

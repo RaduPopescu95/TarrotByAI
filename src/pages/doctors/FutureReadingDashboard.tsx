@@ -26,6 +26,7 @@ import {
   H8fontMediumWhite,
 } from "../../components/commonText";
 import { useLanguage } from "../../context/LanguageContext";
+import CardLayoutViitor from "../../components/CardLayout/CardLayoutViitor";
 
 const FutureReadingDashboard = () => {
   const [cardAnimations, setCardAnimations] = useState([]);
