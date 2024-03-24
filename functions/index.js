@@ -85,7 +85,7 @@ exports.checkAndSendNotifications = functions.pubsub.schedule("every 5 minutes")
       }
     });
 
-exports.sendRandomNotification = functions.pubsub.schedule("every 5 minutes")
+exports.sendRandomNotification = functions.pubsub.schedule("every 120 minutes")
     .timeZone("Europe/Bucharest")
     .onRun(async (context) => {
       const loc = "RegularNotifications";

@@ -25,6 +25,13 @@ import { useLanguage } from '../../context/LanguageContext';
 import { handleQueryFirestoreGeneral } from '../../utils/firestoreUtils';
 import { filterArticlesBeforeCurrentTime } from '../../utils/commonUtils';
 
+import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
+
+// Înlocuiți cu ID-ul real al unității de anunțuri pentru producție
+const adUnitId = __DEV__ ? TestIds.INTERSTITIAL : 'ca-app-pub-9577714849380446/7080054250';
+const interstitialAd = InterstitialAd.createForAdRequest(adUnitId);
+
+
 const PAGE_SIZE = 5; // Definește câte articole să fie încărcate odată
 
 const News = () => {
@@ -38,6 +45,7 @@ const News = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const { language, changeLanguage } = useLanguage();
+  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
 
   const fetchArticles = async (refresh = false) => {
     console.log("Start fetch...")
@@ -118,9 +126,12 @@ const News = () => {
     fetchArticles(true);
   }, [selectedCategory]);
 
-  const openModalWithArticle = (article) => {
-    setSelectedArticle(article);
-    setModalVisible(true);
+  const openModalWithArticle = async (article) => {
+    await interstitialAd.show();
+    setTimeout(() => {
+      setSelectedArticle(article);
+      setModalVisible(true);
+    }, 500); // Ajustează întârzierea după necesități
   };
 
   const handleCloseModal = () => {
@@ -203,6 +214,47 @@ const News = () => {
       console.error("Failed to save or remove the article", error);
     }
   };
+
+  useEffect(() => {
+    // Ascultător pentru evenimentul de încărcare a interstitialului
+    const loadListener = interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+      setInterstitialLoaded(true);
+    });
+
+    // Ascultător pentru evenimentul de închidere a interstitialului
+    const closeListener = interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+      // Navigația se face după închiderea interstitialului
+      // if (isFuture) {
+      //   navigation.navigate(screenName.FutureReading, {
+      //     item,
+      //   });
+      // }
+      // Reîncărcați interstitialul pentru utilizări ulterioare
+      setInterstitialLoaded(false);
+      interstitialAd.load();
+    });
+
+    const errorListener = interstitialAd.addAdEventListener(
+      AdEventType.ERROR,
+      (error) => {
+        console.error(error);
+      }
+    );
+
+
+
+
+    // Încărcați interstitialul
+    interstitialAd.load();
+
+    return () => {
+      // Curățare la demontare
+      loadListener();
+      closeListener();
+      errorListener();
+    };
+  }, []);
+
   
   const renderArticle = ({ item }) => (
     <NewsCard post={item} onPress={() => openModalWithArticle(item)} />
